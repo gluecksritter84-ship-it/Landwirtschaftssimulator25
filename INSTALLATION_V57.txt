@@ -1,0 +1,17 @@
+LS 2025 Hofverwaltung mit Tieren – V57
+
+Änderung:
+- Korrigiert das Dashboard-Raster: direkt verschachtelte .grid-Elemente
+  erhalten jetzt die volle verfügbare Breite.
+- Keine Änderungen an den Datenspeicher- oder Google-Sync-Funktionen.
+
+GitHub:
+1. Im Repository die index.html im Hauptverzeichnis ersetzen.
+2. sw.js ebenfalls ersetzen.
+3. manifest.webmanifest und den Ordner icons unverändert lassen.
+4. Commit changes.
+5. Danach die App vollständig schließen und neu öffnen.
+
+Wichtig:
+Vor dem Austausch in der App ein JSON-Backup exportieren.
+Nicht Browserdaten oder Website-Daten löschen.

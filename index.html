@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LS 2025 Hofverwaltung mit Tieren · V56</title>
+<title>LS 2025 Hofverwaltung mit Tieren · V57</title>
 <style>
 :root{
  --bg:#171d19;--surface:#222b24;--surface-2:#29352b;--line:#3b493d;
@@ -681,6 +681,15 @@ main {
 }
 #dashboard .management-kpis > .card { grid-column:span 1 !important; }
 #dashboard .dashboard-shortcuts { width:100% !important; max-width:100% !important; }
+/* V57 – Fehlerkorrektur: verschachtelte Raster als direkte Grid-Kinder
+   müssen über die gesamte Breite laufen, statt in einer einzelnen 1fr-Spalte
+   (ca. 53 px) zusammenzuschrumpfen. */
+#dashboard .grid > .grid {
+  grid-column: 1 / -1 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
 @media(max-width:900px){
   main { width:calc(100vw - 24px) !important; }
   #dashboard .management-kpis { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
