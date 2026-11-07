@@ -1,0 +1,16 @@
+LS 2025 Hofverwaltung mit Tieren – Version 58
+
+Fehlerkorrektur:
+- Hofübersicht bleibt nicht mehr dauerhaft sichtbar, wenn ein anderer Bereich geöffnet wird.
+- Beim Wechsel wird die ausgewählte Seite korrekt oben angezeigt.
+- Die Auswertung wird beim Öffnen neu aufgebaut; Fehler werden sichtbar gemeldet.
+- Service-Worker-Cache auf V58 erhöht, damit Chrome/PWA die neue Version lädt.
+
+Wichtig: Diese Version setzt KEINE Hofdaten zurück und löscht keine lokalen oder Google-Drive-Daten.
+
+GitHub:
+1. Im Repository Landwirtschaftssimulator25 die Dateien im Stammverzeichnis ersetzen:
+   index.html, sw.js, manifest.webmanifest und icons (unverändert).
+2. Commit changes.
+3. App nach Veröffentlichung neu laden. In Chrome ggf. Strg+Umschalt+R (Mac: Cmd+Shift+R).
+4. Die installierte PWA schließen und erneut öffnen.
