@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ls25-hofverwaltung-v57';
+const CACHE_NAME = 'ls25-hofverwaltung-v58';
 const APP_SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));

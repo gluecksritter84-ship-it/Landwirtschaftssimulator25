@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LS 2025 Hofverwaltung mit Tieren · V57</title>
+<title>LS 2025 Hofverwaltung mit Tieren · V58</title>
 <style>
 :root{
  --bg:#171d19;--surface:#222b24;--surface-2:#29352b;--line:#3b493d;
@@ -700,6 +700,12 @@ main {
 }
 
 </style>
+<style id="v58-panel-visibility-fix">
+/* V58: Das Dashboard darf nicht dauerhaft sichtbar bleiben.
+   Der alte V56-Fix mit display:block!important hat die Navigation überlagert. */
+#dashboard.panel:not(.active){display:none!important}
+#dashboard.panel.active{display:block!important}
+</style>
 
 </head>
 <body>
@@ -1006,7 +1012,7 @@ main {
 </div>
 </div>
 </section>
-<footer>LS 2025 Hofverwaltung mit Tieren · V56 – Tierbestand, Futterplanung, Ernte & Lager, Milch und Finanzen. Die App ist eine manuelle Begleitverwaltung und liest keine Daten direkt aus der Xbox. Daten werden lokal im jeweiligen Browser gespeichert; für iPhone-/MacBook-Wechsel bitte die Backup-Funktion verwenden. Tier- und Produktionsannahmen können je nach LS25-Version, Karte und Mods abweichen.</footer>
+<footer>LS 2025 Hofverwaltung mit Tieren · V58 – Tierbestand, Futterplanung, Ernte & Lager, Milch und Finanzen. Die App ist eine manuelle Begleitverwaltung und liest keine Daten direkt aus der Xbox. Daten werden lokal im jeweiligen Browser gespeichert; für iPhone-/MacBook-Wechsel bitte die Backup-Funktion verwenden. Tier- und Produktionsannahmen können je nach LS25-Version, Karte und Mods abweichen.</footer>
 </main>
 <script>
 const months=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
@@ -2116,6 +2122,17 @@ function showTab(tab){
    panel.setAttribute("aria-hidden",active?"false":"true");
  });
  try{history.replaceState(null,"","#"+valid);}catch(e){}
+ // Beim Wechsel immer oben am neu gewählten Bereich beginnen.
+ window.scrollTo({top:0,left:0,behavior:"auto"});
+ // Auswertung beim Öffnen frisch aufbauen, damit die Ansicht nicht veraltet bleibt.
+ if(valid==="analysis"){
+   try{renderAnalysis();}
+   catch(err){
+     console.error("Auswertung konnte nicht aufgebaut werden:",err);
+     const box=document.getElementById("appError");
+     if(box){box.hidden=false;box.textContent="Die Auswertung konnte nicht aufgebaut werden: "+(err.message||err);}
+   }
+ }
 }
 const mainNav=document.querySelector("nav[aria-label='Hauptnavigation']");
 if(mainNav){
