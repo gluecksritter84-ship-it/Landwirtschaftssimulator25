@@ -1,0 +1,29 @@
+LS 2025 Hofverwaltung mit Tieren – installierbare Web-App (PWA)
+
+INHALT
+- index.html: Hofverwaltung V49 mit App-Installationshinweisen
+- manifest.webmanifest: App-Metadaten und Symbole
+- sw.js: Offline-App-Shell / Cache
+- icons/: App-Symbole
+
+WICHTIG
+Die App muss über HTTPS bereitgestellt werden, z. B. über GitHub Pages. Das Öffnen der HTML-Datei direkt aus dem Dateisystem reicht für die PWA-Installation und den Service Worker nicht aus.
+
+GITHUB PAGES
+1. Vorher in der bisherigen Hofverwaltung einen JSON-Backup-Export erstellen.
+2. Die Dateien und den Ordner icons/ aus diesem Paket in das Repository-Hauptverzeichnis hochladen.
+3. index.html im Repository durch diese index.html ersetzen.
+4. manifest.webmanifest, sw.js und icons/ ebenfalls im Hauptverzeichnis ablegen.
+5. GitHub Pages wie bisher auf den main-Branch / root zeigen lassen.
+6. Die veröffentlichte HTTPS-Seite öffnen.
+
+INSTALLATION
+Windows: Seite in Edge oder Chrome öffnen, Installieren-Symbol in der Adressleiste oder den Menüpunkt „App installieren“ verwenden.
+macOS: In Safari „Ablage > Zum Dock hinzufügen“ (bei unterstützten Safari-Versionen) oder in Chrome „Installieren“ verwenden.
+iPhone: In Safari öffnen > Teilen > „Zum Home-Bildschirm“ > „Als Web-App öffnen“ aktivieren, falls angeboten.
+
+DATEN
+Die App verwendet weiterhin den bisherigen Browser-localStorage. Die PWA synchronisiert Daten NICHT automatisch zwischen iPhone, Mac und PC. Für den Gerätewechsel JSON-Backup exportieren und auf dem anderen Gerät importieren. Der Offline-Cache speichert die App-Dateien, nicht automatisch eine gemeinsame Datenbank.
+
+HINWEIS
+Dies ist eine installierbare PWA, keine native App aus dem Microsoft Store, Mac App Store oder Apple App Store. Sie benötigt keine Store-Freigabe. Für eine echte native iPhone-App wäre ein separater iOS-Build und Apple-Entwicklerkonto/Signierung nötig.

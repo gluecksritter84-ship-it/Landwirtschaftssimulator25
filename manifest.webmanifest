@@ -1,0 +1,18 @@
+{
+  "id": "./",
+  "name": "LS 2025 Hofverwaltung mit Tieren",
+  "short_name": "LS25 Hofverwaltung",
+  "description": "Hofverwaltung für den Landwirtschafts-Simulator 25 mit Tierbestand, Futter, Ernte, Lager und Finanzen.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#101a14",
+  "theme_color": "#263b2c",
+  "categories": ["utilities", "productivity"],
+  "icons": [
+    {"src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "./icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
