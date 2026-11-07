@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LS 2025 Hofverwaltung mit Tieren · V55</title>
+<title>LS 2025 Hofverwaltung mit Tieren · V56</title>
 <style>
 :root{
  --bg:#171d19;--surface:#222b24;--surface-2:#29352b;--line:#3b493d;
@@ -648,6 +648,48 @@ img,svg,canvas{max-width:100%}
 @media(hover:none){
  nav button:hover,.btn:hover{filter:none}
 }
+
+/* V56 – Dashboard-Breite stabilisieren: Grid-Container dürfen nicht schrumpfen */
+html, body { width:100% !important; min-width:0 !important; }
+body { display:block !important; }
+main {
+  display:block !important;
+  width: min(1320px, calc(100vw - 32px)) !important;
+  max-width:1320px !important;
+  min-width:0 !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+#dashboard {
+  display:block !important;
+  width:100% !important;
+  min-width:0 !important;
+}
+#dashboard > .grid,
+#dashboard .grid {
+  display:grid !important;
+  width:100% !important;
+  min-width:0 !important;
+  max-width:100% !important;
+}
+#dashboard > .grid { grid-template-columns:repeat(12,minmax(0,1fr)) !important; }
+#dashboard .card { min-width:0 !important; max-width:100% !important; }
+#dashboard .management-kpis {
+  display:grid !important;
+  width:100% !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+}
+#dashboard .management-kpis > .card { grid-column:span 1 !important; }
+#dashboard .dashboard-shortcuts { width:100% !important; max-width:100% !important; }
+@media(max-width:900px){
+  main { width:calc(100vw - 24px) !important; }
+  #dashboard .management-kpis { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+}
+@media(max-width:560px){
+  main { width:calc(100vw - 16px) !important; }
+  #dashboard .management-kpis { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+}
+
 </style>
 
 </head>
@@ -955,7 +997,7 @@ img,svg,canvas{max-width:100%}
 </div>
 </div>
 </section>
-<footer>LS 2025 Hofverwaltung mit Tieren · V55 – Tierbestand, Futterplanung, Ernte & Lager, Milch und Finanzen. Die App ist eine manuelle Begleitverwaltung und liest keine Daten direkt aus der Xbox. Daten werden lokal im jeweiligen Browser gespeichert; für iPhone-/MacBook-Wechsel bitte die Backup-Funktion verwenden. Tier- und Produktionsannahmen können je nach LS25-Version, Karte und Mods abweichen.</footer>
+<footer>LS 2025 Hofverwaltung mit Tieren · V56 – Tierbestand, Futterplanung, Ernte & Lager, Milch und Finanzen. Die App ist eine manuelle Begleitverwaltung und liest keine Daten direkt aus der Xbox. Daten werden lokal im jeweiligen Browser gespeichert; für iPhone-/MacBook-Wechsel bitte die Backup-Funktion verwenden. Tier- und Produktionsannahmen können je nach LS25-Version, Karte und Mods abweichen.</footer>
 </main>
 <script>
 const months=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
