@@ -2194,6 +2194,76 @@ function printYearReport(){
  const rows=Object.entries(snap.stock||{}).map(([k,v])=>`<tr><td>${escapeHtml(v.name)}</td><td>${fmt(v.opening)} ${v.unit}</td><td>${fmt(v.harvest)} ${v.unit}</td><td>${fmt(v.need)} ${v.unit}</td><td>${fmt(Math.max(0,v.closing))} ${v.unit}</td><td>${fmt(v.shortage)} ${v.unit}</td></tr>`).join("");
  const needs=[ ["TMR-Stroh",snap.need.strawTmr||0,snap.harvest.strawTmr||0,"L"],["Heu",snap.need.hay||0,snap.harvest.hay||0,"L"],["Maissilage",snap.need.silage||0,snap.harvest.silage||0,"L"],["Einstreu-Stroh",snap.need.beddingBales||0,snap.harvest.beddingBales||0,"Ballen"] ];
  const html=`<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Jahresbericht ${y}</title><style>body{font:14px Arial,sans-serif;color:#172019;margin:28px}h1,h2{color:#315b2b}table{width:100%;border-collapse:collapse;margin:12px 0}td,th{border:1px solid #bbb;padding:8px;text-align:left}th{background:#e9f0e4}.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.box{border:1px solid #bbb;padding:12px;border-radius:8px}.muted{color:#555}@media print{button{display:none}}</style></head><body><h1>LS25 · LS 25 Hof Verwaltung mit Tierzucht</h1><h2>Jahresbericht Betriebsjahr ${y}</h2><p class="muted">Erstellt am ${new Date().toLocaleString("de-DE")}${yearClosures[y]?' · Jahresabschluss gespeichert':' · Vorschau, Jahr noch nicht abgeschlossen'}</p><div class="kpis"><div class="box"><b>Tierbestand</b><h2>${snap.animalCount}</h2></div><div class="box"><b>TMR-Verbrauch</b><h2>${fmt(snap.totals.tmr)} L</h2></div><div class="box"><b>Milchproduktion</b><h2>${fmt(snap.totals.milk)} L</h2></div><div class="box"><b>Milch ausgeliefert</b><h2>${fmt(snap.totals.milkDelivered)} L</h2></div></div><h2>Finanzübersicht</h2><table><tr><th>Position</th><th>Betrag</th></tr><tr><td>Einnahmen</td><td>${euro(snap.finance?.incomeTotal||0)}</td></tr><tr><td>Laufende Ausgaben</td><td>${euro(snap.finance?.runningTotal||0)}</td></tr><tr><td>Investitionen</td><td>${euro(snap.finance?.investmentTotal||0)}</td></tr><tr><td>Saldo</td><td>${euro(snap.finance?.balance||0)}</td></tr></table><h2>Feldhistorie</h2><table><tr><th>Feld</th><th>Fläche</th><th>Anbau</th><th>Ernten</th></tr>${(snap.fieldHistory||[]).map(f=>`<tr><td>${escapeHtml(f.name)}</td><td>${fmt(f.area)} ha</td><td>${escapeHtml(cropLabels[f.crop]||f.crop||"–")}</td><td>${f.harvests}</td></tr>`).join("")}</table><h2>Bedarf und Ernte</h2><table><tr><th>Produkt</th><th>Jahresbedarf</th><th>Ernte</th><th>Saldo Ernte − Bedarf</th></tr>${needs.map(([name,need,harvest,unit])=>`<tr><td>${name}</td><td>${fmt(need)} ${unit}</td><td>${fmt(harvest)} ${unit}</td><td>${fmt(harvest-need)} ${unit}</td></tr>`).join("")}</table><h2>Lagerabschluss</h2><table><tr><th>Produkt</th><th>Anfang</th><th>Ernte</th><th>Verbrauch</th><th>Endbestand</th><th>Fehlmenge</th></tr>${rows}</table><p class="muted">Dieser Bericht enthält die erfassten Einnahmen, Ausgaben und Investitionen. Der Finanzsaldo ist eine einfache betriebliche Übersicht auf Basis deiner manuellen Buchungen und keine Steuer- oder Bilanzrechnung.</p><button onclick="window.print()">Drucken / Als PDF speichern</button><script>setTimeout(()=>window.print(),500)<\/script>
+
+
+<style id="iphone-month-entry-fix">
+/* Nur Smartphones: Monatswerte untereinander und vollständig bedienbar.
+   Desktop-/Mac-Layout bleibt unverändert. */
+@media (max-width: 650px) {
+  #months,
+  #months .card,
+  #months .table-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: visible !important;
+  }
+  #months .table-wrap table,
+  #months table {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+  }
+  #months thead { display: none !important; }
+  #months tbody {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    gap: 12px !important;
+  }
+  #months tbody tr {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    gap: 8px !important;
+  }
+  #months tbody td {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    grid-column: 1 / -1 !important;
+    overflow: visible !important;
+  }
+  #months tbody td input,
+  #months tbody td input[type="number"] {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    min-height: 48px !important;
+    padding: 10px 12px !important;
+    font-size: 16px !important;
+    line-height: 1.3 !important;
+    -webkit-appearance: none;
+    appearance: textfield;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    position: relative;
+    z-index: 1;
+  }
+  #months tbody td:first-child {
+    grid-column: 1 / -1 !important;
+  }
+}
+</style>
+
 </body></html>`;
  const w=window.open("","_blank");if(!w){alert("Bitte Pop-ups für diese App erlauben, um den PDF-Bericht zu erstellen.");return;}w.document.open();w.document.write(html);w.document.close();
 }
@@ -2620,5 +2690,75 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
  updateButtons();
 })();
 </script>
+
+
+<style id="iphone-month-entry-fix">
+/* Nur Smartphones: Monatswerte untereinander und vollständig bedienbar.
+   Desktop-/Mac-Layout bleibt unverändert. */
+@media (max-width: 650px) {
+  #months,
+  #months .card,
+  #months .table-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: visible !important;
+  }
+  #months .table-wrap table,
+  #months table {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    table-layout: fixed !important;
+  }
+  #months thead { display: none !important; }
+  #months tbody {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    gap: 12px !important;
+  }
+  #months tbody tr {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    gap: 8px !important;
+  }
+  #months tbody td {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    grid-column: 1 / -1 !important;
+    overflow: visible !important;
+  }
+  #months tbody td input,
+  #months tbody td input[type="number"] {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    min-height: 48px !important;
+    padding: 10px 12px !important;
+    font-size: 16px !important;
+    line-height: 1.3 !important;
+    -webkit-appearance: none;
+    appearance: textfield;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    position: relative;
+    z-index: 1;
+  }
+  #months tbody td:first-child {
+    grid-column: 1 / -1 !important;
+  }
+}
+</style>
+
 </body>
 </html>
