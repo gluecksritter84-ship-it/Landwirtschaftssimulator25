@@ -23,7 +23,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LS 2025 Hofverwaltung mit Tieren · V65</title>
+<title>LS 2025 Hofverwaltung mit Tieren · Finale Version</title>
 <style>
 :root{
  --bg:#171d19;--surface:#222b24;--surface-2:#29352b;--line:#3b493d;
@@ -863,7 +863,44 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 }
 </style>
 
-</head>
+
+<style id="milk-layout-fix-v70">
+/* Milchseite: KPI-Karten bekommen ein eigenes, ausreichend breites Raster. */
+#milk > .card { width:100%; min-width:0; padding:clamp(16px,2.2vw,24px); }
+#milk .milk-kpis { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; width:100%; align-items:stretch; margin:16px 0; }
+#milk .milk-kpis > .card { grid-column:auto; min-width:0; min-height:112px; padding:16px; display:flex; flex-direction:column; justify-content:center; }
+#milk .milk-kpis .kpi-label { font-size:clamp(11px,1.1vw,13px); line-height:1.4; overflow-wrap:anywhere; }
+#milk .milk-kpis .kpi { font-size:clamp(22px,2.5vw,32px); line-height:1.25; overflow-wrap:anywhere; }
+#milk .fields { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; align-items:end; margin-top:18px; }
+#milk .fields .field { min-width:0; margin-bottom:4px; }
+#milk .fields input,#milk .fields select { width:100%; min-width:0; min-height:48px; font-size:16px; }
+#milk .actions { margin:16px 0; }
+#milk #saveMilkMonth { min-height:48px; padding:12px 20px; }
+#milk #milkResult { min-height:82px; line-height:1.65; margin:14px 0 18px; padding:15px 16px; }
+#milk .table-wrap { width:100%; max-width:100%; margin-top:16px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+#milk .table-wrap table { width:100%; min-width:700px; font-size:13px; }
+#milk .table-wrap th,#milk .table-wrap td { padding:12px 11px; line-height:1.45; white-space:normal; }
+@media(max-width:760px){
+ #milk .milk-kpis { grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:9px; }
+ #milk .milk-kpis > .card { grid-column:auto !important; min-height:104px; padding:12px 9px !important; }
+ #milk .fields { grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:12px; }
+ #milk .fields .field:last-child { grid-column:1/-1; }
+ #milk .milk-kpis .kpi-label { font-size:11px; }
+}
+@media(max-width:460px){
+ #milk .milk-kpis { grid-template-columns:1fr !important; gap:9px; }
+ #milk .milk-kpis > .card { min-height:76px; padding:13px 15px !important; }
+ #milk .milk-kpis .kpi-label { font-size:12px; }
+ #milk .milk-kpis .kpi { font-size:25px; }
+ #milk .fields { grid-template-columns:1fr !important; gap:4px; }
+ #milk .fields .field:last-child { grid-column:auto; }
+ #milk .actions { display:block; }
+ #milk #saveMilkMonth { width:100%; }
+ #milk .table-wrap table { min-width:660px; }
+}
+</style>
+<!-- V71: Wartungsupdate – Milchdaten in JSON-Backups, CSV-Download und Startablauf abgesichert. -->
+<!-- Finale Wartung: Backup-Erinnerung, Speicherstatus, Lagerwarnung und Jahresabschluss-Check. -->\n</head>
 <body>
 <a class="skip-link" href="#dashboard">Zum Inhalt springen</a>
 <header><div class="header-inner"><div><h1>🐄 LS 2025 Hofverwaltung mit Tieren · V68</h1><p>Tierbestand · Tieralter · Futter & TMR · Ernte & Lager · Jahresauswertung</p></div><div class="save-indicator" id="saveIndicator" role="status" aria-live="polite"><span class="save-dot"></span><span id="saveIndicatorText">Lokale Datenspeicherung</span></div></div></header>
@@ -934,7 +971,7 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 <div class="card span-6"><h2>Aktueller Lagerstatus</h2><div id="dashboardStock"></div><div id="stockAlerts"></div></div>
 <div class="card span-6"><h2>Milchtank – aktueller Bestand</h2><div id="dashboardMilkTank"></div></div>
 <div class="card span-12"><h2>TMR-Mischungsrechner</h2><p class="muted">Gib die gewünschte Anzahl vollständiger Mischwagen ein. Die Zutatenmengen werden nach deiner Rezeptur berechnet.</p><div class="fields"><div class="field"><label for="mixerLoads">Anzahl Mischwagen</label><input id="mixerLoads" type="number" min="0" step="0.1" value="1"></div><div class="field"><label>Gesamtmenge</label><div class="kpi" id="mixerTotal">45.000 L</div></div></div><div id="mixerResult"></div><div id="recipeBars"></div><div class="note">Rezept je 45.000-L-Wagen: 9.000 L Stroh + 13.500 L Heu + 22.500 L Maissilage. Rezeptanteile und Kapazität basieren auf den Hofeinstellungen.</div></div>
-<div class="card span-12"><h2>Datensicherung & Datenübertragung</h2><p class="muted">Sichere alle Tiere, Monatsdaten, Ernten, Lagerwerte und Einstellungen als Datei. Auf einem anderen Gerät kannst du die Datei wieder importieren.</p><div class="actions"><button class="btn primary" id="backupExportBtn" type="button">⬇ Backup exportieren</button><button class="btn" id="backupImportBtn" type="button">⬆ Backup importieren</button><input id="backupFile" type="file" accept="application/json,.json" hidden></div><small id="backupMsg">Empfehlung: regelmäßig ein Backup speichern, besonders vor Geräte- oder Browserwechsel.</small></div>
+<div class="card span-12"><h2>Datensicherung & Datenübertragung</h2><p class="muted">Sichere alle Tiere, Monatsdaten, Ernten, Lagerwerte und Einstellungen als Datei. Auf einem anderen Gerät kannst du die Datei wieder importieren.</p><div class="actions"><button class="btn primary" id="backupExportBtn" type="button">⬇ Backup exportieren</button><button class="btn" id="backupImportBtn" type="button">⬆ Backup importieren</button><input id="backupFile" type="file" accept="application/json,.json" hidden></div><small id="backupMsg" aria-live="polite">Backup-Status wird geprüft …</small><small id="backupReminder" class="muted" aria-live="polite"></small></div>
 <div class="card span-12" id="driveSyncCard"><h2>☁ Google-Drive-Synchronisierung</h2><p class="muted">Synchronisiert deine Hofdaten über den geschützten Google-App-Datenordner zwischen MacBook und iPhone. Es werden nur Hofdaten übertragen, nicht deine übrigen Drive-Dateien.</p><div class="actions"><button class="btn primary" id="driveConnectBtn" type="button">Mit Google verbinden</button><button class="btn" id="driveSyncBtn" type="button" disabled>Jetzt synchronisieren</button><button class="btn" id="driveDisconnectBtn" type="button" disabled>Verbindung trennen</button></div><small id="driveSyncStatus" role="status">Noch nicht mit Google verbunden. Für die erste Verbindung bitte auf jedem Gerät anmelden.</small><p class="muted" style="font-size:12px">Hinweis: Die Google-Anmeldung muss auf jedem Gerät einmal bestätigt werden. Bei Änderungen auf mehreren Geräten erkennt die App mögliche Konflikte und fragt vor dem Überschreiben. Die lokale Speicherung bleibt als Sicherung bestehen.</p></div>
 </div>
 </section>
@@ -1295,8 +1332,9 @@ function persist(){try{
  localStorage.setItem("ls25buffalo_stock_settings",JSON.stringify(stockSettings));
  localStorage.setItem("ls25buffalo_herd",JSON.stringify(herd));
  localStorage.setItem("ls25buffalo_milk_tank_opening",String(milkTankOpening));
+ localStorage.setItem(MILK_KEY,JSON.stringify(milkEntries));
  localStorage.setItem("ls25buffalo_next_id",String(nextAnimalId));
- setSaveIndicator("Lokal gespeichert · "+new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}));
+ const savedAt=new Date().toISOString();localStorage.setItem("ls25buffalo_last_saved_at",savedAt);setSaveIndicator("Lokal gespeichert · "+new Date(savedAt).toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"}));
  try{window.dispatchEvent(new Event("ls25-local-data-changed"));}catch(_){}
  }catch(e){setSaveIndicator("Speichern fehlgeschlagen · bitte Backup prüfen",true);}}
 
@@ -1790,8 +1828,8 @@ function renderStock(){
  const status=!hasActivity?"NOCH KEINE ERFASSUNG":r.shortage>0?"FEHLT":r.belowMinimum?"MINDESTBESTAND UNTERSCHRITTEN":"AUSREICHEND";
  return `<tr><td>${labels[k]}</td><td>${fmt(r.opening)} ${r.unit}</td><td>+ ${fmt(r.harvest)} ${r.unit}</td><td>− ${fmt(r.need)} ${r.unit}</td><td><b>${fmt(r.closing)} ${r.unit}</b></td><td>${fmtYears(remaining)}</td><td><span class="pill" style="${r.shortage>0||r.belowMinimum?'background:#fde2e2;color:#9b2525':''}">${status}</span></td></tr>`;
  }).join("")}</tbody></table></div><p class="muted">Die Reichweite berechnet sich aus dem Restbestand geteilt durch den Bedarf des ausgewählten Betriebsjahres. Sie ist eine Schätzung bei gleichbleibendem Verbrauch und ohne weitere Ernten.</p>`;
- const alerts=items.map(k=>{const r=current.items[k],monthly=r.need/12,stock=Math.max(0,r.closing),runway=monthly>0?stock/monthly:null,reorder=Math.max(0,Math.max(r.minimum,monthly*3)-stock);return {label:labels[k],unit:r.unit,runway,reorder,short:r.shortage>0,low:r.belowMinimum&&(r.opening>0||r.harvest>0||r.need>0)};}).filter(a=>a.short||a.low||(a.runway!==null&&a.runway<2));
- document.getElementById("stockAlerts").innerHTML=alerts.length?`<div class="note"><b>Lagerwarnungen</b>${alerts.map(a=>`<p>${a.label}: ${a.short?'Bestand reicht nicht aus':a.low?'Mindestbestand unterschritten':'geringe Reichweite'}${a.runway!==null?' · ca. '+fmt(a.runway)+' Monate':''}${a.reorder>0?' · Empfehlung für 3-Monats-Vorrat: '+fmt(a.reorder)+' '+a.unit:''}</p>`).join("")}</div>`:'<p class="compare-good">Alle Lagerbestände sind ausreichend.</p>';
+ const alerts=items.map(k=>{const r=current.items[k],monthly=r.need/12,stock=Math.max(0,r.closing),runway=monthly>0?stock/monthly:null,reorder=Math.max(0,Math.max(r.minimum,monthly*3)-stock);return {label:labels[k],unit:r.unit,runway,reorder,short:r.shortage>0,low:r.belowMinimum&&(r.opening>0||r.harvest>0||r.need>0)};}).filter(a=>a.short||a.low||(a.runway!==null&&a.runway<3));
+ document.getElementById("stockAlerts").innerHTML=alerts.length?`<div class="note"><b>Lagerwarnungen</b>${alerts.map(a=>`<p>${a.label}: ${a.short?'Bestand reicht nicht aus':a.low?'Mindestbestand unterschritten':'Vorrat unter drei Monatsbedarfen'}${a.runway!==null?' · ca. '+fmt(a.runway)+' Monate':''}${a.reorder>0?' · Empfehlung für 3-Monats-Vorrat: '+fmt(a.reorder)+' '+a.unit:''}</p>`).join("")}</div>`:'<p class="compare-good">Alle Lagerbestände sind ausreichend.</p>';
  document.getElementById("dashboardStock").innerHTML=items.map(k=>{const r=current.items[k];return `<p><b>${labels[k]}:</b> ${fmt(r.closing)} ${r.unit}</p>`}).join("");
 }
 function pieCard(title,parts,description){
@@ -2104,10 +2142,21 @@ function makeYearSnapshot(year=activeYear()){
  const fieldHistory=farmFields.map(f=>({id:f.id,name:f.name,area:Number(f.area)||0,crop:f.crop,harvests:getHarvestForYear(y).filter(h=>String(h.fieldId||"")===String(f.id)).length}));
  return {year:y,closedAt:new Date().toISOString(),totals:result.totals,need,harvest,stock:ledger.items,months:(yearData[String(y)]||data).map(d=>({...d})),animalCount:getHerdForYear(y).length,finance:{incomes,expenses,incomeTotal,investmentTotal,runningTotal,balance:incomeTotal-investmentTotal-runningTotal},fieldHistory};
 }
+function getYearCloseChecklist(year=activeYear()){
+ const y=Number(year),key=String(y),months=Array.isArray(yearData[key])?yearData[key]:data;
+ const monthCount=months.filter(m=>Object.values(m||{}).some(v=>Number(v)>0)).length;
+ const harvestCount=getHarvestForYear(y).length;
+ const milkCount=Object.keys(milkEntries[key]||{}).filter(k=>Number(milkEntries[key][k])>0).length;
+ const stock=buildStockLedger(y).slice(-1)[0]?.items||{};
+ const stockIssues=Object.values(stock).filter(v=>v.shortage>0||v.belowMinimum).length;
+ return {monthCount,harvestCount,milkCount,stockIssues,monthsComplete:monthCount===12};
+}
 function closeBusinessYear(){
  const y=activeYear();
+ const audit=getYearCloseChecklist(y);
+ const auditText="\n\nPrüfung vor dem Abschluss:\n• Monatswerte erfasst: "+audit.monthCount+"/12\n• Erntevorgänge: "+audit.harvestCount+"\n• Milchmonate erfasst: "+audit.milkCount+"/12\n• Lagerwarnungen: "+audit.stockIssues+"\n\nDu kannst auch mit unvollständigen Angaben abschließen.";
  if(yearClosures[y]){alert("Dieses Betriebsjahr ist bereits abgeschlossen.");return;}
- if(!confirm("Betriebsjahr "+y+" verbindlich abschließen? Die Werte werden gespeichert und gesperrt. Anschließend wird automatisch das nächste Betriebsjahr begonnen."))return;
+ if(!confirm("Betriebsjahr "+y+" verbindlich abschließen? Die Werte werden gespeichert und gesperrt. Anschließend wird automatisch das nächste Betriebsjahr begonnen."+auditText))return;
  saveActiveYearData(y);yearClosures[y]=makeYearSnapshot(y);persist();renderYearClose();applyYearLock();
  createNextBusinessYear();
 }
@@ -2128,7 +2177,7 @@ function createNextBusinessYear(){
 }
 function renderYearClose(){
  const y=activeYear(),snap=yearClosures[y],status=document.getElementById("yearCloseStatus");if(!status)return;
- status.innerHTML=snap?`<p><b>Abgeschlossen:</b> ${new Date(snap.closedAt).toLocaleString("de-DE")} · ${snap.animalCount} Tiere · TMR ${fmt(snap.totals.tmr)} L · Milch ${fmt(snap.totals.milk)} L</p><p class="muted">Abschluss gespeichert. Das Betriebsjahr ist schreibgeschützt.</p>`:`<p class="muted">Betriebsjahr ${y} ist noch offen. Vor dem Abschluss bitte Monatswerte, Ernten und Lagerbestand prüfen.</p>`;
+ const audit=getYearCloseChecklist(y);status.innerHTML=snap?`<p><b>Abgeschlossen:</b> ${new Date(snap.closedAt).toLocaleString("de-DE")} · ${snap.animalCount} Tiere · TMR ${fmt(snap.totals.tmr)} L · Milch ${fmt(snap.totals.milk)} L</p><p class="muted">Abschluss gespeichert. Das Betriebsjahr ist schreibgeschützt.</p>`:`<p class="muted">Betriebsjahr ${y} ist noch offen.</p><div class="note"><b>Abschluss-Check</b><p>Monatswerte: ${audit.monthCount}/12 ${audit.monthsComplete?"✓":"· unvollständig"}<br>Erntevorgänge: ${audit.harvestCount}<br>Milchmonate: ${audit.milkCount}/12<br>Lagerwarnungen: ${audit.stockIssues}</p><small>Fehlende Einträge verhindern den Abschluss nicht, werden aber vor der Bestätigung angezeigt.</small></div>`;
  document.getElementById("closeYearBtn").disabled=!!snap;document.getElementById("reopenYearBtn").disabled=!snap;document.getElementById("createNextYearBtn").disabled=!snap;
  document.getElementById("yearCloseReport").innerHTML=snap?`<div class="report-block"><h3>Abschlussbericht Betriebsjahr ${y}</h3><p>Tierbestand: <b>${snap.animalCount}</b><br>Einnahmen: <b>${euro(snap.finance?.incomeTotal||0)}</b><br>Laufende Ausgaben: <b>${euro(snap.finance?.runningTotal||0)}</b><br>Investitionen: <b>${euro(snap.finance?.investmentTotal||0)}</b><br>Finanzsaldo: <b>${euro(snap.finance?.balance||0)}</b><br>TMR-Verbrauch: <b>${fmt(snap.totals.tmr)} L</b><br>Stroh TMR: <b>${fmt(snap.need.strawTmr)} L</b><br>Heu: <b>${fmt(snap.need.hay)} L</b><br>Maissilage: <b>${fmt(snap.need.silage)} L</b><br>Einstreu: <b>${fmt(snap.need.beddingBales)} Ballen</b><br>Milchproduktion: <b>${fmt(snap.totals.milk)} L</b><br>Milch ausgeliefert: <b>${fmt(snap.totals.milkDelivered)} L</b></p><h3>Lager-Endbestand</h3>${Object.entries(snap.stock).map(([k,v])=>`<p>${v.name}: <b>${fmt(Math.max(0,v.closing))} ${v.unit}</b> · Fehlmenge ${fmt(v.shortage)} ${v.unit}</p>`).join("")}</div>`:"";
 }
@@ -2319,7 +2368,7 @@ function showTab(tab){
    }
  }
 }
-// V68: separate, simple monthly buffalo-milk entry. Stored per operating year.
+// Monthly buffalo-milk entry for the factory menu. Stored per operating year and included in backups/cloud sync.
 const MILK_KEY="ls25buffalo_monthly_factory_milk_v68";
 let milkEntries={};
 try{milkEntries=JSON.parse(localStorage.getItem(MILK_KEY)||"{}")||{};}catch(e){milkEntries={};}
@@ -2397,7 +2446,7 @@ document.getElementById("resetBtn").addEventListener("click",()=>{
  if(!confirm("Wirklich alle gespeicherten Hofdaten, Ernten und Lagerbestände zurücksetzen?"))return;
  ids.forEach(id=>document.getElementById(id).value=defaults[id]);
  data=months.map(()=>({tmr:0,bedding:0,milkDelivered:0}));yearData={};yearHerdData={};yearSettings={};yearInitialized={};harvestData={};farmFields=[];nextFieldId=1;harvestPlans={};yearClosures={};operatingExpenses=[];nextExpenseId=1;
- stockSettings={strawTmr:0,beddingBales:0,hay:0,silage:0,minStrawTmr:0,minBeddingBales:0,minHay:0,minSilage:0};milkTankOpening=0;document.getElementById("milkTankOpening").value=0;
+ stockSettings={strawTmr:0,beddingBales:0,hay:0,silage:0,minStrawTmr:0,minBeddingBales:0,minHay:0,minSilage:0};milkTankOpening=0;document.getElementById("milkTankOpening").value=0;milkEntries={};localStorage.setItem(MILK_KEY,JSON.stringify(milkEntries));
  loadStockInputs();
  nextAnimalId=1;nextHarvestId=1;
  yearData[String(Math.max(1,Math.floor(val("year"))))]=data;
@@ -2466,16 +2515,26 @@ document.getElementById("csvBtn").addEventListener("click",()=>{
  const {rows}=calc(),head=["Monat","Tiere","Durchschnittsalter Monate","TMR L","Einstreu L","Stroh TMR L","Heu L","Maissilage L","Futterwagen rechnerisch","Milchproduktion L","Milch ausgeliefert L","Fabrikbedarf L","Fabrikdeckung","Einstreuballen"];
  const lines=[head,...rows.map(r=>[r.month,r.animals,r.age,r.tmr,r.bedding,r.straw,r.hay,r.silage,r.wag,r.milk,r.milkDelivered,r.factory,(r.coverage*100).toFixed(1)+"%",r.bales])];
  const csv="\\uFEFF"+lines.map(row=>row.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(";")).join("\\r\\n");
- const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download="LS25_Betriebsjahr_"+activeYear()+"_Monatsplanung.csv";a.click();URL.revokeObjectURL(a.href);
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download="LS25_Betriebsjahr_"+activeYear()+"_Monatsplanung.csv";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 });
+function updateBackupReminder(){
+ const msg=document.getElementById("backupMsg"),rem=document.getElementById("backupReminder");
+ if(!msg||!rem)return;
+ const raw=localStorage.getItem("ls25buffalo_last_backup_at");
+ if(!raw){msg.textContent="Noch kein Backup auf diesem Gerät erstellt.";rem.textContent="Empfehlung: vor größeren Änderungen und mindestens wöchentlich ein JSON-Backup herunterladen.";return;}
+ const date=new Date(raw),days=Math.floor((Date.now()-date.getTime())/86400000);
+ if(!Number.isFinite(date.getTime())){msg.textContent="Backup-Zeitpunkt konnte nicht gelesen werden.";rem.textContent="Bitte ein neues Backup erstellen.";return;}
+ msg.textContent="Letztes Backup: "+date.toLocaleString("de-DE");
+ rem.textContent=days>=7?"⚠ Das Backup ist "+days+" Tage alt. Bitte jetzt ein neues Backup erstellen.":"Backup aktuell · vor Gerätewechsel trotzdem erneut sichern.";
+}
 function exportBackup(){
  const backup={format:"LS2025-Hofverwaltung-Backup",version:20,createdAt:new Date().toISOString(),
- settings:{...getSettings(),year:Number(activeYear())},months:data,yearData,yearHerdData,yearSettings,yearInitialized,harvestData,farmFields,nextFieldId,harvestPlans,yearClosures,operatingExpenses,nextExpenseId,operatingIncomes,nextIncomeId,stockSettings,herd,nextAnimalId,nextHarvestId,milkTankOpening};
+ settings:{...getSettings(),year:Number(activeYear())},months:data,yearData,yearHerdData,yearSettings,yearInitialized,harvestData,farmFields,nextFieldId,harvestPlans,yearClosures,operatingExpenses,nextExpenseId,operatingIncomes,nextIncomeId,stockSettings,herd,nextAnimalId,nextHarvestId,milkTankOpening,milkEntries};
  const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
  const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;
  a.download="LS_2025_Hofverwaltung_Backup_"+new Date().toISOString().slice(0,10)+".json";a.click();
  setTimeout(()=>URL.revokeObjectURL(url),1000);
- document.getElementById("backupMsg").textContent="Backup wurde erstellt. Bewahre die JSON-Datei sicher auf.";
+ localStorage.setItem("ls25buffalo_last_backup_at",new Date().toISOString());updateBackupReminder();document.getElementById("backupMsg").textContent="Backup wurde erstellt. Bewahre die JSON-Datei sicher auf.";
 }
 function importBackup(file){
  const reader=new FileReader();
@@ -2488,11 +2547,12 @@ function importBackup(file){
    yearData=b.yearData;yearHerdData=b.yearHerdData||{};yearSettings=b.yearSettings||{};yearInitialized=b.yearInitialized||{};if(!Object.keys(yearHerdData).length){Object.keys(yearData).forEach(k=>yearHerdData[k]=b.herd.map(a=>({...a})));}harvestData=b.harvestData;farmFields=Array.isArray(b.farmFields)?b.farmFields:[];nextFieldId=Number(b.nextFieldId)||Math.max(0,...farmFields.map(f=>Number(f.id)||0))+1;harvestPlans=b.harvestPlans||{};yearClosures=b.yearClosures||{};operatingExpenses=Array.isArray(b.operatingExpenses)?b.operatingExpenses:[];nextExpenseId=Number(b.nextExpenseId)||Math.max(0,...operatingExpenses.map(x=>Number(x.id)||0))+1;operatingIncomes=Array.isArray(b.operatingIncomes)?b.operatingIncomes:[];nextIncomeId=Number(b.nextIncomeId)||Math.max(0,...operatingIncomes.map(x=>Number(x.id)||0))+1;stockSettings={...stockSettings,...(b.stockSettings||{})};
    herd=b.herd;nextAnimalId=Number(b.nextAnimalId)||Math.max(0,...herd.map(a=>Number(a.id)||0))+1;
    nextHarvestId=Number(b.nextHarvestId)||1;milkTankOpening=Math.max(0,Number(b.milkTankOpening)||0);
+   if(b.milkEntries&&typeof b.milkEntries==="object"&&!Array.isArray(b.milkEntries)){milkEntries=b.milkEntries;localStorage.setItem(MILK_KEY,JSON.stringify(milkEntries));}
    document.getElementById("milkTankOpening").value=milkTankOpening;
    const current=String(Math.max(1,Math.floor(val("year"))));
    data=Array.isArray(yearData[current])?yearData[current]:(Array.isArray(b.months)?b.months:months.map(()=>({tmr:0,bedding:0,milkDelivered:0})));
-   yearData[current]=data;if(!yearHerdData[current])yearHerdData[current]=herd.map(a=>({...a}));if(!yearSettings[current])yearSettings[current]={...defaults,...getSettings(),year:Number(current)};if(!yearInitialized[current])yearInitialized[current]=true;applyYearSettings(current);refreshYearOptions(current);document.getElementById("year").dataset.previous=current;herd=(yearHerdData[current]||[]).map(a=>({...a}));loadStockInputs();renderHerd();renderMonths();renderAll();persist();
-   document.getElementById("backupMsg").textContent="Backup erfolgreich importiert.";
+   yearData[current]=data;if(!yearHerdData[current])yearHerdData[current]=herd.map(a=>({...a}));if(!yearSettings[current])yearSettings[current]={...defaults,...getSettings(),year:Number(current)};if(!yearInitialized[current])yearInitialized[current]=true;applyYearSettings(current);refreshYearOptions(current);document.getElementById("year").dataset.previous=current;herd=(yearHerdData[current]||[]).map(a=>({...a}));loadStockInputs();renderHerd();renderMonths();renderAll();persist();refreshMilkYears();renderMilkMonth();updateBackupReminder();
+   localStorage.setItem("ls25buffalo_last_backup_at",new Date().toISOString());updateBackupReminder();document.getElementById("backupMsg").textContent="Backup erfolgreich importiert.";
   }catch(err){document.getElementById("backupMsg").textContent="Import fehlgeschlagen: "+err.message;}
  };
  reader.readAsText(file);
@@ -2501,7 +2561,7 @@ document.getElementById("backupExportBtn").addEventListener("click",exportBackup
 document.getElementById("backupImportBtn").addEventListener("click",()=>document.getElementById("backupFile").click());
 document.getElementById("backupFile").addEventListener("change",e=>{if(e.target.files&&e.target.files[0])importBackup(e.target.files[0]);e.target.value="";});
 document.getElementById("mixerLoads").value=1;
-load();document.getElementById("expenseDate").value=new Date().toISOString().slice(0,10);document.getElementById("incomeDate").value=new Date().toISOString().slice(0,10);renderExpenses();refreshYearOptions(activeYear());syncYearSelectors();document.getElementById("year").dataset.previous=activeYear();syncYearSelectors();data=data.map(d=>({...{tmr:0,bedding:0,milkDelivered:0},...d}));Object.keys(yearData).forEach(k=>{if(Array.isArray(yearData[k]))yearData[k]=yearData[k].map(d=>({...{tmr:0,bedding:0,milkDelivered:0},...d}));});Object.keys(yearHerdData).forEach(k=>{if(Array.isArray(yearHerdData[k]))yearHerdData[k]=yearHerdData[k].map(a=>({...a}));});yearHerdData[activeYear()]=herd.map(a=>({...a}));yearSettings[activeYear()]={...getSettings()};loadStockInputs();Object.values(harvestData).flatMap(v=>Array.isArray(v)?v:[]).forEach(h=>nextHarvestId=Math.max(nextHarvestId,(Number(h.id)||0)+1));renderHerd();renderMonths();renderAll(false);renderHarvest();renderFields();renderStock();renderYearClose();applyYearLock();setSaveIndicator("Lokale Daten geladen · Änderungen werden gespeichert");
+load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(lastSaved)setSaveIndicator("Zuletzt lokal gespeichert · "+new Date(lastSaved).toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"}));updateBackupReminder();document.getElementById("expenseDate").value=new Date().toISOString().slice(0,10);document.getElementById("incomeDate").value=new Date().toISOString().slice(0,10);renderExpenses();refreshYearOptions(activeYear());document.getElementById("year").dataset.previous=activeYear();syncYearSelectors();data=data.map(d=>({...{tmr:0,bedding:0,milkDelivered:0},...d}));Object.keys(yearData).forEach(k=>{if(Array.isArray(yearData[k]))yearData[k]=yearData[k].map(d=>({...{tmr:0,bedding:0,milkDelivered:0},...d}));});Object.keys(yearHerdData).forEach(k=>{if(Array.isArray(yearHerdData[k]))yearHerdData[k]=yearHerdData[k].map(a=>({...a}));});yearHerdData[activeYear()]=herd.map(a=>({...a}));yearSettings[activeYear()]={...getSettings()};loadStockInputs();Object.values(harvestData).flatMap(v=>Array.isArray(v)?v:[]).forEach(h=>nextHarvestId=Math.max(nextHarvestId,(Number(h.id)||0)+1));renderHerd();renderMonths();renderAll(false);renderHarvest();renderFields();renderStock();renderYearClose();applyYearLock();setSaveIndicator("Lokale Daten geladen · Änderungen werden gespeichert");
 </script>
 
 <style>
