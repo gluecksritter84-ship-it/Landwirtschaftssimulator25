@@ -793,6 +793,16 @@ main {
   #dashboard .management-kpis { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
 }
 
+/* V68 responsive scaling audit: keep every panel/card/form within viewport. */
+*{box-sizing:border-box}
+main,.panel,.grid,.card,.fields,.field{min-width:0;max-width:100%}
+.card{overflow-wrap:anywhere}
+input,select,textarea,button{max-width:100%;min-width:0}
+.table-wrap{width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.table-wrap table{width:max-content;min-width:100%}
+.chartbox,svg{max-width:100%}
+@media(max-width:760px){main{width:calc(100% - 16px)!important;margin:0 auto!important}.grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.card{grid-column:1/-1!important;padding:12px!important}.fields{grid-template-columns:repeat(2,minmax(0,1fr))!important}.fields .field{min-width:0}.milk-kpis{grid-template-columns:repeat(3,minmax(0,1fr))!important}.milk-kpis .card{grid-column:auto!important;padding:10px!important}.kpi{font-size:clamp(18px,5vw,28px)}}
+@media(max-width:460px){.fields{grid-template-columns:1fr!important}.milk-kpis{grid-template-columns:1fr!important}.milk-kpis .card{grid-column:1/-1!important}nav[aria-label="Hauptnavigation"]{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;overflow:visible!important}nav button{white-space:normal!important;min-width:0!important;font-size:12px!important;padding:9px 6px!important}}
 </style>
 <style id="v58-panel-visibility-fix">
 /* V58: Das Dashboard darf nicht dauerhaft sichtbar bleiben.
@@ -856,7 +866,7 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 </head>
 <body>
 <a class="skip-link" href="#dashboard">Zum Inhalt springen</a>
-<header><div class="header-inner"><div><h1>🐄 LS 2025 Hofverwaltung mit Tieren · V66</h1><p>Tierbestand · Tieralter · Futter & TMR · Ernte & Lager · Jahresauswertung</p></div><div class="save-indicator" id="saveIndicator" role="status" aria-live="polite"><span class="save-dot"></span><span id="saveIndicatorText">Lokale Datenspeicherung</span></div></div></header>
+<header><div class="header-inner"><div><h1>🐄 LS 2025 Hofverwaltung mit Tieren · V68</h1><p>Tierbestand · Tieralter · Futter & TMR · Ernte & Lager · Jahresauswertung</p></div><div class="save-indicator" id="saveIndicator" role="status" aria-live="polite"><span class="save-dot"></span><span id="saveIndicatorText">Lokale Datenspeicherung</span></div></div></header>
 <main>
 <div class="muted" style="font-size:12px;margin:0 2px 9px">HOFVERWALTUNG <span style="color:var(--yellow)">/</span> Betriebsjahr <b id="activeYearLabel">1</b></div>
 <nav aria-label="Hauptnavigation">
@@ -867,9 +877,17 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 <button type="button" data-tab="harvest" aria-controls="harvest">🌾 Ernte & Lager</button>
 <button type="button" data-tab="expenses" aria-controls="expenses">💶 Finanzen</button>
 <button type="button" data-tab="analysis" aria-controls="analysis">📊 Auswertung</button>
+<button type="button" data-tab="milk" aria-controls="milk">🥛 Milch</button>
 </nav>
 <div id="appError" class="note" hidden role="alert" style="margin-bottom:14px"></div>
 
+<section id="milk" class="panel">
+<div class="card span-12"><h2>🥛 Milchbestand & Molkerei</h2><p class="muted">Trage hier jeden Monat die tatsächlich verfügbare Büffelmilch ein. Die normale Molkerei verarbeitet je Zyklus 10 Liter Milch zu 20 Litern abgefüllter Büffelmilch. Bei 144 Zyklen pro Monat werden 1.440 Liter Büffelmilch benötigt.</p>
+<div class="grid milk-kpis"><div class="card"><div class="kpi-label">Bedarf pro Monat</div><div class="kpi">1.440 L</div></div><div class="card"><div class="kpi-label">Abfüllmenge pro Monat</div><div class="kpi">2.880 L</div></div><div class="card"><div class="kpi-label">Produktionszyklen</div><div class="kpi">144</div></div></div>
+<div class="fields"><div class="field"><label for="milkYear">Betriebsjahr</label><select id="milkYear"></select></div><div class="field"><label for="milkMonth">Monat</label><select id="milkMonth"></select></div><div class="field"><label for="milkAvailable">Verfügbare Büffelmilch (Liter)</label><input id="milkAvailable" type="number" min="0" step="1" placeholder="z. B. 1500"></div></div>
+<div class="actions"><button type="button" class="btn primary" id="saveMilkMonth">Milchbestand speichern</button></div><div id="milkResult" class="note" aria-live="polite">Monat auswählen und Milchbestand eintragen.</div>
+<div class="table-wrap"><table><thead><tr><th>Monat</th><th>Verfügbar</th><th>Bedarf</th><th>Überschuss / Fehlmenge</th><th>Status</th></tr></thead><tbody id="milkMonthRows"></tbody></table></div>
+</div></section>
 <section id="dashboard" class="panel active">
 <div class="note storage-note"><b>Deine Daten werden lokal auf diesem Gerät gespeichert.</b> Wenn du Google Drive unter „Datensicherung“ verbunden hast, werden Änderungen bei bestehender Internetverbindung zusätzlich mit deinem privaten Google-App-Datenordner synchronisiert. Ohne Google-Verbindung bleiben die Daten nur auf diesem Gerät; regelmäßige JSON-Backups werden weiterhin empfohlen.</div>
 <div class="dashboard-shortcuts" aria-label="Schnellzugriff">
@@ -1935,7 +1953,7 @@ function animalSaleAssessment(animal,year){
 function renderAnalysis(){
  const sel=document.getElementById("analysisYear"); if(!sel)return;
  const current=Math.max(1,Math.floor(val("year")));
- const years=[...new Set([...Object.keys(yearInitialized).filter(k=>yearInitialized[k]).map(Number).filter(n=>n>0),...Object.keys(yearClosures).map(Number).filter(n=>n>0),current])].sort((a,b)=>a-b);
+ const years=[...new Set([...Object.keys(yearInitialized).filter(k=>yearInitialized[k]).map(Number).filter(n=>n>0),...Object.keys(yearClosures).map(Number).filter(n=>n>0),current])].filter(y=>y!==24&&y!==2025&&y!==2026).sort((a,b)=>a-b);
  const previous=sel.value||"all";
  sel.innerHTML='<option value="all">Gesamt – alle Betriebsjahre</option>'+years.map(y=>`<option value="${y}">Betriebsjahr ${y}</option>`).join("");
  sel.value=previous==="all"||years.includes(Number(previous))?previous:String(current);
@@ -2097,6 +2115,7 @@ function reopenBusinessYear(){
  const y=activeYear();if(!yearClosures[y])return;
  if(!confirm("Jahresabschluss für Betriebsjahr "+y+" wirklich aufheben? Das Jahr wird wieder bearbeitbar."))return;
  delete yearClosures[y];persist();renderYearClose();applyYearLock();
+ refreshMilkYears();renderMilkMonth();
 }
 function createNextBusinessYear(){
  const current=Number(activeYear());
@@ -2275,7 +2294,7 @@ function printExpenseReport(){
 
 document.querySelectorAll("[data-jump-tab]").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.jumpTab)));
 function showTab(tab){
- const valid=["dashboard","master","months","production","harvest","expenses","analysis"].includes(tab)?tab:"dashboard";
+ const valid=["dashboard","master","months","production","harvest","expenses","analysis","milk"].includes(tab)?tab:"dashboard";
  document.querySelectorAll("nav button[data-tab]").forEach(b=>{
    const active=b.dataset.tab===valid;
    b.classList.toggle("active",active);
@@ -2300,6 +2319,17 @@ function showTab(tab){
    }
  }
 }
+// V68: separate, simple monthly buffalo-milk entry. Stored per operating year.
+const MILK_KEY="ls25buffalo_monthly_factory_milk_v68";
+let milkEntries={};
+try{milkEntries=JSON.parse(localStorage.getItem(MILK_KEY)||"{}")||{};}catch(e){milkEntries={};}
+const milkMonthNames=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+function refreshMilkYears(){const el=document.getElementById("milkYear");if(!el)return;const y=activeYear();const ys=knownYears(y).filter(n=>n!==24&&n!==2025);el.innerHTML=ys.map(n=>`<option value="${n}">Betriebsjahr ${n}</option>`).join("");el.value=ys.includes(Number(y))?y:String(ys[ys.length-1]||1);}
+function renderMilkMonth(){const y=document.getElementById("milkYear").value||activeYear(),m=Number(document.getElementById("milkMonth").value||1),v=Number(milkEntries[y]?.[m-1])||0,need=1440,diff=v-need;document.getElementById("milkAvailable").value=milkEntries[y]?.[m-1]??"";document.getElementById("milkResult").innerHTML=`<b>${v>=need?"Molkerei ausreichend versorgt":"Milch fehlt"}</b><br>Verfügbar: ${fmt(v)} L · Monatsbedarf: ${fmt(need)} L · ${diff>=0?"Überschuss":"Fehlmenge"}: ${fmt(Math.abs(diff))} L<br>Abfüllmenge bei vollem Bedarf: 2.880 L`;document.getElementById("milkMonthRows").innerHTML=milkMonthNames.map((name,i)=>{const q=Number(milkEntries[y]?.[i])||0,d=q-need;return `<tr><td>${name}</td><td>${fmt(q)} L</td><td>1.440 L</td><td>${d>=0?"+":"−"}${fmt(Math.abs(d))} L</td><td>${q>=need?"Ausreichend":"Fehlmenge"}</td></tr>`;}).join("");}
+document.getElementById("milkMonth").innerHTML=milkMonthNames.map((m,i)=>`<option value="${i+1}">${m}</option>`).join("");
+document.getElementById("milkYear").addEventListener("change",renderMilkMonth);document.getElementById("milkMonth").addEventListener("change",renderMilkMonth);
+document.getElementById("saveMilkMonth").addEventListener("click",()=>{const y=document.getElementById("milkYear").value,m=Number(document.getElementById("milkMonth").value),v=Math.max(0,Number(document.getElementById("milkAvailable").value)||0);milkEntries[y]=milkEntries[y]||{};milkEntries[y][m-1]=v;localStorage.setItem(MILK_KEY,JSON.stringify(milkEntries));renderMilkMonth();document.getElementById("milkResult").innerHTML+="<br><b>Gespeichert.</b>";});
+refreshMilkYears();renderMilkMonth();
 const mainNav=document.querySelector("nav[aria-label='Hauptnavigation']");
 if(mainNav){
  mainNav.querySelectorAll("button[data-tab]").forEach(button=>{
