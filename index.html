@@ -912,7 +912,6 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 <button type="button" data-tab="months" aria-controls="months">📅 Monatsplan</button>
 <button type="button" data-tab="production" aria-controls="production">📦 Futterbedarf</button>
 <button type="button" data-tab="harvest" aria-controls="harvest">🌾 Ernte & Lager</button>
-<button type="button" data-tab="expenses" aria-controls="expenses">💶 Finanzen</button>
 <button type="button" data-tab="analysis" aria-controls="analysis">📊 Auswertung</button>
 <button type="button" data-tab="milk" aria-controls="milk">🥛 Milch</button>
 </nav>
@@ -1671,6 +1670,13 @@ function saveHarvestForYear(){
    if(!item)return;
    item.label=row.querySelector('[data-k="label"]').value.trim();
    item.fieldId=row.querySelector('[data-k="fieldId"]').value;
+   const selectedField=farmFields.find(f=>String(f.id)===String(item.fieldId));
+   if(selectedField){
+     item.cropAtHarvest=selectedField.crop;
+     item.productAtHarvest=cropProduct[selectedField.crop]||selectedField.crop;
+     item.fieldNameAtHarvest=selectedField.name;
+     item.areaAtHarvest=Number(selectedField.area)||0;
+   }
    item.strawTmr=Math.max(0,Number(row.querySelector('[data-k="strawTmr"]').value)||0);
    item.beddingBales=Math.max(0,Number(row.querySelector('[data-k="beddingBales"]').value)||0);
    item.hay=Math.max(0,Number(row.querySelector('[data-k="hay"]').value)||0);
@@ -1697,7 +1703,8 @@ function calculateFieldYields(year=activeYear()){
  (Array.isArray(harvestData[String(year)])?harvestData[String(year)]:[]).forEach(h=>{
   const f=farmFields.find(f=>String(f.id)===String(h.fieldId||""));
   if(!f||!(Number(f.area)>0))return;
-  const k=cropProduct[f.crop]||f.crop;
+  const historicalCrop=h.cropAtHarvest||f.crop;
+  const k=h.productAtHarvest||(cropProduct[historicalCrop]||historicalCrop);
   if(!results[k])return;
   const liters=k==="straw"?(Number(h.strawTmr)||0)+(Number(h.beddingBales)||0)*Math.max(1,Number(getSettingsForYear(year).bale)||7000):Number(h[k])||0;
   if(liters<=0)return;
@@ -1869,16 +1876,17 @@ function renderFieldHarvestAnalysis(entries){
  entries.forEach(year=>{
   getHarvestForYear(year).forEach((h,index)=>{
    const f=farmFields.find(x=>String(x.id)===String(h.fieldId||""));
-   const crop=f?f.crop:"";
-   const product=f?(cropProduct[crop]||crop):"";
-   const area=f?Math.max(0,Number(f.area)||0):0;
+   const crop=h.cropAtHarvest|| (f?f.crop:"");
+   const product=h.productAtHarvest||(crop?(cropProduct[crop]||crop):"");
+   const area=Number.isFinite(Number(h.areaAtHarvest))&&h.areaAtHarvest!==undefined?Math.max(0,Number(h.areaAtHarvest)):(f?Math.max(0,Number(f.area)||0):0);
+   const fieldName=h.fieldNameAtHarvest||(f?f.name:"Nicht zugeordnet");
    const baleSize=Math.max(1,Number(getSettingsForYear(year).bale)||7000);
    const strawTmr=Number(h.strawTmr)||0, beddingBales=Number(h.beddingBales)||0;
    const straw=strawTmr+beddingBales*baleSize;
    const hay=Number(h.hay)||0, silage=Number(h.silage)||0;
    let quantity=product==="straw"?straw:product==="hay"?hay:product==="silage"?silage:straw+hay+silage;
    const unit="L";
-   rows.push({year,label:h.label||("Ernte "+(index+1)),fieldId:f?String(f.id):"",field:f?.name||"Nicht zugeordnet",crop:cropLabels[crop]||crop||"–",area,quantity,perHa:area>0?quantity/area:null,straw,strawTmr,beddingBales,hay,silage,product});
+   rows.push({year,label:h.label||("Ernte "+(index+1)),fieldId:f?String(f.id):"",field:fieldName,crop:cropLabels[crop]||crop||"–",area,quantity,perHa:area>0?quantity/area:null,straw,strawTmr,beddingBales,hay,silage,product});
   });
  });
  const fieldTotals=new Map();
@@ -1890,6 +1898,16 @@ function renderFieldHarvestAnalysis(entries){
  });
  const annual=[...fieldTotals.values()];
  const annualHtml=annual.length?`<h3>Jahressummen je Feld</h3><div class="table-wrap"><table><thead><tr><th>Betriebsjahr</th><th>Feld</th><th>Anbau</th><th>Fläche</th><th>Erntemenge</th><th>Ø Ertrag/ha</th><th>Ernten</th></tr></thead><tbody>${annual.map(t=>`<tr><td>${t.year}</td><td><b>${escapeHtml(t.field)}</b></td><td>${escapeHtml(t.crop)}</td><td>${fmt(t.area)} ha</td><td>${fmt(t.quantity)} L</td><td>${t.area>0?fmt(t.quantity/t.area)+" L/ha":"–"}</td><td>${t.records}</td></tr>`).join("")}</tbody></table></div>`:"<p class='muted'>Noch keine Ernten mit Feldzuordnung vorhanden.</p>";
+ const productTotals=new Map();
+ rows.forEach(r=>{
+  if(!r.product)return;
+  const key=r.product;
+  if(!productTotals.has(key))productTotals.set(key,{product:key,quantity:0,records:0,areaByField:new Map()});
+  const p=productTotals.get(key);p.quantity+=r.quantity;p.records++;
+  if(r.fieldId&&r.area>0)p.areaByField.set(r.year+"|"+r.fieldId,r.area);
+ });
+ const productLabels={straw:"Stroh",hay:"Heu",silage:"Maissilage"};
+ const productHtml=productTotals.size?`<h3 style="margin-top:18px">Erntesummen nach Produkt – ausgewählte Betriebsjahre</h3><div class="table-wrap"><table><thead><tr><th>Produkt</th><th>Gesamternte</th><th>Erntevorgänge</th><th>Feld-Jahre</th></tr></thead><tbody>${[...productTotals.values()].map(p=>`<tr><td><b>${productLabels[p.product]||escapeHtml(p.product)}</b></td><td>${fmt(p.quantity)} L</td><td>${p.records}</td><td>${p.areaByField.size}</td></tr>`).join("")}</tbody></table></div>`:"";
  const detailHtml=rows.length?`<h3 style="margin-top:18px">Einzelne Erntevorgänge</h3><div class="table-wrap"><table><thead><tr><th>Betriebsjahr</th><th>Ernte / Datum</th><th>Feld</th><th>Anbau</th><th>Fläche</th><th>Stroh TMR</th><th>Einstreu</th><th>Heu</th><th>Maissilage</th><th>Ertrag des Feldes</th><th>Ertrag/ha</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r.year}</td><td>${escapeHtml(r.label)}</td><td>${escapeHtml(r.field)}</td><td>${escapeHtml(r.crop)}</td><td>${r.area?fmt(r.area)+" ha":"–"}</td><td>${fmt(r.strawTmr)} L</td><td>${fmt(r.beddingBales)} Ballen</td><td>${fmt(r.hay)} L</td><td>${fmt(r.silage)} L</td><td>${fmt(r.quantity)} L</td><td>${r.perHa===null?"–":fmt(r.perHa)+" L/ha"}</td></tr>`).join("")}</tbody></table></div>`:"";
 
  const historyByField=new Map();
@@ -1902,7 +1920,7 @@ function renderFieldHarvestAnalysis(entries){
  const historyHtml=historyByField.size?`<h3 style="margin-top:18px">Feldhistorie – Anbau und Ertrag im Jahresvergleich</h3>${[...historyByField.values()].map(f=>`<div class="note" style="margin:10px 0"><b>${escapeHtml(f.field)}</b> · ${fmt(f.area)} ha<div class="table-wrap"><table><thead><tr><th>Betriebsjahr</th><th>Anbau</th><th>Erntemenge</th><th>Ø Ertrag/ha</th></tr></thead><tbody>${f.years.sort((a,b)=>a.year-b.year).map(y=>`<tr><td>${y.year}</td><td>${escapeHtml(y.crop)}</td><td>${fmt(y.quantity)} L</td><td>${f.area>0?fmt(y.quantity/f.area)+" L/ha":"–"}</td></tr>`).join("")}</tbody></table></div></div>`).join("")}`:"";
 
  const unassigned=rows.filter(r=>!r.fieldId);
- host.innerHTML=annualHtml+historyHtml+detailHtml+(unassigned.length?`<p class="note" style="margin-top:12px">${unassigned.length} Ernte(n) sind keinem Feld zugeordnet und können deshalb keinem Hektarertrag zugerechnet werden.</p>`:"")+
+ host.innerHTML=annualHtml+productHtml+historyHtml+detailHtml+(unassigned.length?`<p class="note" style="margin-top:12px">${unassigned.length} Ernte(n) sind keinem Feld zugeordnet und können deshalb keinem Hektarertrag zugerechnet werden.</p>`:"")+
  `<p class="muted">Die Ertragsmenge wird je nach Feld-Anbau zugeordnet: Weizen/Gerste = Stroh (TMR-Stroh plus Einstreuballen in Liter umgerechnet), Gras = Heu, Mais = Maissilage. Der Hektarertrag eines einzelnen Erntevorgangs teilt die Erntemenge durch die gesamte Feldfläche. Bei mehreren Ernten desselben Feldes wird die Jahresmenge addiert und die Feldfläche nur einmal angesetzt.</p>`;
 }
 
@@ -2413,7 +2431,7 @@ function printExpenseReport(){
 
 document.querySelectorAll("[data-jump-tab]").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.jumpTab)));
 function showTab(tab){
- const valid=["dashboard","master","months","production","harvest","expenses","analysis","milk"].includes(tab)?tab:"dashboard";
+ const valid=["dashboard","master","months","production","harvest","analysis","milk"].includes(tab)?tab:"dashboard";
  document.querySelectorAll("nav button[data-tab]").forEach(b=>{
    const active=b.dataset.tab===valid;
    b.classList.toggle("active",active);
@@ -2757,6 +2775,40 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
   #months tbody td:first-child {
     grid-column: 1 / -1 !important;
   }
+}
+
+/* V69: echte Desktop-Seitenleiste und iPhone-Bottom-Navigation */
+@media (min-width: 901px) {
+  nav[aria-label="Hauptnavigation"] {
+    position: fixed !important; left: 18px !important; top: 150px !important;
+    bottom: 20px !important; width: 218px !important; height: auto !important;
+    display: flex !important; flex-direction: column !important; flex-wrap: nowrap !important;
+    align-items: stretch !important; justify-content: flex-start !important;
+    overflow-y: auto !important; padding: 12px !important;
+    background: var(--surface, #17251b) !important; border: 1px solid var(--line) !important;
+    border-radius: 16px !important; box-shadow: 0 8px 28px rgba(0,0,0,.16) !important;
+  }
+  nav[aria-label="Hauptnavigation"] button[data-tab] { flex: 0 0 auto !important; width:100% !important; text-align:left !important; }
+  main { margin-left: 250px !important; }
+}
+@media (max-width: 900px) {
+  nav[aria-label="Hauptnavigation"] {
+    position: fixed !important; z-index: 1000 !important; left: 0 !important; right: 0 !important;
+    top: auto !important; bottom: 0 !important; width: 100% !important;
+    display: grid !important; grid-template-columns: repeat(7,minmax(0,1fr)) !important;
+    gap: 3px !important; padding: 6px max(6px,env(safe-area-inset-left)) calc(6px + env(safe-area-inset-bottom)) !important;
+    background: var(--surface, #17251b) !important; border-top: 1px solid var(--line) !important;
+    box-shadow: 0 -5px 20px rgba(0,0,0,.18) !important;
+  }
+  nav[aria-label="Hauptnavigation"] button[data-tab] {
+    min-width:0 !important; min-height:48px !important; padding:5px 2px !important;
+    font-size:10px !important; line-height:1.15 !important; white-space:normal !important;
+  }
+  main { padding-bottom: calc(90px + env(safe-area-inset-bottom)) !important; }
+}
+@media (max-width: 430px) {
+  nav[aria-label="Hauptnavigation"] { grid-template-columns: repeat(4,minmax(0,1fr)) !important; }
+  nav[aria-label="Hauptnavigation"] button[data-tab] { min-height:44px !important; font-size:10px !important; }
 }
 </style>
 
