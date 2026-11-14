@@ -1439,6 +1439,17 @@ function load(){try{
  Object.keys(yearData).forEach(k=>{if(!yearSettings[k])yearSettings[k]={...getSettings(),year:Number(k)};});
  if(!yearSettings[currentYear])yearSettings[currentYear]=getSettings();
  }catch(e){herd=[]}}
+// Einheitliche Altersberechnung zum Ende eines Betriebsjahres.
+// Das Alter bei Zugang wird um die Monate seit dem Zugangsmonat bis Dezember erhöht.
+function animalAgeInYear(animal, month=12){
+ if(!animal) return 0;
+ const startMonth=Math.max(1,Math.min(12,Number(animal.startMonth)||1));
+ const targetMonth=Math.max(1,Math.min(12,Number(month)||12));
+ const entryAge=Math.max(0,Number(animal.age)||0);
+ if(targetMonth<startMonth) return 0;
+ return entryAge+(targetMonth-startMonth);
+}
+
 function animalMilkPerMonth(animal, ageMonths, settings){
  if(!animal || (animal.type||"buffalo")==="pig" || !animal.milkStarted) return 0;
  const startAge=Math.max(0,Number(animal.expectedMilkAge??animal.firstMilkAge??((animal.type||"buffalo")==="cow"?12:24))||0);
@@ -2689,7 +2700,7 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
 <style>
 #pwaInstallButton{position:fixed;right:14px;bottom:14px;z-index:9999;border:1px solid #d7b94c;background:#263b2c;color:#fff;padding:12px 16px;border-radius:14px;font-weight:800;box-shadow:0 5px 20px #0005;display:none;cursor:pointer}#pwaInstallButton:focus{outline:3px solid #e6c85a;outline-offset:3px}
 /* Tierverwaltung: reduzierte Bestandstabelle ohne Preis- und Verkaufsbewertung */
-#animalRows th:nth-child(n+4):not(:last-child),#animalRows td:nth-child(n+4):not(:last-child){display:none!important}
+#animalRows th:nth-child(4),#animalRows th:nth-child(5),#animalRows td:nth-child(4),#animalRows td:nth-child(5){display:none!important}
 #animalRows td:nth-child(3){font-weight:700}
 #bulkExpectedMilkAge,#bulkMilkStarted{display:none!important}
 
@@ -2697,12 +2708,12 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
 </style>
 <style id="stall-assignment-visibility-fix">
 /* Die ältere reduzierte Tieransicht blendet Zusatzspalten aus. Die neue Stallspalte bleibt sichtbar. */
-#animalRows thead th.stall-head:nth-child(8) { display:table-cell !important; }
-#animalRows tr.animal-data-row > td.animal-stall-cell:nth-child(8) { display:table-cell !important; }
+#animalRows thead th.stall-head:nth-child(6) { display:table-cell !important; }
+#animalRows tr.animal-data-row > td.animal-stall-cell:nth-child(6) { display:table-cell !important; }
 #animalRows .animal-data-row td.animal-stall-cell::before { content:"Stall"; display:block; color:var(--muted); font-size:10px; font-weight:800; line-height:1.25; text-transform:uppercase; letter-spacing:.3px; }
 @media (max-width:850px) {
- #animalRows tr.animal-data-row > td.animal-stall-cell:nth-child(8) { display:flex !important; flex-direction:column; align-items:stretch; justify-content:center; min-width:0; padding:5px 7px; border:1px solid #405044; border-radius:8px; background:#1b261e; white-space:normal; }
- #animalRows thead th.stall-head:nth-child(8) { display:none !important; }
+ #animalRows tr.animal-data-row > td.animal-stall-cell:nth-child(6) { display:flex !important; flex-direction:column; align-items:stretch; justify-content:center; min-width:0; padding:5px 7px; border:1px solid #405044; border-radius:8px; background:#1b261e; white-space:normal; }
+ #animalRows thead th.stall-head:nth-child(6) { display:none !important; }
 }
 @media (max-width:640px) {
  #master .card:has(#animalRows) .table-wrap { width:100%; min-width:0; overflow:visible; }
@@ -2899,7 +2910,8 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
    if(!confirm(`Stall „${st.name}“ entfernen? ${count} zugeordnete Tiere erhalten danach „Kein Stall“. Bereits erfasste Verbrauchswerte bleiben in den historischen Summen erhalten.`))return;
    getHerd().forEach(a=>{if(a.stallId===st.id)a.stallId='';});
    // Verbrauchshistorie in den verbleibenden Stall übertragen, damit die Gesamtsummen erhalten bleiben.
-   Object.keys(consumption).forEach(yy=>{
+   const target=stalls.find(x=>x.id!==st.id);
+   if(target) Object.keys(consumption).forEach(yy=>{
     const rec=consumption[yy]||{};
     for(let mi=0;mi<12;mi++){
      const oldKey=`${mi}:${st.id}`,newKey=`${mi}:${target.id}`;
@@ -2977,3 +2989,10 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
 
 </body>
 </html>
+<style id="stall-assignment-final-layout-fix">
+/* Stallspalte ist nach dem Einfügen vor Aktion immer Spalte 6. */
+#animalRows tr.animal-data-row > td.animal-stall-cell:nth-child(6){display:table-cell!important;visibility:visible!important;opacity:1!important;}
+#animalRows tr.animal-data-row > td.animal-stall-cell:nth-child(6) select{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;width:100%!important;min-width:110px!important;position:relative;z-index:3;}
+#animalRows thead th.stall-head:nth-child(6){display:table-cell!important;visibility:visible!important;}
+@media(max-width:650px){#animalRows tr.animal-data-row > td.animal-stall-cell:nth-child(6){display:flex!important;flex-direction:column;min-width:0;}#animalRows tr.animal-data-row > td.animal-stall-cell:nth-child(6) select{min-width:0!important;}}
+</style>
