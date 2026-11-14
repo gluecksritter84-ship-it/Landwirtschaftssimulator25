@@ -499,9 +499,9 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
  #animalRows .animal-data-row td:nth-child(3)::before{content:"Alter bei Zugang · Monate"}
  #animalRows .animal-data-row td:nth-child(4)::before{content:"Milchproduktion gestartet"}
  #animalRows .animal-data-row td:nth-child(5)::before{content:"Milchstart · Alter in Monaten"}
- #animalRows .animal-data-row td:nth-child(9){grid-column:1/-1}
- #animalRows .animal-data-row td:nth-child(8)::before{content:"Stall"}
- #animalRows .animal-data-row td:nth-child(9)::before{content:"Aktion"}
+ #animalRows .animal-data-row td:nth-child(7){grid-column:1/-1}
+ #animalRows .animal-data-row td:nth-child(6)::before{content:"Stall"}
+ #animalRows .animal-data-row td:nth-child(7)::before{content:"Aktion"}
  #animalRows .animal-data-row td:nth-child(4){flex-direction:row;align-items:center;justify-content:space-between}
  #animalRows .animal-data-row td:nth-child(4) input{width:24px;height:24px}
  #animalRows .animal-assessment-row{display:block;margin-top:-5px}
@@ -1503,6 +1503,8 @@ function renderHerd(){
  tb.querySelectorAll('button[data-remove]').forEach(b=>b.addEventListener('click',()=>{
    herd=herd.filter(a=>String(a.id)!==b.dataset.remove);renderHerd();renderAll();
  }));
+ // Stall-Dropdowns nach jedem Neuaufbau der Tierliste direkt ergänzen.
+ window.ls25StallSystem?.renderAssignments?.();
 }
 function renderMonths(){
  const tb=document.getElementById("monthRows");tb.innerHTML="";
@@ -2930,7 +2932,7 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
   if(nameInput)nameInput.value='';if(capacityInput)capacityInput.value='';save();renderAllStallViews();
  });
  const originalRenderHerd=window.renderHerd;
- if(typeof originalRenderHerd==='function')window.renderHerd=function(...args){const result=originalRenderHerd.apply(this,args);renderAnimalAssignments();renderStallList();renderStallAnalysis();return result;};
+ // renderHerd ruft renderAnimalAssignments direkt auf; Stallübersichten werden separat aktualisiert.
  const originalRenderMonths=window.renderMonths;
  if(typeof originalRenderMonths==='function')window.renderMonths=function(...args){const result=originalRenderMonths.apply(this,args);renderMonthTotals();renderConsumptionInputs();return result;};
  document.getElementById('year')?.addEventListener('change',()=>setTimeout(()=>{renderAllStallViews();renderMonthTotals();},0));
@@ -2947,7 +2949,7 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
  if(typeof renderHerd==='function')renderHerd();
  if(typeof renderMonths==='function')renderMonths();
  renderAllStallViews();
- window.ls25StallSystem={render:renderAllStallViews,applyCombined,version:2};
+ window.ls25StallSystem={render:renderAllStallViews,renderAssignments:renderAnimalAssignments,applyCombined,version:2};
 })();
 </script>
 
