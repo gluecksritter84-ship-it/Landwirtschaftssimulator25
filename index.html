@@ -443,17 +443,6 @@ img,svg,canvas{max-width:100%}
 #master input[type=number]{max-width:100%}
 @media(max-width:650px){#master .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}}
 
-/* V38 – Tierverkaufsanalyse */
-#animalSaleAnalysis{min-width:0}
-#animalSaleAnalysis .table-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
-#animalSaleAnalysis table{min-width:980px}
-#animalSaleAnalysis small{white-space:normal;display:inline-block;min-width:180px;max-width:300px}
-
-/* V39 – Tierarten- und Preiskurvenauswahl */
-#animalRows select,#animalRows input{min-width:110px;max-width:190px}
-#animalSaleAnalysis .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-#animalSaleAnalysis table{min-width:1050px}
-
 .animal-assessment-row td{padding:7px 10px 12px!important;background:rgba(70,110,65,.07);border-top:0!important}.animal-assessment{display:grid;grid-template-columns:2fr 1fr 1.3fr 1.5fr 1.2fr;gap:10px;align-items:start;border-left:4px solid var(--accent);padding:10px 12px;border-radius:8px;font-size:13px}.animal-assessment small{color:var(--muted);line-height:1.4}.animal-assessment b{font-size:12px}@media(max-width:760px){.animal-assessment{grid-template-columns:1fr 1fr}.animal-assessment>div:first-child{grid-column:1/-1}}
 
 
@@ -510,10 +499,9 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
  #animalRows .animal-data-row td:nth-child(3)::before{content:"Alter bei Zugang · Monate"}
  #animalRows .animal-data-row td:nth-child(4)::before{content:"Milchproduktion gestartet"}
  #animalRows .animal-data-row td:nth-child(5)::before{content:"Milchstart · Alter in Monaten"}
- #animalRows .animal-data-row td:nth-child(6)::before{content:"Anschaffungspreis · €"}
- #animalRows .animal-data-row td:nth-child(7)::before{content:"Verkaufspreis · € (optional)"}
- #animalRows .animal-data-row td:nth-child(8){grid-column:1/-1}
- #animalRows .animal-data-row td:nth-child(8)::before{content:"Aktion"}
+ #animalRows .animal-data-row td:nth-child(9){grid-column:1/-1}
+ #animalRows .animal-data-row td:nth-child(8)::before{content:"Stall"}
+ #animalRows .animal-data-row td:nth-child(9)::before{content:"Aktion"}
  #animalRows .animal-data-row td:nth-child(4){flex-direction:row;align-items:center;justify-content:space-between}
  #animalRows .animal-data-row td:nth-child(4) input{width:24px;height:24px}
  #animalRows .animal-assessment-row{display:block;margin-top:-5px}
@@ -527,7 +515,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 }
 @media(max-width:390px){
  #animalRows .animal-data-row{grid-template-columns:1fr}
- #animalRows .animal-data-row td:nth-child(8){grid-column:auto}
+ #animalRows .animal-data-row td:nth-child(9){grid-column:auto}
  .animal-assessment{grid-template-columns:1fr}
  .animal-assessment>div:first-child{grid-column:auto}
  .dashboard-shortcuts .btn{flex-basis:100%}
@@ -614,8 +602,7 @@ label[for="quickMilkDelivered"]{display:none!important}
 #dashboard .card:has(>#dashboardMilkTank){display:none!important}
 #dashboard .card:has(>#annualSummary) #annualSummary{display:none!important}
 #dashboard .card:has(>#annualSummary){display:none!important}
-#master .card:has(>#milkStartAnalysis),
-#master .card:has(>#animalSaleAnalysis){display:none!important}
+#master .card:has(>#milkStartAnalysis){display:none!important}
 #master input[data-k="milkStarted"],
 #master th:nth-child(4),#master td:nth-child(4),
 #master th:nth-child(5),#master td:nth-child(5){display:none!important}
@@ -651,12 +638,9 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 #dashboard .card:has(>#annualSummary),
 #dashboard .card:has(>#factorySummary),
 #master .card:has(>#milkStartAnalysis),
-#master .card:has(>#animalSaleAnalysis),
 #master input[data-k="milkStarted"],
 #master th:nth-child(4), #master td:nth-child(4),
 #master th:nth-child(5), #master td:nth-child(5),
-#master th:nth-child(6), #master td:nth-child(6),
-#master th:nth-child(7), #master td:nth-child(7),
 #master .animal-assessment-row,
 #months th:nth-child(10), #months td:nth-child(10),
 #months th:nth-child(11), #months td:nth-child(11),
@@ -665,7 +649,6 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 #milkForecast, #analysisSummary .card:nth-child(4),
 .analysis-text-card:has(>#analysisMilk),
 .analysis-text-card:has(>#milkStartAnalysis),
-.analysis-text-card:has(>#animalSaleAnalysis),
 .analysis-text-card:has(>#milkForecast),
 #analysisCompare th:nth-child(n+15), #analysisCompare td:nth-child(n+15),
 #analysisBars .compare-legend span:last-child,
@@ -820,7 +803,6 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 #dashboard .card:has(#dashIncome),
 #dashboard .card:has(#dashExpenses),
 #dashboard .card:has(#dashBalance),
-#dashboard .card:has(#dashSaleCount),
 #dashboard .card:has(#dashFinanceBreakdown),
 #dashboard .card:has(#kMilk),
 #dashboard .card:has(#milkChart),
@@ -831,16 +813,11 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 #master .field:has(#milkPerAnimal),
 #master .field:has(#factory),
 #master .card:has(#milkFactorStart),
-#master .card:has(#milkPricePerLiter),
-#master .card:has(#buffaloAge0),
 #master .field:has(#bulkExpectedMilkAge),
-#master .field:has(#bulkPurchasePrice),
-#master .field:has(#bulkSalePrice),
 #master .field:has(#bulkMilkStarted) { display:none !important; }
 /* Einzeltiere: nur Tierart, Zugang, Alter und Aktion anzeigen */
-#master .card:has(#animalRows) table thead tr > :nth-child(n+4):nth-child(-n+7),
-#master #animalRows tr.animal-data-row > :nth-child(n+4):nth-child(-n+7),
-#master #animalRows tr.animal-assessment-row { display:none !important; }
+#master .card:has(#animalRows) table thead tr > :nth-child(4),
+#master #animalRows tr.animal-data-row > :nth-child(4) { display:none !important; }
 #master .card:has(#animalRows) table { min-width:560px !important; }
 /* Monatsplan: Milch- und Fabrikspalten ausblenden */
 #months #monthRows tr > :nth-child(10),
@@ -854,7 +831,6 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 /* Jahresauswertung: reine Milch- und Verkaufsanalysen */
 #analysis .card:has(#analysisMilk),
 #analysis .card:has(#milkStartAnalysis),
-#analysis .card:has(#animalSaleAnalysis),
 #analysis .card:has(#milkForecast) { display:none !important; }
 /* Klarere Tabellenbreite auf Mobilgeräten */
 #months .table-wrap table { min-width:760px; }
@@ -900,16 +876,74 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 }
 </style>
 <!-- V71: Wartungsupdate – Milchdaten in JSON-Backups, CSV-Download und Startablauf abgesichert. -->
-<!-- Finale Wartung: Backup-Erinnerung, Speicherstatus, Lagerwarnung und Jahresabschluss-Check. -->\n</head>
+<!-- Finale Wartung: Backup-Erinnerung, Speicherstatus, Lagerwarnung und Jahresabschluss-Check. -->\n
+<style id="ls25-mobile-month-input-fix">
+/* Korrektur für den Futterplan auf Smartphones:
+   verhindert die feste 760px-Tabellenbreite und hält TMR/Einstreu sichtbar. */
+@media (max-width: 650px) {
+  #months .table-wrap,
+  #months .table-wrap table {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: visible !important;
+  }
+  #months .table-wrap table {
+    display: block !important;
+    table-layout: fixed !important;
+  }
+  #months #monthRows {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  #months #monthRows > tr {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  #months #monthRows > tr > td {
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+  #months #monthRows > tr > td:nth-child(4),
+  #months #monthRows > tr > td:nth-child(5) {
+    display: flex !important;
+    grid-column: 1 / -1 !important;
+    visibility: visible !important;
+  }
+  #months #monthRows > tr > td:nth-child(4) input,
+  #months #monthRows > tr > td:nth-child(5) input {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    min-height: 48px !important;
+    box-sizing: border-box !important;
+    font-size: 16px !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+  }
+}
+</style>
+
+</head>
 <body>
 <a class="skip-link" href="#dashboard">Zum Inhalt springen</a>
-<header><div class="header-inner"><div><h1>🐄 LS 2025 Hofverwaltung mit Tieren · V68</h1><p>Tierbestand · Tieralter · Futter & TMR · Ernte & Lager · Jahresauswertung</p></div><div class="save-indicator" id="saveIndicator" role="status" aria-live="polite"><span class="save-dot"></span><span id="saveIndicatorText">Lokale Datenspeicherung</span></div></div></header>
+<header><div class="header-inner"><div><h1>🐄 LS 2025 Hofverwaltung mit Tieren</h1><p>Tierbestand · Tieralter · Futter & TMR · Ernte & Lager · Jahresauswertung</p></div><div class="save-indicator" id="saveIndicator" role="status" aria-live="polite"><span class="save-dot"></span><span id="saveIndicatorText">Lokale Datenspeicherung</span></div></div></header>
 <main>
 <div class="muted" style="font-size:12px;margin:0 2px 9px">HOFVERWALTUNG <span style="color:var(--yellow)">/</span> Betriebsjahr <b id="activeYearLabel">1</b></div>
 <nav aria-label="Hauptnavigation">
 <button type="button" class="active" data-tab="dashboard" aria-controls="dashboard" aria-pressed="true">🏡 Hofübersicht</button>
 <button type="button" data-tab="master" aria-controls="master">🐃 Tierbestand</button>
 <button type="button" data-tab="months" aria-controls="months">📅 Monatsplan</button>
+<button type="button" data-tab="stalls" aria-controls="stalls">🏠 Ställe</button>
 <button type="button" data-tab="production" aria-controls="production">📦 Futterbedarf</button>
 <button type="button" data-tab="harvest" aria-controls="harvest">🌾 Ernte & Lager</button>
 <button type="button" data-tab="analysis" aria-controls="analysis">📊 Auswertung</button>
@@ -951,7 +985,6 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
  <div class="card span-3"><div class="kpi-label">Einnahmen erfasst</div><div class="kpi" id="dashIncome">–</div></div>
  <div class="card span-3"><div class="kpi-label">Ausgaben erfasst</div><div class="kpi" id="dashExpenses">–</div></div>
  <div class="card span-3"><div class="kpi-label">Betriebssaldo</div><div class="kpi" id="dashBalance">–</div></div>
- <div class="card span-3"><div class="kpi-label">Tiere mit Verkaufsprüfung</div><div class="kpi" id="dashSaleCount">–</div></div>
 </div>
 <div class="grid">
  <div class="card span-6"><h3>📦 Futtervorschau – nächste 12 Monate</h3><div id="dashFeedPlan"></div><button type="button" class="btn" data-jump-tab="production">Futterbedarf öffnen</button></div>
@@ -1008,25 +1041,7 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 <div class="field"><label for="milkFactorPeak">Monat 13–36</label><input id="milkFactorPeak" type="number" min="0" step="0.05" value="1"></div>
 <div class="field"><label for="milkFactorLate">Ab Monat 37</label><input id="milkFactorLate" type="number" min="0" step="0.05" value="0.85"></div>
 </div></div>
-<div class="card span-12"><h2>💶 Grundlagen für die Tierverkaufsanalyse</h2>
-<p class="muted">Trage deine tatsächlichen Preise ein. Die App nutzt diese Werte zusammen mit dem altersabhängigen Futter- und Einstreubedarf, um den monatlichen Deckungsbeitrag je Tier zu schätzen.</p>
-<div class="fields">
-<div class="field"><label for="milkPricePerLiter">Milcherlös je Liter (€)</label><input id="milkPricePerLiter" type="number" min="0" step="0.01" value="0"></div>
-<div class="field"><label for="tmrCostPerLiter">TMR-Kosten je Liter Mischung (€)</label><input id="tmrCostPerLiter" type="number" min="0" step="0.001" value="0"></div>
-<div class="field"><label for="beddingCostPerLiter">Einstreukosten je Liter (€)</label><input id="beddingCostPerLiter" type="number" min="0" step="0.001" value="0"></div>
-</div><p class="muted">0 deaktiviert die jeweilige Position. Für eine konkrete Einschätzung müssen Milcherlös, TMR-/Einstreukosten, Referenzverbräuche und ein Verkaufspreis je Tier eingetragen sein. Arbeit, Tierarzt und Maschinenkosten sind nicht enthalten.</p></div>
 <div class="note span-12" style="margin:12px 0"><b>LS25-Grundspiel – wichtige Abgrenzung:</b> Kühe und Wasserbüffel nutzen Gras, Heu, Silage oder TMR; TMR verbessert die Milchleistung. Stroh ist für die Mistproduktion relevant. Schweine benötigen mehrere Futtergruppen (Grundfutter/Getreide, Protein und Hackfrüchte) und keine Rinder-TMR. Deshalb fließen Schweine in dieser Version nicht in die TMR-/Stroh-Einstreu-Bedarfsrechnung oder in eine automatische Gewinn-/Verkaufsempfehlung ein. Exakte Preise, Rationsmengen und Produktionsraten können je nach Patch, Karte und Schwierigkeitsgrad abweichen.</div>
-<div class="card span-12"><h2>⚙️ Tierpreise selbst festlegen</h2><p class="muted">Passe die Alters- und Preisstufen für jede Tierart an deine Spielversion, deinen Schwierigkeitsgrad oder deine Beobachtungen an. Die App berechnet die Werte zwischen den Stufen automatisch linear. Die Werte gelten je Betriebsjahr und werden mit deinen übrigen Einstellungen gespeichert. Ein individueller Verkaufspreis am Tier überschreibt weiterhin diese Kurve.</p>
-<div class="table-wrap"><table><thead><tr><th>Tierart</th><th>Stufe</th><th>Alter (Monate)</th><th>Preis (€)</th></tr></thead><tbody>
-<tr><td rowspan="3">Wasserbüffel</td><td>Stufe 1</td><td><input id="buffaloAge0" type="number" min="0" step="1" value="0"></td><td><input id="buffaloPrice0" type="number" min="0" step="0.01" value="200"></td></tr>
-<tr><td>Stufe 2</td><td><input id="buffaloAge1" type="number" min="0" step="1" value="6"></td><td><input id="buffaloPrice1" type="number" min="0" step="0.01" value="525"></td></tr>
-<tr><td>Stufe 3</td><td><input id="buffaloAge2" type="number" min="0" step="1" value="18"></td><td><input id="buffaloPrice2" type="number" min="0" step="0.01" value="1175"></td></tr>
-<tr><td rowspan="3">Kuh</td><td>Stufe 1</td><td><input id="cowAge0" type="number" min="0" step="1" value="0"></td><td><input id="cowPrice0" type="number" min="0" step="0.01" value="200"></td></tr>
-<tr><td>Stufe 2</td><td><input id="cowAge1" type="number" min="0" step="1" value="6"></td><td><input id="cowPrice1" type="number" min="0" step="0.01" value="525"></td></tr>
-<tr><td>Stufe 3</td><td><input id="cowAge2" type="number" min="0" step="1" value="18"></td><td><input id="cowPrice2" type="number" min="0" step="0.01" value="1175"></td></tr>
-<tr><td rowspan="2">Schwein</td><td>Stufe 1</td><td><input id="pigAge0" type="number" min="0" step="1" value="0"></td><td><input id="pigPrice0" type="number" min="0" step="0.01" value="200"></td></tr>
-<tr><td>Stufe 2</td><td><input id="pigAge1" type="number" min="0" step="1" value="3"></td><td><input id="pigPrice1" type="number" min="0" step="0.01" value="525"></td></tr>
-</tbody></table></div><p class="muted">Hinweis: Das sind Startwerte aus den bisherigen Vanilla-Richtwerten dieser Hofverwaltung, keine vollständige offizielle Wiederverkaufskurve. Du kannst Alter und Preis jeder Stufe frei ändern.</p></div>
 <div class="card span-12"><h2>Tiergruppe auf einmal hinzufügen</h2>
 <p class="muted">Hier kannst du mehrere gleichartige Tiere mit denselben Startdaten gleichzeitig anlegen. Jedes Tier wird trotzdem als eigener Datensatz gespeichert und kann danach einzeln bearbeitet oder entfernt werden.</p>
 <div class="fields">
@@ -1035,16 +1050,14 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
  <div class="field"><label for="bulkAnimalMonth">Zugang ab Monat</label><select id="bulkAnimalMonth"><option value="1">Januar</option><option value="2">Februar</option><option value="3">März</option><option value="4">April</option><option value="5">Mai</option><option value="6">Juni</option><option value="7">Juli</option><option value="8">August</option><option value="9">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Dezember</option></select></div>
  <div class="field"><label for="bulkAnimalAge">Alter bei Zugang (Monate)</label><input id="bulkAnimalAge" type="number" min="0" step="1" value="0"></div>
  <div class="field"><label for="bulkExpectedMilkAge">Erwarteter Milchstart (Monate)</label><input id="bulkExpectedMilkAge" type="number" min="0" step="1" value="24"></div>
- <div class="field"><label for="bulkPurchasePrice">Anschaffungspreis je Tier (€)</label><input id="bulkPurchasePrice" type="number" min="0" step="0.01" placeholder="Optional"></div>
- <div class="field"><label for="bulkSalePrice">Verkaufspreis je Tier (€)</label><input id="bulkSalePrice" type="number" min="0" step="0.01" placeholder="Automatisch"></div>
  <div class="field" style="display:flex;align-items:center;gap:10px"><input id="bulkMilkStarted" type="checkbox" style="width:22px;height:22px"><label for="bulkMilkStarted">Milchproduktion hat bereits begonnen</label></div>
 </div>
+<div class="field" style="max-width:360px;margin:10px 0"><label for="bulkAnimalStall">Stall für die gesamte Tiergruppe</label><select id="bulkAnimalStall"><option value="">Hauptstall / erster Stall</option></select></div>
 <div class="actions"><button class="btn primary" id="bulkAddAnimalsBtn" type="button">＋ Tiergruppe hinzufügen</button></div>
 <small id="bulkAnimalMsg" aria-live="polite">Beispiel: 25 Wasserbüffel auswählen und gemeinsam hinzufügen.</small>
 </div>
 
-<div class="card span-12" id="stallManager"><h2>🏠 Ställe verwalten</h2><p class="muted">Lege beliebig viele Ställe an. Ordne anschließend jedes Tier in der Tierliste einem Stall zu. Die Zuordnung gilt für das ausgewählte Betriebsjahr.</p><div class="fields"><div class="field"><label for="stallNewName">Neuer Stall – Name</label><input id="stallNewName" placeholder="z. B. Wasserbüffelstall Nord"></div><div class="field"><label for="stallNewCapacity">Kapazität (optional)</label><input id="stallNewCapacity" type="number" min="1" step="1" placeholder="Anzahl Plätze"></div></div><div class="actions"><button class="btn primary" type="button" id="stallAdd">＋ Stall anlegen</button></div><div id="stallList"></div></div>
-<div class="card span-12"><h2>Einzelne Tiere verwalten</h2><p class="muted">Trage das Alter zu Beginn des Zugangsmonats ein. Bei übernommenen Tieren ist der Zugangsmonat Januar. Bei nachgekauften Tieren wählst du den Monat, ab dem sie zum Bestand zählen. Die Hofverwaltung zeigt das laufende Tieralter an. Du kannst jedes Tier einzeln bearbeiten oder entfernen.</p><div class="table-wrap"><table style="min-width:980px"><thead><tr><th>Tierart</th><th>Zugang ab Monat</th><th>Alter bei Zugang (Monate)</th><th>Milchproduktion gestartet?</th><th>Erwarteter Milchstart (Alter in Monaten)</th><th>Anschaffungspreis (€)</th><th>Verkaufspreis (€)</th><th>Aktion</th></tr></thead><tbody id="animalRows"></tbody></table></div><div class="actions"><button class="btn primary" id="addAnimalBtn" type="button">＋ Tier hinzufügen</button></div></div>
+<div class="card span-12"><h2>Einzelne Tiere verwalten</h2><p class="muted">Trage das Alter zu Beginn des Zugangsmonats ein. Bei übernommenen Tieren ist der Zugangsmonat Januar. Bei nachgekauften Tieren wählst du den Monat, ab dem sie zum Bestand zählen. Die Hofverwaltung zeigt das laufende Tieralter an. Du kannst jedes Tier einzeln bearbeiten oder entfernen.</p><div class="table-wrap"><table style="min-width:700px"><thead><tr><th>Tierart</th><th>Zugang ab Monat</th><th>Alter bei Zugang (Monate)</th><th>Milchproduktion gestartet?</th><th>Erwarteter Milchstart (Alter in Monaten)</th><th>Aktion</th></tr></thead><tbody id="animalRows"></tbody></table></div><div class="field" style="max-width:360px;margin:10px 0"><label for="singleAnimalStall">Stall für das neue Tier</label><select id="singleAnimalStall"><option value="">Hauptstall / erster Stall</option></select></div><div class="actions"><button class="btn primary" id="addAnimalBtn" type="button">＋ Tier hinzufügen</button></div></div>
 <div class="card span-6"><h2>Futter & Erträge</h2><div class="fields">
 <div class="field"><label>Futterwagen-Kapazität (Liter)</label><input id="capacity" type="number" value="45000" min="1"></div>
 <div class="field" style="grid-column:1/-1"><label>Ertrag je Hektar – automatisch aus deinen Ernten</label><div id="autoYields" class="note">Noch keine zugeordneten Ernten vorhanden.</div></div>
@@ -1064,8 +1077,13 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 <div class="year-page-toolbar"><label for="monthsYear">Betriebsjahr dieser Seite</label><select id="monthsYear" class="year-page-select"></select><span class="year-page-hint">Verbrauchsdaten und Tierbedarf werden getrennt je Betriebsjahr gespeichert.</span></div>
 <p class="muted">Trage TMR-Verbrauch und Einstreu in Litern ein. Tierbestand und Alter werden aus den Einzeltieren übernommen; jedes Tier wird monatlich automatisch ein Monat älter.</p>
 
-<div class="card span-12" id="stallMonthly"><h2>🏠 Monatsplanung nach Stall</h2><p class="muted">Tierzahlen werden aus den zugeordneten Tieren und deren Zugangsmonat automatisch ermittelt. Du kannst die Monatszahl je Stall manuell überschreiben. Der Gesamt-Monatsplan bleibt unverändert; Stallzahlen werden nicht zusätzlich dazugezählt.</p><div class="table-wrap"><table><thead><tr><th>Monat</th><th>Stall</th><th>Tiere automatisch</th><th>Tiere geplant (optional)</th></tr></thead><tbody id="stallMonthRows"></tbody></table></div><div id="stallMonthStatus" class="note"></div></div>
 <div class="table-wrap"><table><thead><tr><th>Monat</th><th>Tiere</th><th>Alter Ø (Mon.)</th><th>TMR-Verbrauch (L)</th><th>Einstreu (L)</th><th>Stroh TMR (L)</th><th>Heu TMR (L)</th><th>Maissilage (L)</th><th>Wagen (45.000 L)</th><th class="legacy-milk-col">Milchproduktion (L)</th><th class="legacy-milk-col">Milch ausgeliefert (L)</th><th class="legacy-milk-col">Fabrikdeckung</th><th>Einstreu-Ballen</th></tr></thead><tbody id="monthRows"></tbody></table></div>
+<div class="card span-12" id="stallConsumptionMonth">
+<h2>🏠 Verbrauch je Stall erfassen</h2>
+<p class="muted">Trage hier den monatlichen TMR- und Einstreuverbrauch für jeden Stall ein. Die Summe wird automatisch zum Gesamtverbrauch im Monatsplan addiert. Der Gesamtverbrauch bleibt dort weiterhin manuell bearbeitbar; beim Bearbeiten wird nur der manuelle Zusatzanteil angepasst, damit nichts doppelt gezählt wird.</p>
+<div class="table-wrap"><table><thead><tr><th>Monat</th><th>Stall</th><th>TMR (L)</th><th>Einstreu (L)</th></tr></thead><tbody id="stallConsumptionRows"></tbody></table></div>
+<div id="stallConsumptionStatus" class="note" aria-live="polite"></div>
+</div>
 <div class="actions"><button class="btn primary" id="updateBtn">Berechnungen aktualisieren</button><button class="btn" id="csvBtn">Monatsdaten als CSV exportieren</button></div>
 </div>
 </section>
@@ -1232,7 +1250,7 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 <div class="card analysis-text-card"><h2>Futterbedarf & Ernte</h2><div id="analysisNeed"></div></div>
 <div class="card analysis-text-card"><h2>Milchproduktion & Lieferung</h2><div id="analysisMilk"></div></div>
 <div class="card analysis-text-card"><h2>🐃 Milchstart je Tier</h2><div id="milkStartAnalysis"></div></div>
-<div class="card analysis-text-card"><h2>💡 Wann ist ein Tierverkauf sinnvoll?</h2><div id="animalSaleAnalysis"></div></div>
+
 <div class="card analysis-text-card"><h2>🔮 Milch- und Produktionsprognose</h2><div id="milkForecast"></div></div>
 <div class="card analysis-text-card stock-report"><h2>Bestandsbericht</h2><div id="analysisStockText"></div></div>
 <div class="card analysis-text-card stock-report"><h2>🌾 Felderträge nach Betriebsjahr und Ernte</h2><div id="analysisFieldHarvest"></div></div>
@@ -1244,12 +1262,29 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 </div>
 </div>
 </section>
-<footer>LS 2025 Hofverwaltung mit Tieren · V64 – Tieralter, Futterplanung, Ernte & Lager. Die App ist eine manuelle Begleitverwaltung für Tieralter, Futter, Ernte und Lager und liest keine Daten direkt aus der Xbox. Daten werden lokal im jeweiligen Browser gespeichert; für iPhone-/MacBook-Wechsel bitte die Backup-Funktion verwenden. Tier- und Produktionsannahmen können je nach LS25-Version, Karte und Mods abweichen.</footer>
+<footer>LS 2025 Hofverwaltung mit Tieren – Tieralter, Futterplanung, Ernte & Lager. Die App ist eine manuelle Begleitverwaltung für Tieralter, Futter, Ernte und Lager und liest keine Daten direkt aus der Xbox. Daten werden lokal im jeweiligen Browser gespeichert; für iPhone-/MacBook-Wechsel bitte die Backup-Funktion verwenden. Tier- und Produktionsannahmen können je nach LS25-Version, Karte und Mods abweichen.</footer>
+
+<section id="stalls" class="panel">
+<div class="grid">
+ <div class="card span-12" id="stallManager">
+  <h2>🏠 Stallverwaltung</h2>
+  <p class="muted">Lege hier deine Ställe an, verwalte Namen und Kapazitäten und ordne die Tiere im Menü „Tierbestand“ den Ställen zu.</p>
+  <div class="fields">
+   <div class="field"><label for="stallNewName">Neuer Stall – Name</label><input id="stallNewName" placeholder="z. B. Wasserbüffelstall Nord"></div>
+   <div class="field"><label for="stallNewCapacity">Kapazität (optional)</label><input id="stallNewCapacity" type="number" min="1" step="1" placeholder="Anzahl Plätze"></div>
+  </div>
+  <div class="actions"><button class="btn primary" type="button" id="stallAdd">＋ Stall anlegen</button></div>
+  <div id="stallList"></div>
+ </div>
+ <div class="card span-12"><h2>📊 Auswertung je Stall</h2><p class="muted">Hier siehst du Tierbestand, Kapazität und den aufsummierten Futter- und Einstreuverbrauch des ausgewählten Betriebsjahres.</p><div id="stallMenuAnalysis"></div></div>
+</div>
+</section>
+
 </main>
 <script>
 const months=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
-const ids=["milkPerAnimal","factory","capacity","bale","adultTmrMonthly","adultBeddingMonthly","tmrFactorCalf","tmrFactorYoung","tmrFactorSubadult","tmrFactorAdult","beddingFactorCalf","beddingFactorYoung","beddingFactorSubadult","beddingFactorAdult","milkPricePerLiter","tmrCostPerLiter","beddingCostPerLiter","milkFactorStart","milkFactorRise","milkFactorPeak","milkFactorLate",... ["buffalo","cow"].flatMap(t=>[0,1,2].flatMap(i=>[`${t}Age${i}`,`${t}Price${i}`])),"pigAge0","pigPrice0","pigAge1","pigPrice1"];
-const defaults={year:1,milkPerAnimal:500,factory:8000,capacity:45000,strawYield:12000,hayYield:18000,silageYield:45000,bale:7000,adultTmrMonthly:0,adultBeddingMonthly:0,tmrFactorCalf:0.35,tmrFactorYoung:0.55,tmrFactorSubadult:0.75,tmrFactorAdult:1,beddingFactorCalf:0.4,beddingFactorYoung:0.65,beddingFactorSubadult:0.85,beddingFactorAdult:1,milkPricePerLiter:0,tmrCostPerLiter:0,beddingCostPerLiter:0,milkFactorStart:0.65,milkFactorRise:0.85,milkFactorPeak:1,milkFactorLate:0.85,buffaloAge0:0,buffaloPrice0:200,buffaloAge1:6,buffaloPrice1:525,buffaloAge2:18,buffaloPrice2:1175,cowAge0:0,cowPrice0:200,cowAge1:6,cowPrice1:525,cowAge2:18,cowPrice2:1175,pigAge0:0,pigPrice0:200,pigAge1:3,pigPrice1:525};
+const ids=["milkPerAnimal","factory","capacity","bale","adultTmrMonthly","adultBeddingMonthly","tmrFactorCalf","tmrFactorYoung","tmrFactorSubadult","tmrFactorAdult","beddingFactorCalf","beddingFactorYoung","beddingFactorSubadult","beddingFactorAdult","milkFactorStart","milkFactorRise","milkFactorPeak","milkFactorLate"];
+const defaults={year:1,milkPerAnimal:500,factory:8000,capacity:45000,strawYield:12000,hayYield:18000,silageYield:45000,bale:7000,adultTmrMonthly:0,adultBeddingMonthly:0,tmrFactorCalf:0.35,tmrFactorYoung:0.55,tmrFactorSubadult:0.75,tmrFactorAdult:1,beddingFactorCalf:0.4,beddingFactorYoung:0.65,beddingFactorSubadult:0.85,beddingFactorAdult:1,milkFactorStart:0.65,milkFactorRise:0.85,milkFactorPeak:1,milkFactorLate:0.85};
 let herd=[]; let nextAnimalId=1;
 let data=months.map((m,i)=>({tmr:0,bedding:0,milkDelivered:0}));
 let yearData={};
@@ -1421,58 +1456,20 @@ function calc(sourceData=data, sourceHerd=herd, sourceSettings=getSettings()){
 }
 
 const animalTypeLabels={buffalo:"Wasserbüffel",cow:"Kuh",pig:"Schwein"};
-// V41: Vanilla-LS25-Händlerpreise nach Alter (ohne Realistic Livestock RM).
-// Quellen: Simmods FS25 Tier-Guides. Die Tabellen veröffentlichen Kaufpreise,
-// keine vollständige Vanilla-Wiederverkaufskurve. Deshalb sind dies transparente
-// Alters-Richtwerte und keine garantierten individuellen Verkaufserlöse.
-function animalPriceCurve(type,settings=getSettingsForYear()){
- const t=type||"buffalo",count=t==="pig"?2:3;
- return Array.from({length:count},(_,i)=>[Math.max(0,Number(settings[`${t}Age${i}`])||0),Math.max(0,Number(settings[`${t}Price${i}`])||0)]).sort((a,b)=>a[0]-b[0]);
+let commitRefreshTimer=null;
+function scheduleCommitRefresh(options={}){
+ if(commitRefreshTimer!==null)clearTimeout(commitRefreshTimer);
+ commitRefreshTimer=setTimeout(()=>{
+  commitRefreshTimer=null;
+  try{if(options.herd)renderHerd();renderAll();}
+  catch(err){console.error("Aktualisierung nach Eingabe fehlgeschlagen:",err);}
+ },120);
 }
-function interpolateAnimalPrice(curve,age){
- if(!curve?.length)return 0;const a=Math.max(0,Number(age)||0);
- if(a<=curve[0][0])return curve[0][1];
- for(let i=1;i<curve.length;i++){const [x1,y1]=curve[i-1],[x2,y2]=curve[i];if(a<=x2)return y1+(y2-y1)*(a-x1)/(x2-x1);}
- return curve[curve.length-1][1];
-}
-function animalAgeInYear(animal,month=12){
- const start=Math.max(1,Math.min(12,Number(animal.startMonth)||1));
- return Math.max(0,Number(animal.age)||0)+Math.max(0,month-start);
-}
-function animalAutoSellPrice(animal,age=animalAgeInYear(animal),settings=getSettingsForYear()){
- const base=interpolateAnimalPrice(animalPriceCurve(animal.type||"buffalo",settings),age);
- // Laut Vanilla-Kuh-Guide bringen Milchkühe beim Verkauf ungefähr die Hälfte.
- // Für Wasserbüffel wird derselbe konservative Milchkuh-Abschlag als Näherung genutzt.
- return (animal.type||"buffalo")!=="pig"&&animal.milkStarted?base*0.5:base;
-}
-function animalSellPrice(animal,age=animalAgeInYear(animal),settings=getSettingsForYear()){
- const override=Number(animal.salePrice);
- return Number.isFinite(override)&&override>0?override:animalAutoSellPrice(animal,age,settings);
-}
-function milkCurveFactor(monthsLactating,settings){
- const m=Math.max(1,Number(monthsLactating)||1);
- if(m<=6)return Math.max(0,Number(settings.milkFactorStart)||0);
- if(m<=12)return Math.max(0,Number(settings.milkFactorRise)||0);
- if(m<=36)return Math.max(0,Number(settings.milkFactorPeak)||0);
- return Math.max(0,Number(settings.milkFactorLate)||0);
-}
-function animalMilkPerMonth(animal,age,settings){
- if((animal.type||"buffalo")==="pig")return 0;
- const startAge=Math.max(0,Number(animal.expectedMilkAge??animal.firstMilkAge??((animal.type||"buffalo")==="cow"?12:24))||0);
- if(!animal.milkStarted||age<startAge)return 0;
- // Vanilla-Referenz: Holstein/Brown-Swiss bis ca. 150 L/Monat mit TMR.
- // Für Wasserbüffel ist in den öffentlich zugänglichen Vanilla-Quellen keine
- // belastbare altersabhängige Literkurve veröffentlicht; deshalb bleibt deren
- // Basiswert bewusst als eigener, editierbarer Hofwert erhalten.
- const base=(animal.type||"buffalo")==="cow"?150:Math.max(0,Number(settings.milkPerAnimal)||0);
- return base*milkCurveFactor(age-startAge+1,settings);
-}
-
 function renderHerd(){
  const tb=document.getElementById("animalRows"); if(!tb)return; tb.innerHTML="";
  if(!herd.length){
   const empty=document.createElement("tr");
-  empty.innerHTML='<td colspan="8" style="text-align:center;padding:22px;color:var(--muted)">Noch keine Tiere angelegt. Über „Tier hinzufügen“ kannst du mit deinem eigenen Bestand starten.</td>';
+  empty.innerHTML='<td colspan="6" style="text-align:center;padding:22px;color:var(--muted)">Noch keine Tiere angelegt. Über „Tier hinzufügen“ kannst du mit deinem eigenen Bestand starten.</td>';
   tb.appendChild(empty);
  }
  herd.forEach((a,i)=>{
@@ -1487,19 +1484,8 @@ function renderHerd(){
    <td><input aria-label="Tier ${i+1} Alter bei Zugang" type="number" min="0" step="1" data-id="${a.id}" data-k="age" value="${Number(a.age)||0}"></td>
    <td style="text-align:center"><input aria-label="Tier ${i+1} Milchproduktion gestartet" style="width:22px;height:22px" type="checkbox" data-id="${a.id}" data-k="milkStarted" ${a.milkStarted?'checked':''} ${((a.type||"buffalo")==="pig")?'disabled':''}></td>
    <td><input aria-label="Tier ${i+1} erwarteter Milchstart" type="number" min="0" step="1" data-id="${a.id}" data-k="expectedMilkAge" value="${a.expectedMilkAge??24}"></td>
-   <td><input aria-label="Tier ${i+1} Anschaffungspreis" type="number" min="0" step="0.01" data-id="${a.id}" data-k="purchasePrice" value="${a.purchasePrice??''}" placeholder="Kaufpreis"></td>
-   <td><input aria-label="Tier ${i+1} Verkaufspreis manuell überschreiben" type="number" min="0" step="0.01" data-id="${a.id}" data-k="salePrice" value="${a.salePrice??''}" placeholder="${fmt(animalAutoSellPrice(a,animalAgeInYear(a),getSettingsForYear()))} automatisch"></td>
    <td><button type="button" class="btn" data-remove="${a.id}">Entfernen</button></td>`;
   tb.appendChild(tr);
-  const assessYear=Math.max(1,Math.floor(Number(val("year"))||1));
-  const r=animalSaleAssessment(a,assessYear);
-  const recommendation=document.createElement("tr");
-  recommendation.className="animal-assessment-row";
-  const statusClass=r.status.includes("Verkauf")||r.status.includes("abwägen")?"compare-bad":r.status.includes("behalten")?"compare-good":"";
-  const milkText=(a.type||"buffalo")==="pig"?"keine Milchproduktion":`${fmt(r.monthlyMilk)} L/Monat · ${fmt(r.milkThisYear)} L im Betriebsjahr`;
-  const feedText=(a.type||"buffalo")==="pig"?"Schweineration nicht modelliert":`${fmt(r.tmrLitres)} L TMR + ${fmt(r.beddingLitres)} L Einstreu/Monat (${r.feedSource})`;
-  recommendation.innerHTML=`<td colspan="8"><div class="animal-assessment"><div><b>Verkaufsempfehlung · Tier ${i+1}</b><br><span class="${statusClass}"><b>${r.status}</b></span><br><small>${r.reason}</small></div><div><b>Alter / Verkaufswert</b><br>${fmt(r.age)} Monate · ${euro(r.salePrice)}</div><div><b>Milchleistung</b><br>${milkText}</div><div><b>Bedarf je Monat</b><br>${feedText}</div><div><b>Prognose 12 Monate</b><br>${r.configured&&r.milkConfigured?euro(r.forecastNet):"Preise/Verbrauch ergänzen"}</div></div></td>`;
-  tb.appendChild(recommendation);
  });
  document.getElementById("herdCount").textContent=herd.length;
  tb.querySelectorAll('input,select').forEach(inp=>inp.addEventListener('change',e=>{
@@ -1511,7 +1497,8 @@ function renderHerd(){
      else a.milkStartMonth=null;
    }else if(k==='startMonth')a.startMonth=Math.max(1,Math.min(12,Number(e.target.value)||1));
    else a[k]=Math.max(0,Number(e.target.value)||0);
-   renderHerd();renderAll();
+   // Die komplette Tierliste nur bei Tierartwechsel neu aufbauen.
+   scheduleCommitRefresh({herd:k==='type'});
  }));
  tb.querySelectorAll('button[data-remove]').forEach(b=>b.addEventListener('click',()=>{
    herd=herd.filter(a=>String(a.id)!==b.dataset.remove);renderHerd();renderAll();
@@ -1530,7 +1517,7 @@ function renderMonths(){
    data[i][k]=Math.max(0,Number(v)||0);
    scheduleLiveRefresh();
   });
-  inp.addEventListener("change",()=>{persist();renderAll();});
+  inp.addEventListener("change",()=>{scheduleCommitRefresh();});
  });
 }
 function svgChart(rows,series,labels){
@@ -1562,10 +1549,6 @@ function renderManagementCockpit(totals,stockNow){
  const balance=incomeTotal-expenseTotal;
  const setText=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value;};
  setText("dashIncome",euro(incomeTotal));setText("dashExpenses",euro(expenseTotal));setText("dashBalance",euro(balance));
- const assessments=herd.map(a=>animalSaleAssessment(a,Math.max(1,Math.floor(Number(val("year"))||1))));
- const reviewCount=assessments.filter(r=>/Verkauf prüfen|Anschaffung abwägen|rechnet sich langsam/.test(r.status)).length;
- setText("dashSaleCount",String(reviewCount));
- const saleEl=document.getElementById("dashSaleCount");if(saleEl)saleEl.style.color=reviewCount?"#e3bd43":"#b7e486";
  const feedEl=document.getElementById("dashFeedPlan");
  if(feedEl){
   const items=[
@@ -2042,65 +2025,6 @@ function ageWeightedDemand(year,monthIndex){
 }
 
 
-function animalSaleAssessment(animal,year){
- const s=getSettingsForYear(year),age=animalAgeInYear(animal,12),band=ageBand(age);
- const expectedMilkAge=Math.max(0,Number(animal.expectedMilkAge??animal.firstMilkAge??((animal.type||"buffalo")==="cow"?12:24))||0);
- const monthsToMilk=(animal.type||"buffalo")==="pig"?null:Math.max(0,Math.ceil(expectedMilkAge-age));
- const milkActive=!!animal.milkStarted&&age>=expectedMilkAge;
- const milkStartMonth=Math.max(1,Math.min(12,Number(animal.milkStartMonth)||Number(animal.startMonth)||1));
- const milkThisYear=Array.from({length:12},(_,i)=>{
-  if(i+1<milkStartMonth)return 0;
-  const mAge=animalAgeInYear(animal,i+1);return animalMilkPerMonth(animal,mAge,s);
- }).reduce((a,b)=>a+b,0);
- const isPig=(animal.type||"buffalo")==="pig";
- // Pig rations are separate LS25 feed groups and must not be charged as cattle TMR/straw.
- let tmrLitres=isPig?0:Math.max(0,Number(s.adultTmrMonthly)||0)*Math.max(0,Number(s["tmrFactor"+band.key[0].toUpperCase()+band.key.slice(1)])||0);
- let beddingLitres=isPig?0:Math.max(0,Number(s.adultBeddingMonthly)||0)*Math.max(0,Number(s["beddingFactor"+band.key[0].toUpperCase()+band.key.slice(1)])||0);
- let feedSource="Altersmodell";
- // Wenn Monatsverbräuche vorhanden sind, den tatsächlichen Betriebsverbrauch auf die
- // im jeweiligen Monat vorhandenen Rinder/Büffel verteilen und als Ist-Ø je Tier nutzen.
- const observedMonths=Array.isArray(yearData[String(year)])?yearData[String(year)]:(Number(year)===Number(activeYear())?data:[]);
- const observedHerd=getHerdForYear(year).filter(x=>(x.type||"buffalo")!=="pig");
- let tmrSum=0,beddingSum=0,observedCount=0;
- observedMonths.forEach((m,i)=>{
-  const present=observedHerd.filter(x=>Math.max(1,Math.min(12,Number(x.startMonth)||1))<=i+1).length;
-  if(present>0&&i+1>=Math.max(1,Number(animal.startMonth)||1)&&((Number(m.tmr)||0)>0||(Number(m.bedding)||0)>0)){
-   tmrSum+=(Number(m.tmr)||0)/present;beddingSum+=(Number(m.bedding)||0)/present;observedCount++;
-  }
- });
- const observedTmr=observedCount?tmrSum/observedCount:null,observedBedding=observedCount?beddingSum/observedCount:null;
- if(!isPig&&observedCount){if(observedTmr!==null)tmrLitres=observedTmr;if(observedBedding!==null)beddingLitres=observedBedding;feedSource="Betriebsverbrauch (Ist-Ø je Tier)";}
- const monthlyFeedCost=tmrLitres*Math.max(0,Number(s.tmrCostPerLiter)||0),monthlyBeddingCost=beddingLitres*Math.max(0,Number(s.beddingCostPerLiter)||0);
- const monthlyMilk=animalMilkPerMonth(animal,age,s),monthlyMilkRevenue=monthlyMilk*Math.max(0,Number(s.milkPricePerLiter)||0);
- const monthlyMargin=monthlyMilkRevenue-monthlyFeedCost-monthlyBeddingCost;
- const salePrice=animalSellPrice(animal,age,s),purchasePrice=Math.max(0,Number(animal.purchasePrice)||0);
- const configured=!isPig&&salePrice>0&&Number(s.tmrCostPerLiter)>0&&Number(s.beddingCostPerLiter)>0&&Number(s.adultTmrMonthly)>0&&Number(s.adultBeddingMonthly)>0;
- const milkConfigured=isPig||Number(s.milkPricePerLiter)>0;
- // Vorschau über 12 Monate: berücksichtigt Wartezeit bis zum Milchstart und den ansteigenden/abfallenden Laktationsfaktor.
- let forecastMilk=0,forecastFeed=0,forecastBedding=0;
- for(let m=1;m<=12;m++){
-  const futureAge=age+m;
-  forecastMilk+=animalMilkPerMonth({...animal,milkStarted:true,firstMilkAge:expectedMilkAge},futureAge,s);
-  const fb=ageBand(futureAge),fs=fb.key[0].toUpperCase()+fb.key.slice(1);
-  forecastFeed+=Math.max(0,Number(s.adultTmrMonthly)||0)*Math.max(0,Number(s["tmrFactor"+fs])||0)*Math.max(0,Number(s.tmrCostPerLiter)||0);
-  forecastBedding+=Math.max(0,Number(s.adultBeddingMonthly)||0)*Math.max(0,Number(s["beddingFactor"+fs])||0)*Math.max(0,Number(s.beddingCostPerLiter)||0);
- }
- const forecastRevenue=forecastMilk*Math.max(0,Number(s.milkPricePerLiter)||0),forecastNet=forecastRevenue-forecastFeed-forecastBedding;
- const postMilkAge=Math.max(age,expectedMilkAge);
- const postMilkRevenue=animalMilkPerMonth({...animal,milkStarted:true,firstMilkAge:expectedMilkAge},postMilkAge,s)*Math.max(0,Number(s.milkPricePerLiter)||0);
- const postMilkMargin=postMilkRevenue-monthlyFeedCost-monthlyBeddingCost;
- const purchasePaybackMonths=postMilkMargin>0&&purchasePrice>0?Math.ceil(purchasePrice/postMilkMargin)+(monthsToMilk||0):null;
- let status="Daten ergänzen",reason="Bitte Kaufpreis, Milchpreis sowie Futter- und Einstreukosten eintragen, damit sich Halten und Verkaufen vergleichen lassen.";
- if(isPig){status="Schweine-Futterdaten fehlen";reason="Schweine benötigen im LS25 eine eigene Ration aus mehreren Futtergruppen. Da diese Mengen und Kosten hier noch nicht erfasst werden, gibt es bewusst keine irreführende Halten-/Verkaufen-Empfehlung.";}
- else if(configured&&milkConfigured){
-  if(forecastNet<0){status="Verkauf prüfen";reason="Die prognostizierten Milch-, Futter- und Einstreuwerte ergeben für die nächsten 12 Monate einen negativen Saldo.";}
-  else if(monthsToMilk>0&&purchasePrice>0){status="Anschaffung abwägen";reason=`Es dauert voraussichtlich noch ${monthsToMilk} Monate bis zum Milchstart. In dieser Zeit entstehen Futter- und Einstreukosten ohne Milcherlös.`;}
-  else if(purchasePrice>0&&purchasePaybackMonths!==null&&purchasePaybackMonths>12){status="Anschaffung rechnet sich langsam";reason=`Der Kaufpreis würde sich rechnerisch erst nach etwa ${purchasePaybackMonths} Monaten amortisieren – ohne weitere Kosten und Erlöse.`;}
-  else {status="Weiter behalten";reason="Die 12-Monats-Prognose ist nach den eingetragenen Milch-, Futter- und Einstreuwerten positiv.";}
- }
- return {age,band:band.label,milkActive,milkThisYear,monthlyMilk,monthlyMilkRevenue,tmrLitres,beddingLitres,monthlyFeedCost,monthlyBeddingCost,monthlyMargin,salePrice,purchasePrice,monthsToMilk,forecastMilk,forecastRevenue,forecastNet,purchasePaybackMonths,configured,milkConfigured,status,reason,type:animal.type||"buffalo",feedSource};
-}
-
 function renderAnalysis(){
  const sel=document.getElementById("analysisYear"); if(!sel)return;
  const current=Math.max(1,Math.floor(val("year")));
@@ -2180,18 +2104,6 @@ function renderAnalysis(){
   milkStartHost.innerHTML=activeMilk.length
    ? `<p>Der Haken kennzeichnet Tiere, die bereits Milch geben. Das erwartete Alter beim Milchstart wird im Tierbestand separat eingetragen.</p><div class="table-wrap"><table><thead><tr><th>Tier</th><th>Betriebsjahr</th><th>Milchstart ab</th><th>Erwarteter Milchstart</th><th>Spitzenleistung/Monat</th></tr></thead><tbody>${activeMilk.map((a,i)=>{const sm=Math.max(1,Math.min(12,Number(a.milkStartMonth)||Number(a.startMonth)||1));const s=getSettingsForYear(a.year);return `<tr><td>Tier ${i+1}</td><td>${a.year}</td><td>${months[sm-1]}</td><td>${fmt(Number(a.expectedMilkAge??a.firstMilkAge??24)||24)} Monate</td><td>${fmt(Number(s.milkPerAnimal)||0)} L</td></tr>`;}).join("")}</tbody></table></div>`
    : '<p class="muted">Noch keine Milchproduktion aktiviert. Setze bei einem Tier den Haken „Milchproduktion gestartet“, dann erscheint hier der Startmonat und die berechnete Milchleistung.</p>';
- }
- const saleHost=document.getElementById("animalSaleAnalysis");
- if(saleHost){
-  const saleYears=chosen==="all"?years:[Number(chosen)];
-  const saleRows=saleYears.flatMap(y=>getHerdForYear(y).map((a,i)=>({animal:a,year:y,index:i+1,result:animalSaleAssessment(a,y)})));
-  const enough=saleRows.filter(x=>x.result.configured);
-  saleHost.innerHTML=saleRows.length
-   ? `<p>Die Empfehlung bewertet das Alter, den aktuellen Richt-Verkaufswert, die geschätzte Milchmenge im Betriebsjahr, den altersabhängigen Milchverlauf sowie Futter- und Einstreubedarf. Bei Anschaffungen wird zusätzlich die Wartezeit bis zum erwarteten Milchstart und die mögliche Amortisation berücksichtigt. Die 12-Monats-Prognose ist eine Modellrechnung, keine Garantie.</p>
-   <div class="table-wrap"><table><thead><tr><th>Tierart</th><th>Alter</th><th>Verkaufswert jetzt</th><th>Milch im Jahr (Schätzung)</th><th>Milch/Monat aktuell</th><th>TMR/Monat</th><th>Einstreu/Monat</th><th>Saldo nächste 12 Monate</th><th>Wartezeit Milch</th><th>Kaufpreis</th><th>Einschätzung</th></tr></thead><tbody>
-   ${saleRows.map(x=>{const r=x.result,c=r.status.includes("Verkauf")||r.status.includes("abwägen")?"compare-bad":r.status.includes("behalten")?"compare-good":"";return `<tr><td>${animalTypeLabels[r.type]}</td><td>${fmt(r.age)} Mon. (${r.band})</td><td>${r.salePrice>0?euro(r.salePrice):"–"}${x.animal.salePrice>0?" (manuell)":" (Richtwert)"}</td><td>${r.type==="pig"?"–":fmt(r.milkThisYear)+" L"}</td><td>${r.type==="pig"?"–":fmt(r.monthlyMilk)+" L"}</td><td>${r.type==="pig"?"nicht modelliert":fmt(r.tmrLitres)+" L"}</td><td>${r.type==="pig"?"nicht modelliert":fmt(r.beddingLitres)+" L"}</td><td class="${c}">${r.configured&&r.milkConfigured?euro(r.forecastNet):"–"}</td><td>${r.monthsToMilk===null?"–":r.monthsToMilk+" Mon."}</td><td>${r.purchasePrice>0?euro(r.purchasePrice):"nicht erfasst"}</td><td><b class="${c}">${r.status}</b><br><small>${r.reason}${r.purchasePaybackMonths!==null?` Amortisation ca. ${r.purchasePaybackMonths} Mon.`:""}</small></td></tr>`;}).join("")}
-   </tbody></table></div><p class="muted">Die Berechnung verwendet deine hinterlegten Milch-, TMR- und Einstreupreise sowie die Verbrauchsfaktoren. Arbeit, Tierarzt, Zucht, Gesundheit, Transport und mögliche weitere Erlöse sind nicht enthalten. Die Preisstufen sind bewusst bearbeitbare Richtwerte. Öffentlich zugängliche, versionsgenaue Vanilla-Daten belegen keine vollständige Wiederverkaufskurve für jedes Tieralter; Händlerpreise und Verkaufserlöse können je nach Tierart/Rasse, Patch, Karte und Schwierigkeitsgrad abweichen. Zwischen deinen eingetragenen Stufen wird linear interpoliert. Verwende für eine genaue Übereinstimmung mit deinem Spielstand die Preise aus deinem Tiermenü.</p>`
-   : '<p class="muted">Noch keine Tiere angelegt. Sobald du Tiere und Preis-/Verbrauchswerte erfasst hast, erscheint hier die Verkaufseinschätzung.</p>';
  }
  document.getElementById("analysisStockText").innerHTML=`<p><b>Lagerbilanz – ${chosen==="all"?"letztes erfasstes Betriebsjahr":"Betriebsjahr "+chosen}</b></p>`+Object.keys(labels).map(k=>{
    const r=selectedLedger.items[k],status=r.shortage>0?"Fehlmenge":r.belowMinimum?"Mindestbestand unterschritten":(r.opening||r.harvest||r.need||r.manualIn||r.manualOut)?"ausreichend":"noch nicht erfasst";
@@ -2530,7 +2442,7 @@ function printExpenseReport(){
 
 document.querySelectorAll("[data-jump-tab]").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.jumpTab)));
 function showTab(tab){
- const valid=["dashboard","master","months","production","harvest","analysis","milk"].includes(tab)?tab:"dashboard";
+ const valid=["dashboard","master","months","stalls","production","harvest","analysis","milk"].includes(tab)?tab:"dashboard";
  document.querySelectorAll("nav button[data-tab]").forEach(b=>{
    const active=b.dataset.tab===valid;
    b.classList.toggle("active",active);
@@ -2647,7 +2559,7 @@ document.getElementById("resetBtn").addEventListener("click",()=>{
  document.getElementById("saveMsg").textContent="Hofdaten zurückgesetzt. Der Tierbestand ist leer – du kannst jetzt deine ersten Tiere hinzufügen.";
 });
 document.getElementById("addAnimalBtn").addEventListener("click",()=>{
- const id=nextAnimalId++;herd.push({id,type:"buffalo",age:0,startMonth:1,milkStarted:false,expectedMilkAge:24,purchasePrice:null,salePrice:null});
+ const id=nextAnimalId++;const selectedStall=document.getElementById("singleAnimalStall")?.value||"";herd.push({id,type:"buffalo",age:0,startMonth:1,milkStarted:false,expectedMilkAge:24,...(selectedStall?{stallId:selectedStall}:{})});
  renderHerd();renderAll();
 });
 function addAnimalGroup(){
@@ -2659,14 +2571,11 @@ function addAnimalGroup(){
  const expectedDefault=type==="cow"?12:24;
  const expectedMilkAge=Math.max(0,Math.floor(Number(document.getElementById("bulkExpectedMilkAge").value)||expectedDefault));
  const milkStarted=type!=="pig"&&document.getElementById("bulkMilkStarted").checked;
- const purchaseRaw=document.getElementById("bulkPurchasePrice").value;
- const saleRaw=document.getElementById("bulkSalePrice").value;
- const purchasePrice=purchaseRaw===""?null:Math.max(0,Number(purchaseRaw)||0);
- const salePrice=saleRaw===""?null:Math.max(0,Number(saleRaw)||0);
+ const selectedStall=document.getElementById("bulkAnimalStall")?.value||"";
  const msg=document.getElementById("bulkAnimalMsg");
  if(!Number.isFinite(countRaw)||count<1||count>500){msg.textContent="Bitte eine Anzahl zwischen 1 und 500 Tieren eingeben.";return;}
  for(let i=0;i<count;i++){
-  const animal={id:nextAnimalId++,type,age,startMonth,milkStarted,expectedMilkAge,purchasePrice,salePrice};
+  const animal={id:nextAnimalId++,type,age,startMonth,milkStarted,expectedMilkAge,...(selectedStall?{stallId:selectedStall}:{})};
   if(milkStarted)animal.milkStartMonth=startMonth;
   herd.push(animal);
  }
@@ -2720,8 +2629,8 @@ function updateBackupReminder(){
  rem.textContent=days>=7?"⚠ Das Backup ist "+days+" Tage alt. Bitte jetzt ein neues Backup erstellen.":"Backup aktuell · vor Gerätewechsel trotzdem erneut sichern.";
 }
 function exportBackup(){
- const backup={format:"LS2025-Hofverwaltung-Backup",version:20,createdAt:new Date().toISOString(),
- settings:{...getSettings(),year:Number(activeYear())},months:data,yearData,yearHerdData,yearSettings,yearInitialized,harvestData,farmFields,nextFieldId,harvestPlans,yearClosures,operatingExpenses,nextExpenseId,operatingIncomes,nextIncomeId,stockSettings,stockTransactions,nextStockTransactionId,herd,nextAnimalId,nextHarvestId,milkTankOpening,milkEntries};
+ const backup={format:"LS2025-Hofverwaltung-Backup",version:21,createdAt:new Date().toISOString(),
+ settings:{...getSettings(),year:Number(activeYear())},months:data,yearData,yearHerdData,yearSettings,yearInitialized,harvestData,farmFields,nextFieldId,harvestPlans,yearClosures,operatingExpenses,nextExpenseId,operatingIncomes,nextIncomeId,stockSettings,stockTransactions,nextStockTransactionId,herd,nextAnimalId,nextHarvestId,milkTankOpening,milkEntries,stallData:{stalls:JSON.parse(localStorage.getItem("ls25buffalo_stalls")||"[]"),consumption:JSON.parse(localStorage.getItem("ls25buffalo_stall_consumption_v1")||"{}"),manualBase:JSON.parse(localStorage.getItem("ls25buffalo_stall_manual_base_v1")||"{}"),monthPlans:JSON.parse(localStorage.getItem("ls25buffalo_stall_month_plans")||"{}")}};
  const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
  const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;
  a.download="LS_2025_Hofverwaltung_Backup_"+new Date().toISOString().slice(0,10)+".json";a.click();
@@ -2736,6 +2645,7 @@ function importBackup(file){
    if(!b||!b.settings||!Array.isArray(b.herd)||!b.yearData||!b.harvestData)throw new Error("Die Datei ist kein gültiges LS25-Backup.");
    ids.forEach(id=>{if(b.settings[id]!==undefined)document.getElementById(id).value=b.settings[id]});
    if(b.settings.year)document.getElementById("year").value=b.settings.year;
+   if(b.stallData){localStorage.setItem("ls25buffalo_stalls",JSON.stringify(Array.isArray(b.stallData.stalls)?b.stallData.stalls:[]));localStorage.setItem("ls25buffalo_stall_consumption_v1",JSON.stringify(b.stallData.consumption||{}));localStorage.setItem("ls25buffalo_stall_manual_base_v1",JSON.stringify(b.stallData.manualBase||{}));localStorage.setItem("ls25buffalo_stall_month_plans",JSON.stringify(b.stallData.monthPlans||{}));}
    yearData=b.yearData;yearHerdData=b.yearHerdData||{};yearSettings=b.yearSettings||{};yearInitialized=b.yearInitialized||{};if(!Object.keys(yearHerdData).length){Object.keys(yearData).forEach(k=>yearHerdData[k]=b.herd.map(a=>({...a})));}harvestData=b.harvestData;farmFields=Array.isArray(b.farmFields)?b.farmFields:[];nextFieldId=Number(b.nextFieldId)||Math.max(0,...farmFields.map(f=>Number(f.id)||0))+1;harvestPlans=b.harvestPlans||{};yearClosures=b.yearClosures||{};operatingExpenses=Array.isArray(b.operatingExpenses)?b.operatingExpenses:[];nextExpenseId=Number(b.nextExpenseId)||Math.max(0,...operatingExpenses.map(x=>Number(x.id)||0))+1;operatingIncomes=Array.isArray(b.operatingIncomes)?b.operatingIncomes:[];nextIncomeId=Number(b.nextIncomeId)||Math.max(0,...operatingIncomes.map(x=>Number(x.id)||0))+1;stockSettings={...stockSettings,...(b.stockSettings||{})};stockTransactions=Array.isArray(b.stockTransactions)?b.stockTransactions:[];nextStockTransactionId=Number(b.nextStockTransactionId)||Math.max(0,...stockTransactions.map(x=>Number(x.id)||0))+1;
    herd=b.herd;nextAnimalId=Number(b.nextAnimalId)||Math.max(0,...herd.map(a=>Number(a.id)||0))+1;
    nextHarvestId=Number(b.nextHarvestId)||1;milkTankOpening=Math.max(0,Number(b.milkTankOpening)||0);
@@ -2743,7 +2653,7 @@ function importBackup(file){
    document.getElementById("milkTankOpening").value=milkTankOpening;
    const current=String(Math.max(1,Math.floor(val("year"))));
    data=Array.isArray(yearData[current])?yearData[current]:(Array.isArray(b.months)?b.months:months.map(()=>({tmr:0,bedding:0,milkDelivered:0})));
-   yearData[current]=data;if(!yearHerdData[current])yearHerdData[current]=herd.map(a=>({...a}));if(!yearSettings[current])yearSettings[current]={...defaults,...getSettings(),year:Number(current)};if(!yearInitialized[current])yearInitialized[current]=true;applyYearSettings(current);refreshYearOptions(current);document.getElementById("year").dataset.previous=current;herd=(yearHerdData[current]||[]).map(a=>({...a}));loadStockInputs();renderHerd();renderMonths();renderAll();persist();refreshMilkYears();renderMilkMonth();updateBackupReminder();
+   yearData[current]=data;if(!yearHerdData[current])yearHerdData[current]=herd.map(a=>({...a}));if(!yearSettings[current])yearSettings[current]={...defaults,...getSettings(),year:Number(current)};if(!yearInitialized[current])yearInitialized[current]=true;applyYearSettings(current);refreshYearOptions(current);document.getElementById("year").dataset.previous=current;herd=(yearHerdData[current]||[]).map(a=>({...a}));loadStockInputs();renderHerd();renderMonths();renderAll();persist();refreshMilkYears();renderMilkMonth();window.ls25StallSystem?.render();updateBackupReminder();
    localStorage.setItem("ls25buffalo_last_backup_at",new Date().toISOString());updateBackupReminder();document.getElementById("backupMsg").textContent="Backup erfolgreich importiert.";
   }catch(err){document.getElementById("backupMsg").textContent="Import fehlgeschlagen: "+err.message;}
  };
@@ -2758,13 +2668,29 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
 
 <style>
 #pwaInstallButton{position:fixed;right:14px;bottom:14px;z-index:9999;border:1px solid #d7b94c;background:#263b2c;color:#fff;padding:12px 16px;border-radius:14px;font-weight:800;box-shadow:0 5px 20px #0005;display:none;cursor:pointer}#pwaInstallButton:focus{outline:3px solid #e6c85a;outline-offset:3px}
-/* V60 – Tierverwaltung vereinfacht: Tierpreise und Verkaufsauswertung ausblenden */
+/* Tierverwaltung: reduzierte Bestandstabelle ohne Preis- und Verkaufsbewertung */
 #animalRows th:nth-child(n+4):not(:last-child),#animalRows td:nth-child(n+4):not(:last-child){display:none!important}
 #animalRows td:nth-child(3){font-weight:700}
-#animalSaleAnalysis{display:none!important}
-#bulkExpectedMilkAge,#bulkPurchasePrice,#bulkSalePrice,#bulkMilkStarted{display:none!important}
-#dashSaleCount{display:none!important}
+#bulkExpectedMilkAge,#bulkMilkStarted{display:none!important}
+
 #animalRows .animal-assessment-row{display:none!important}
+</style>
+<style id="stall-assignment-visibility-fix">
+/* Die ältere reduzierte Tieransicht blendet Zusatzspalten aus. Die neue Stallspalte bleibt sichtbar. */
+#animalRows thead th.stall-head:nth-child(8) { display:table-cell !important; }
+#animalRows tr.animal-data-row > td.animal-stall-cell:nth-child(8) { display:table-cell !important; }
+#animalRows .animal-data-row td.animal-stall-cell::before { content:"Stall"; display:block; color:var(--muted); font-size:10px; font-weight:800; line-height:1.25; text-transform:uppercase; letter-spacing:.3px; }
+@media (max-width:850px) {
+ #animalRows tr.animal-data-row > td.animal-stall-cell:nth-child(8) { display:flex !important; flex-direction:column; align-items:stretch; justify-content:center; min-width:0; padding:5px 7px; border:1px solid #405044; border-radius:8px; background:#1b261e; white-space:normal; }
+ #animalRows thead th.stall-head:nth-child(8) { display:none !important; }
+}
+@media (max-width:640px) {
+ #master .card:has(#animalRows) .table-wrap { width:100%; min-width:0; overflow:visible; }
+ #master .card:has(#animalRows) table { width:100% !important; min-width:0 !important; }
+ #animalRows { width:100%; min-width:0; }
+ #animalRows .animal-data-row { width:100%; min-width:0; box-sizing:border-box; }
+ #animalRows .animal-data-row td.animal-stall-cell select { width:100%; min-width:0; max-width:100%; }
+}
 </style>
 <button id="pwaInstallButton" type="button" aria-label="Hofverwaltung als App installieren">⬇ App installieren</button>
 <script>
@@ -2816,130 +2742,214 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
 
 
 
-<script id="ls25-multi-stall">
-(()=>{
-'use strict';
-const KEY='ls25buffalo_stalls', MONTH_KEY='ls25buffalo_stall_month_plans';
-const read=(key,fallback)=>{try{const v=JSON.parse(localStorage.getItem(key));return v??fallback;}catch{return fallback;}};
-let stalls=read(KEY,[]);let plans=read(MONTH_KEY,{});
-if(!Array.isArray(stalls))stalls=[];
-if(!stalls.length){stalls=[{id:'stall-1',name:'Hauptstall',capacity:null}];localStorage.setItem(KEY,JSON.stringify(stalls));}
-const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const currentYear=()=>String(document.getElementById('year')?.value||1);
-const store=()=>{localStorage.setItem(KEY,JSON.stringify(stalls));localStorage.setItem(MONTH_KEY,JSON.stringify(plans));window.dispatchEvent(new Event('ls25-local-data-changed'));};
-const getAnimals=()=>typeof herd!=='undefined'&&Array.isArray(herd)?herd:[];
-const stallFor=a=>stalls.some(s=>s.id===a.stallId)?a.stallId:stalls[0].id;
-function renderStalls(){
- const host=document.getElementById('stallList');if(!host)return;
- host.innerHTML=stalls.map(s=>{const count=getAnimals().filter(a=>stallFor(a)===s.id).length;return `<div class="row" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:9px 0;border-bottom:1px solid var(--line)"><strong>${esc(s.name)}</strong><span>${count} Tiere${s.capacity?' / '+s.capacity+' Plätze':''}</span><button class="btn" type="button" data-rename="${esc(s.id)}">Umbenennen</button><button class="btn" type="button" data-delete="${esc(s.id)}" ${stalls.length===1?'disabled':''}>Entfernen</button></div>`}).join('');
- host.querySelectorAll('[data-rename]').forEach(b=>b.onclick=()=>{const st=stalls.find(s=>s.id===b.dataset.rename);const name=prompt('Neuer Stallname',st.name);if(name?.trim()){st.name=name.trim();store();renderAllStalls();}});
- host.querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>{const st=stalls.find(s=>s.id===b.dataset.delete);if(!st||stalls.length<2)return;const n=getAnimals().filter(a=>stallFor(a)===st.id).length;if(!confirm(`Stall „${st.name}“ entfernen? ${n} Tiere werden dem ersten verbleibenden Stall zugeordnet.`))return;stalls=stalls.filter(s=>s.id!==st.id);getAnimals().forEach(a=>{if(a.stallId===st.id)a.stallId=stalls[0].id});if(typeof persist==='function')persist();store();renderAllStalls();});
-}
-function renderAnimalStalls(){
- const head=document.querySelector('#animalRows')?.closest('table')?.querySelector('thead tr');if(head&&!head.querySelector('.stall-head')){const th=document.createElement('th');th.className='stall-head';th.textContent='Stall';head.insertBefore(th,head.lastElementChild);}
- document.querySelectorAll('#animalRows tr.animal-data-row').forEach(tr=>{const first=tr.querySelector('[data-id]');const a=getAnimals().find(x=>String(x.id)===first?.dataset.id);if(!a)return;let cell=tr.querySelector('.animal-stall-cell');if(!cell){cell=document.createElement('td');cell.className='animal-stall-cell';tr.insertBefore(cell,tr.lastElementChild);}cell.innerHTML=`<select aria-label="Stall für Tier ${esc(a.id)}">${stalls.map(s=>`<option value="${esc(s.id)}" ${stallFor(a)===s.id?'selected':''}>${esc(s.name)}</option>`).join('')}</select>`;cell.querySelector('select').onchange=e=>{a.stallId=e.target.value;if(typeof persist==='function')persist();store();renderAllStalls();};
- });
-}
-function renderStallMonths(){
- const host=document.getElementById('stallMonthRows');if(!host)return;const year=currentYear();const yearPlans=plans[year]||{};
- const names=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
- host.innerHTML=names.flatMap((name,i)=>stalls.map(s=>{const automatic=getAnimals().filter(a=>stallFor(a)===s.id&&Math.max(1,Number(a.startMonth)||1)<=i+1).length;const key=`${i}:${s.id}`;const value=yearPlans[key];return `<tr><td>${name}</td><td>${esc(s.name)}</td><td>${automatic}</td><td><input type="number" min="0" step="1" style="max-width:115px" data-stall="${esc(s.id)}" data-month="${i}" value="${value==null?'':value}" placeholder="${automatic}"></td></tr>`;})).join('');
- host.querySelectorAll('input').forEach(input=>input.onchange=()=>{const y=currentYear();plans[y]??={};const key=`${input.dataset.month}:${input.dataset.stall}`;if(input.value==='')delete plans[y][key];else plans[y][key]=Math.max(0,Math.floor(Number(input.value)||0));store();renderStallStatus();});renderStallStatus();
-}
-function renderStallStatus(){const host=document.getElementById('stallMonthStatus');if(!host)return;const yearPlans=plans[currentYear()]||{};const overridden=Object.keys(yearPlans).length;const over=stalls.filter(s=>s.capacity&&getAnimals().filter(a=>stallFor(a)===s.id).length>s.capacity);host.textContent=`${stalls.length} Ställe · ${getAnimals().length} Tiere zugeordnet · ${overridden} manuelle Monatswerte.`+(over.length?' Achtung: Kapazität überschritten in '+over.map(s=>s.name).join(', '):'');}
-function renderAllStalls(){renderStalls();renderAnimalStalls();renderStallMonths();}
-const originalHerd=window.renderHerd;
-if(typeof originalHerd==='function')window.renderHerd=function(...args){const r=originalHerd.apply(this,args);renderAllStalls();return r;};
-const originalMonths=window.renderMonths;
-if(typeof originalMonths==='function')window.renderMonths=function(...args){const r=originalMonths.apply(this,args);renderStallMonths();return r;};
-document.getElementById('stallAdd')?.addEventListener('click',()=>{const inp=document.getElementById('stallNewName');const name=inp.value.trim();if(!name){inp.focus();return;}const capacity=Number(document.getElementById('stallNewCapacity').value);stalls.push({id:'stall-'+Date.now()+'-'+Math.random().toString(36).slice(2,6),name,capacity:capacity>0?Math.floor(capacity):null});inp.value='';document.getElementById('stallNewCapacity').value='';store();renderAllStalls();});
-document.getElementById('year')?.addEventListener('change',()=>setTimeout(renderAllStalls,0));
-window.addEventListener('storage',e=>{if(e.key===KEY||e.key===MONTH_KEY){stalls=read(KEY,stalls);plans=read(MONTH_KEY,plans);renderAllStalls();}});
-renderAllStalls();
-})();
-</script>
-
-<style id="ls25-stall-consumption-style">
-#stallConsumption .table-wrap{overflow-x:auto}
-#stallConsumption table{min-width:680px}
-#stallConsumption input{width:110px;max-width:100%;padding:8px;border:1px solid var(--line);border-radius:8px;font:inherit}
-#stallConsumption .stall-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
-#stallConsumption .stall-kpi{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
-#stallConsumption .stall-kpi strong{display:block;font-size:1.15rem;margin-top:4px}
+<style id="ls25-stall-layout-style">
+#stallManager .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--line)}
+#stallConsumptionMonth .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+#stallConsumptionMonth table{min-width:620px}
+#stallConsumptionMonth input{width:120px;max-width:100%;min-height:44px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text);font:inherit}
+#stallMenuAnalysis .stall-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin:12px 0}
+#stallMenuAnalysis .stall-kpi{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+#stallMenuAnalysis .stall-kpi strong{display:block;font-size:1.15rem;margin-top:4px}
+@media(max-width:650px){#stallConsumptionMonth table{min-width:600px}#stallConsumptionMonth input{width:100px}}
 </style>
-<div class="card span-12" id="stallConsumption">
- <h2>🌾 Futter- und Einstreuverbrauch je Stall</h2>
- <p class="muted">Trage den tatsächlichen monatlichen Verbrauch je Stall ein. Die Werte werden getrennt vom bisherigen Gesamt-Monatsplan gespeichert und in der Auswertung nach Stall und Betriebsjahr zusammengefasst.</p>
- <div class="fields"><div class="field"><label for="stallConsumptionYear">Betriebsjahr</label><select id="stallConsumptionYear"></select></div></div>
- <div class="table-wrap"><table><thead><tr><th>Monat</th><th>Stall</th><th>TMR-Verbrauch (L)</th><th>Einstreu (L)</th></tr></thead><tbody id="stallConsumptionRows"></tbody></table></div>
- <div id="stallConsumptionStatus" class="note"></div>
- <h3>📊 Auswertung je Stall</h3>
- <div id="stallConsumptionAnalysis"></div>
-</div>
-<script id="ls25-stall-consumption">
-(function(){
+<script id="ls25-stall-system-v2">
+(()=>{
  'use strict';
- const KEY='ls25buffalo_stall_consumption_v1';
- const months=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
- const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return {}}};
- let records=read();
- const $=id=>document.getElementById(id);
- const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const year=()=>String($('stallConsumptionYear')?.value||$('year')?.value||'1');
- const getStalls=()=>{try{return JSON.parse(localStorage.getItem('ls25buffalo_stalls')||'[]')}catch(e){return []}};
- const save=()=>{localStorage.setItem(KEY,JSON.stringify(records));$('stallConsumptionStatus').textContent='Gespeichert. Die Stall-Auswertung wurde aktualisiert.';renderAnalysis();};
- function initYears(){
-  const sel=$('stallConsumptionYear');if(!sel)return;
-  const main=$('year');let values=new Set(['1',String(main?.value||'1')]);
-  Object.keys(records).forEach(y=>values.add(y));
-  if(main)Array.from(main.options||[]).forEach(o=>values.add(String(o.value)));
-  const old=sel.value;sel.innerHTML=Array.from(values).sort((a,b)=>Number(a)-Number(b)).map(y=>`<option value="${esc(y)}">Betriebsjahr ${esc(y)}</option>`).join('');
-  sel.value=values.has(old)?old:String(main?.value||'1');
+ const STALL_KEY='ls25buffalo_stalls';
+ const CONSUMPTION_KEY='ls25buffalo_stall_consumption_v1';
+ const MANUAL_KEY='ls25buffalo_stall_manual_base_v1';
+ const PLAN_KEY='ls25buffalo_stall_month_plans';
+ const monthNames=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+ const read=(key,fallback)=>{try{const v=JSON.parse(localStorage.getItem(key));return v==null?fallback:v;}catch(_){return fallback;}};
+ let stalls=read(STALL_KEY,[]),consumption=read(CONSUMPTION_KEY,{}),manualBase=read(MANUAL_KEY,{}),animalPlans=read(PLAN_KEY,{});
+ if(!Array.isArray(stalls))stalls=[];
+ if(!stalls.length)stalls=[{id:'stall-1',name:'Hauptstall',capacity:null}];
+ if(!consumption||typeof consumption!=='object')consumption={};
+ if(!manualBase||typeof manualBase!=='object')manualBase={};
+ if(!animalPlans||typeof animalPlans!=='object')animalPlans={};
+ const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const year=()=>String(typeof activeYear==='function'?activeYear():(document.getElementById('year')?.value||'1'));
+ const fmt=n=>Math.round(Number(n)||0).toLocaleString('de-DE');
+ const getHerd=()=>typeof herd!=='undefined'&&Array.isArray(herd)?herd:[];
+ const stallFor=a=>stalls.some(s=>s.id===a.stallId)?a.stallId:(stalls[0]?.id||'');
+ const save=()=>{
+  localStorage.setItem(STALL_KEY,JSON.stringify(stalls));
+  localStorage.setItem(CONSUMPTION_KEY,JSON.stringify(consumption));
+  localStorage.setItem(MANUAL_KEY,JSON.stringify(manualBase));
+  localStorage.setItem(PLAN_KEY,JSON.stringify(animalPlans));
+ };
+ let stallSaveTimer=null;
+ function scheduleStallSave(){
+  if(stallSaveTimer!==null)clearTimeout(stallSaveTimer);
+  stallSaveTimer=setTimeout(()=>{stallSaveTimer=null;try{save();}catch(err){console.error("Stall-Daten konnten nicht gespeichert werden:",err);}},650);
  }
- function renderRows(){
-  const host=$('stallConsumptionRows');if(!host)return;
-  const stalls=getStalls();if(!stalls.length){host.innerHTML='<tr><td colspan="4">Bitte zuerst mindestens einen Stall anlegen.</td></tr>';return;}
-  const y=year();records[y]??={};
-  host.innerHTML=months.flatMap((m,i)=>stalls.map(s=>{
-   const key=`${i}:${s.id}`,v=records[y][key]||{};
-   return `<tr><td>${m}</td><td>${esc(s.name)}</td><td><input type="number" min="0" step="1" inputmode="numeric" aria-label="${m} ${esc(s.name)} TMR in Litern" data-month="${i}" data-stall="${esc(s.id)}" data-kind="tmr" value="${v.tmr??''}" placeholder="0"></td><td><input type="number" min="0" step="1" inputmode="numeric" aria-label="${m} ${esc(s.name)} Einstreu in Litern" data-month="${i}" data-stall="${esc(s.id)}" data-kind="bedding" value="${v.bedding??''}" placeholder="0"></td></tr>`;
-  })).join('');
-  host.querySelectorAll('input').forEach(input=>{
+ function sourceMonths(y){
+  if(String(y)===year() && typeof data!=='undefined' && Array.isArray(data))return data;
+  if(typeof yearData!=='undefined' && Array.isArray(yearData[String(y)]))return yearData[String(y)];
+  return null;
+ }
+ function ensureManualBase(y){
+  const key=String(y);
+  if(Array.isArray(manualBase[key])&&manualBase[key].length===12)return manualBase[key];
+  const source=sourceMonths(key)||Array.from({length:12},()=>({tmr:0,bedding:0,milkDelivered:0}));
+  manualBase[key]=source.map(r=>({tmr:Math.max(0,Number(r.tmr)||0),bedding:Math.max(0,Number(r.bedding)||0)}));
+  save();
+  return manualBase[key];
+ }
+ function stallSum(y,i,kind){
+  const records=consumption[String(y)]||{};
+  return stalls.reduce((sum,st)=>sum+(Number(records[`${i}:${st.id}`]?.[kind])||0),0);
+ }
+ function combinedValue(y,i,kind){const base=ensureManualBase(y);return (Number(base[i]?.[kind])||0)+stallSum(y,i,kind);}
+ function applyCombined(y){
+  const rows=sourceMonths(y);if(!rows)return;
+  const base=ensureManualBase(y);
+  for(let i=0;i<12;i++){
+   rows[i]??={tmr:0,bedding:0,milkDelivered:0};
+   rows[i].tmr=(Number(base[i]?.tmr)||0)+stallSum(y,i,'tmr');
+   rows[i].bedding=(Number(base[i]?.bedding)||0)+stallSum(y,i,'bedding');
+  }
+  if(String(y)===year() && typeof data!=='undefined')data=rows;
+  if(typeof yearData!=='undefined')yearData[String(y)]=rows;
+ }
+ function renderMonthTotals(){
+  applyCombined(year());
+  const body=document.getElementById('monthRows');if(!body)return;
+  body.querySelectorAll('input[data-k="tmr"],input[data-k="bedding"]').forEach(input=>{
+   const i=Number(input.dataset.i),kind=input.dataset.k;
+   input.value=String(combinedValue(year(),i,kind));
+   if(input.dataset.stallTotalBound==='1')return;
+   input.dataset.stallTotalBound='1';
+   input.addEventListener('input',()=>{
+    const y=year(),idx=Number(input.dataset.i),k=input.dataset.k;
+    const base=ensureManualBase(y),sum=stallSum(y,idx,k),entered=Math.max(0,Number(input.value)||0);
+    base[idx][k]=Math.max(0,entered-sum);
+    const total=base[idx][k]+sum;
+    const rows=sourceMonths(y);if(rows)rows[idx][k]=total;
+    if(total!==entered)input.value=String(total);
+    scheduleStallSave();
+   });
    input.addEventListener('change',()=>{
-    const y=year(),key=`${input.dataset.month}:${input.dataset.stall}`,kind=input.dataset.kind;
-    records[y]??={};records[y][key]??={tmr:0,bedding:0};
-    records[y][key][kind]=Math.max(0,Number(input.value)||0);
-    if(!input.value)records[y][key][kind]=0;
-    save();
+    applyCombined(year());
+    if(typeof persist==='function')persist();
+    if(typeof renderAll==='function')renderAll();
+    renderMonthTotals();
    });
   });
-  renderAnalysis();
  }
- function renderAnalysis(){
-  const host=$('stallConsumptionAnalysis');if(!host)return;
-  const y=year(),stalls=getStalls(),data=records[y]||{};
-  if(!stalls.length){host.textContent='Noch keine Ställe angelegt.';return;}
-  const totals=stalls.map(s=>{
+ function renderConsumptionInputs(){
+  const host=document.getElementById('stallConsumptionRows');if(!host)return;
+  const y=year(),records=consumption[y]||(consumption[y]={});
+  if(!stalls.length){host.innerHTML='<tr><td colspan="4">Bitte zuerst im Menü „Ställe“ einen Stall anlegen.</td></tr>';return;}
+  host.innerHTML=monthNames.flatMap((m,i)=>stalls.map(st=>{
+   const v=records[`${i}:${st.id}`]||{};
+   return `<tr><td>${m}</td><td><b>${esc(st.name)}</b></td><td><input type="number" min="0" step="1" inputmode="numeric" data-month="${i}" data-stall="${esc(st.id)}" data-kind="tmr" aria-label="${m} ${esc(st.name)} TMR in Litern" value="${v.tmr??''}" placeholder="0"></td><td><input type="number" min="0" step="1" inputmode="numeric" data-month="${i}" data-stall="${esc(st.id)}" data-kind="bedding" aria-label="${m} ${esc(st.name)} Einstreu in Litern" value="${v.bedding??''}" placeholder="0"></td></tr>`;
+  })).join('');
+  host.querySelectorAll('input').forEach(input=>input.addEventListener('change',()=>{
+   const yy=year(),i=Number(input.dataset.month),st=input.dataset.stall,k=input.dataset.kind;
+   consumption[yy]??={};consumption[yy][`${i}:${st}`]??={tmr:0,bedding:0};
+   consumption[yy][`${i}:${st}`][k]=Math.max(0,Number(input.value)||0);
+   if(!input.value)consumption[yy][`${i}:${st}`][k]=0;
+   applyCombined(yy);save();
+   if(typeof persist==='function')persist();
+   renderMonthTotals();
+   if(typeof renderAll==='function')renderAll();
+   renderStallAnalysis();
+   const status=document.getElementById('stallConsumptionStatus');if(status)status.textContent=`${monthNames[i]} · ${stalls.find(x=>x.id===st)?.name||'Stall'} gespeichert. Gesamtverbrauch im Monatsplan aktualisiert.`;
+  }));
+ }
+ function renderStallList(){
+  const host=document.getElementById('stallList');if(!host)return;
+  host.innerHTML=stalls.map(st=>{
+   const count=getHerd().filter(a=>stallFor(a)===st.id).length;
+   return `<div class="row"><strong>${esc(st.name)}</strong><span>${count} Tiere${st.capacity?' / '+st.capacity+' Plätze':''}</span><button class="btn" type="button" data-rename-stall="${esc(st.id)}">Umbenennen</button><button class="btn" type="button" data-delete-stall="${esc(st.id)}" ${stalls.length===1?'disabled':''}>Entfernen</button></div>`;
+  }).join('');
+  host.querySelectorAll('[data-rename-stall]').forEach(btn=>btn.onclick=()=>{
+   const st=stalls.find(x=>x.id===btn.dataset.renameStall);if(!st)return;
+   const name=prompt('Neuer Stallname',st.name);if(name?.trim()){st.name=name.trim();save();renderAllStallViews();}
+  });
+  host.querySelectorAll('[data-delete-stall]').forEach(btn=>btn.onclick=()=>{
+   const st=stalls.find(x=>x.id===btn.dataset.deleteStall);if(!st||stalls.length<=1)return;
+   const target=stalls.find(x=>x.id!==st.id);
+   const count=getHerd().filter(a=>stallFor(a)===st.id).length;
+   if(!confirm(`Stall „${st.name}“ entfernen? ${count} Tiere werden dem Stall „${target.name}“ zugeordnet. Bereits erfasste Verbrauchswerte dieses Stalls bleiben in den historischen Summen erhalten.`))return;
+   getHerd().forEach(a=>{if(a.stallId===st.id)a.stallId=target.id;});
+   // Verbrauchshistorie in den verbleibenden Stall übertragen, damit die Gesamtsummen erhalten bleiben.
+   Object.keys(consumption).forEach(yy=>{
+    const rec=consumption[yy]||{};
+    for(let mi=0;mi<12;mi++){
+     const oldKey=`${mi}:${st.id}`,newKey=`${mi}:${target.id}`;
+     if(rec[oldKey]){rec[newKey]??={tmr:0,bedding:0};rec[newKey].tmr=(Number(rec[newKey].tmr)||0)+(Number(rec[oldKey].tmr)||0);rec[newKey].bedding=(Number(rec[newKey].bedding)||0)+(Number(rec[oldKey].bedding)||0);delete rec[oldKey];}
+    }
+   });
+   stalls=stalls.filter(x=>x.id!==st.id);
+   if(typeof persist==='function')persist();save();renderAllStallViews();
+  });
+ }
+ function renderAnimalAssignments(){
+  const table=document.querySelector('#animalRows')?.closest('table');
+  const head=table?.querySelector('thead tr');
+  if(head&&!head.querySelector('.stall-head')){const th=document.createElement('th');th.className='stall-head';th.textContent='Stall';head.insertBefore(th,head.lastElementChild);}
+  document.querySelectorAll('#animalRows tr.animal-data-row').forEach(tr=>{
+   const first=tr.querySelector('[data-id]');const animal=getHerd().find(a=>String(a.id)===first?.dataset.id);if(!animal)return;
+   let cell=tr.querySelector('.animal-stall-cell');if(!cell){cell=document.createElement('td');cell.className='animal-stall-cell';tr.insertBefore(cell,tr.lastElementChild);}
+   cell.innerHTML=`<select aria-label="Stall für Tier ${esc(animal.id)}">${stalls.map(st=>`<option value="${esc(st.id)}" ${stallFor(animal)===st.id?'selected':''}>${esc(st.name)}</option>`).join('')}</select>`;
+   cell.querySelector('select').onchange=e=>{animal.stallId=e.target.value;if(typeof persist==='function')persist();save();renderAllStallViews();};
+  });
+ }
+ function renderStallAnalysis(){
+  const host=document.getElementById('stallMenuAnalysis');if(!host)return;
+  const y=year(),records=consumption[y]||{};
+  const totals=stalls.map(st=>{
    let tmr=0,bedding=0,monthsUsed=0;
-   months.forEach((_,i)=>{const v=data[`${i}:${s.id}`]||{};tmr+=Number(v.tmr)||0;bedding+=Number(v.bedding)||0;if((Number(v.tmr)||0)>0||(Number(v.bedding)||0)>0)monthsUsed++;});
-   return {name:s.name,tmr,bedding,monthsUsed};
+   monthNames.forEach((_,i)=>{const v=records[`${i}:${st.id}`]||{};const a=Number(v.tmr)||0,b=Number(v.bedding)||0;tmr+=a;bedding+=b;if(a||b)monthsUsed++;});
+   const animals=getHerd().filter(a=>stallFor(a)===st.id).length;
+   return {id:st.id,name:st.name,capacity:st.capacity,animals,tmr,bedding,monthsUsed};
   });
   const all=totals.reduce((a,r)=>({tmr:a.tmr+r.tmr,bedding:a.bedding+r.bedding}),{tmr:0,bedding:0});
-  const fmt=n=>Math.round(n).toLocaleString('de-DE');
-  host.innerHTML=`<div class="stall-kpis"><div class="stall-kpi">TMR gesamt<strong>${fmt(all.tmr)} L</strong></div><div class="stall-kpi">Einstreu gesamt<strong>${fmt(all.bedding)} L</strong></div><div class="stall-kpi">Ställe erfasst<strong>${totals.filter(x=>x.monthsUsed>0).length} / ${totals.length}</strong></div></div>
-  <div class="table-wrap"><table><thead><tr><th>Stall</th><th>TMR gesamt</th><th>Einstreu gesamt</th><th>Ø TMR je erfasstem Monat</th><th>Ø Einstreu je erfasstem Monat</th><th>Monate mit Einträgen</th></tr></thead><tbody>${totals.map(r=>`<tr><td><b>${esc(r.name)}</b></td><td>${fmt(r.tmr)} L</td><td>${fmt(r.bedding)} L</td><td>${fmt(r.monthsUsed?r.tmr/r.monthsUsed:0)} L</td><td>${fmt(r.monthsUsed?r.bedding/r.monthsUsed:0)} L</td><td>${r.monthsUsed} / 12</td></tr>`).join('')}</tbody></table></div>
-  <p class="muted">Die Durchschnittswerte beziehen sich nur auf Monate mit mindestens einem Verbrauchseintrag. Leere Monate werden nicht als Nullverbrauch in den Durchschnitt eingerechnet.</p>`;
+  const capacityWarnings=totals.filter(r=>r.capacity&&r.animals>r.capacity);
+  const fmtNum=n=>fmt(n);
+  host.innerHTML=`<div class="stall-kpis"><div class="stall-kpi">Ställe<strong>${totals.length}</strong></div><div class="stall-kpi">Tiere<strong>${getHerd().length}</strong></div><div class="stall-kpi">Stall-TMR im Jahr ${esc(y)}<strong>${fmtNum(all.tmr)} L</strong></div><div class="stall-kpi">Stall-Einstreu im Jahr ${esc(y)}<strong>${fmtNum(all.bedding)} L</strong></div></div>
+  <div class="table-wrap"><table><thead><tr><th>Stall</th><th>Tiere</th><th>Kapazität</th><th>TMR gesamt</th><th>Einstreu gesamt</th><th>Monate mit Einträgen</th></tr></thead><tbody>${totals.map(r=>`<tr><td><b>${esc(r.name)}</b></td><td>${r.animals}</td><td>${r.capacity?fmtNum(r.capacity):'–'}</td><td>${fmtNum(r.tmr)} L</td><td>${fmtNum(r.bedding)} L</td><td>${r.monthsUsed} / 12</td></tr>`).join('')}</tbody></table></div>
+  ${capacityWarnings.length?`<p class="note">Kapazität überschritten: ${capacityWarnings.map(r=>esc(r.name)).join(', ')}</p>`:''}
+  <p class="muted">Die Stallauswertung zeigt die direkt je Stall erfassten Werte. Manuelle Zusatzverbräuche aus dem Gesamt-Monatsplan werden nicht künstlich einem einzelnen Stall zugeordnet.</p>`;
  }
- $('stallConsumptionYear')?.addEventListener('change',renderRows);
- $('year')?.addEventListener('change',()=>{initYears();$('stallConsumptionYear').value=String($('year').value);renderRows();});
- window.addEventListener('storage',e=>{if(e.key==='ls25buffalo_stalls'){renderRows();}});
- const originalAdd=window.renderAllStalls;
- if(typeof originalAdd==='function')window.renderAllStalls=function(...args){const r=originalAdd.apply(this,args);initYears();renderRows();return r;};
- initYears();renderRows();
- const stallList=$('stallList');if(stallList&&window.MutationObserver){new MutationObserver(()=>{initYears();renderRows();}).observe(stallList,{childList:true,subtree:true});}
+ function renderEntryStallSelects(){
+  ['singleAnimalStall','bulkAnimalStall'].forEach(id=>{
+   const el=document.getElementById(id);if(!el)return;const previous=el.value;
+   el.innerHTML='<option value="">Hauptstall / erster Stall</option>'+stalls.map(st=>`<option value="${esc(st.id)}">${esc(st.name)}</option>`).join('');
+   if(stalls.some(st=>st.id===previous))el.value=previous;
+  });
+ }
+ function renderAllStallViews(){renderEntryStallSelects();renderStallList();renderAnimalAssignments();renderConsumptionInputs();renderStallAnalysis();}
+ document.getElementById('stallAdd')?.addEventListener('click',()=>{
+  const nameInput=document.getElementById('stallNewName'),capacityInput=document.getElementById('stallNewCapacity');
+  const name=nameInput?.value.trim();if(!name){nameInput?.focus();return;}
+  const capacity=Math.max(0,Math.floor(Number(capacityInput?.value)||0));
+  stalls.push({id:'stall-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),name,capacity:capacity||null});
+  if(nameInput)nameInput.value='';if(capacityInput)capacityInput.value='';save();renderAllStallViews();
+ });
+ const originalRenderHerd=window.renderHerd;
+ if(typeof originalRenderHerd==='function')window.renderHerd=function(...args){const result=originalRenderHerd.apply(this,args);renderAnimalAssignments();renderStallList();renderStallAnalysis();return result;};
+ const originalRenderMonths=window.renderMonths;
+ if(typeof originalRenderMonths==='function')window.renderMonths=function(...args){const result=originalRenderMonths.apply(this,args);renderMonthTotals();renderConsumptionInputs();return result;};
+ document.getElementById('year')?.addEventListener('change',()=>setTimeout(()=>{renderAllStallViews();renderMonthTotals();},0));
+ document.getElementById('monthsYear')?.addEventListener('change',()=>setTimeout(()=>{renderMonthTotals();renderConsumptionInputs();},0));
+ // Die Schnelleingabe auf dem Dashboard bleibt ebenfalls mit der Stall-Summe synchron.
+ document.getElementById('quickSaveMonth')?.addEventListener('click',()=>{
+  const i=Math.max(0,Math.min(11,Number(document.getElementById('quickMonth')?.value)||0)),y=year(),base=ensureManualBase(y);
+  base[i].tmr=Math.max(0,(Number(document.getElementById('quickTmr')?.value)||0)-stallSum(y,i,'tmr'));
+  base[i].bedding=Math.max(0,(Number(document.getElementById('quickBedding')?.value)||0)-stallSum(y,i,'bedding'));
+  applyCombined(y);save();if(typeof persist==='function')persist();renderMonthTotals();renderStallAnalysis();
+ });
+ window.addEventListener('storage',e=>{if([STALL_KEY,CONSUMPTION_KEY,MANUAL_KEY,PLAN_KEY].includes(e.key)){stalls=read(STALL_KEY,stalls);consumption=read(CONSUMPTION_KEY,consumption);manualBase=read(MANUAL_KEY,manualBase);animalPlans=read(PLAN_KEY,animalPlans);renderAllStallViews();renderMonthTotals();}});
+ save();
+ if(typeof renderHerd==='function')renderHerd();
+ if(typeof renderMonths==='function')renderMonths();
+ renderAllStallViews();
+ window.ls25StallSystem={render:renderAllStallViews,applyCombined,version:2};
 })();
 </script>
 
-<style id="ls25-stall-style">@media(max-width:750px){#animalRows .animal-data-row td.animal-stall-cell{grid-column:1/-1}#animalRows .animal-data-row td.animal-stall-cell::before{content:'Stall';display:block;color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase}#stallMonthly .table-wrap{overflow-x:auto}#stallMonthly table{min-width:560px}}#animalRows .animal-stall-cell select{min-width:115px;max-width:100%;width:100%}</style>
 </body>
 </html>
