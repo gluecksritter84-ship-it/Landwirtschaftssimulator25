@@ -933,6 +933,13 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 }
 </style>
 
+<style id="stall-assignment-visibility-fix-v4">
+/* Die aktuelle Tierliste hat 7 Spalten; Stall steht an Position 6. */
+#master .card:has(#animalRows) #animalRows tr.animal-data-row > td.animal-stall-cell {display:table-cell !important;visibility:visible !important;opacity:1 !important;}
+#master .card:has(#animalRows) table thead tr > th.stall-head {display:table-cell !important;visibility:visible !important;}
+#master .card:has(#animalRows) #animalRows tr.animal-data-row > td.animal-stall-cell select {display:block !important;visibility:visible !important;opacity:1 !important;width:100% !important;min-width:110px !important;max-width:100% !important;pointer-events:auto !important;position:relative;z-index:2;}
+@media(max-width:650px){#master .card:has(#animalRows) #animalRows tr.animal-data-row > td.animal-stall-cell{display:flex !important;flex-direction:column;align-items:stretch;min-width:0;}#master .card:has(#animalRows) table thead tr > th.stall-head{display:none !important;}}
+</style>
 </head>
 <body>
 <a class="skip-link" href="#dashboard">Zum Inhalt springen</a>
@@ -1268,7 +1275,7 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 <div class="grid">
  <div class="card span-12" id="stallManager">
   <h2>🏠 Stallverwaltung</h2>
-  <p class="muted">Lege hier deine Ställe an, verwalte Namen und Kapazitäten und ordne die Tiere im Menü „Tierbestand“ den Ställen zu.</p>
+  <p class="muted">Zu Beginn gibt es keine vorgegebenen Ställe. Lege hier deine Ställe selbst an und verwalte Namen und Kapazitäten und ordne die Tiere im Menü „Tierbestand“ den Ställen zu.</p>
   <div class="fields">
    <div class="field"><label for="stallNewName">Neuer Stall – Name</label><input id="stallNewName" placeholder="z. B. Wasserbüffelstall Nord"></div>
    <div class="field"><label for="stallNewCapacity">Kapazität (optional)</label><input id="stallNewCapacity" type="number" min="1" step="1" placeholder="Anzahl Plätze"></div>
@@ -1432,6 +1439,15 @@ function load(){try{
  Object.keys(yearData).forEach(k=>{if(!yearSettings[k])yearSettings[k]={...getSettings(),year:Number(k)};});
  if(!yearSettings[currentYear])yearSettings[currentYear]=getSettings();
  }catch(e){herd=[]}}
+function animalMilkPerMonth(animal, ageMonths, settings){
+ if(!animal || (animal.type||"buffalo")==="pig" || !animal.milkStarted) return 0;
+ const startAge=Math.max(0,Number(animal.expectedMilkAge??animal.firstMilkAge??((animal.type||"buffalo")==="cow"?12:24))||0);
+ if(ageMonths<startAge) return 0;
+ const lactationMonth=Math.max(1,Math.floor(ageMonths-startAge+1));
+ const base=Math.max(0,Number(settings?.milkPerAnimal)||0);
+ const factor=lactationMonth<=6?Number(settings?.milkFactorStart??0.65):lactationMonth<=12?Number(settings?.milkFactorRise??0.85):lactationMonth<=36?Number(settings?.milkFactorPeak??1):Number(settings?.milkFactorLate??0.85);
+ return base*Math.max(0,Number.isFinite(factor)?factor:0);
+}
 function calc(sourceData=data, sourceHerd=herd, sourceSettings=getSettings()){
  const s=sourceSettings, activeHerd=sourceHerd, cap=Math.max(1,s.capacity), bale=Math.max(1,s.bale);
  let totals={tmr:0,bedding:0,straw:0,hay:0,silage:0,wagonsExact:0,wagonsRounded:0,milk:0,milkDelivered:0,factory:0,bales:0};
@@ -1501,10 +1517,11 @@ function renderHerd(){
    scheduleCommitRefresh({herd:k==='type'});
  }));
  tb.querySelectorAll('button[data-remove]').forEach(b=>b.addEventListener('click',()=>{
-   herd=herd.filter(a=>String(a.id)!==b.dataset.remove);renderHerd();renderAll();
+   herd=herd.filter(a=>String(a.id)!==b.dataset.remove);renderHerd();renderAll();persist();window.ls25StallSystem?.render?.();
  }));
  // Stall-Dropdowns nach jedem Neuaufbau der Tierliste direkt ergänzen.
  window.ls25StallSystem?.renderAssignments?.();
+ window.ls25StallSystem?.renderSummary?.();
 }
 function renderMonths(){
  const tb=document.getElementById("monthRows");tb.innerHTML="";
@@ -2561,8 +2578,8 @@ document.getElementById("resetBtn").addEventListener("click",()=>{
  document.getElementById("saveMsg").textContent="Hofdaten zurückgesetzt. Der Tierbestand ist leer – du kannst jetzt deine ersten Tiere hinzufügen.";
 });
 document.getElementById("addAnimalBtn").addEventListener("click",()=>{
- const id=nextAnimalId++;const selectedStall=document.getElementById("singleAnimalStall")?.value||"";herd.push({id,type:"buffalo",age:0,startMonth:1,milkStarted:false,expectedMilkAge:24,...(selectedStall?{stallId:selectedStall}:{})});
- renderHerd();renderAll();
+ const id=nextAnimalId++;const stallSelect=document.getElementById("singleAnimalStall");const selectedStall=stallSelect?.value||stallSelect?.options?.[1]?.value||"";herd.push({id,type:"buffalo",age:0,startMonth:1,milkStarted:false,expectedMilkAge:24,...(selectedStall?{stallId:selectedStall}:{})});
+ renderHerd();renderAll();window.ls25StallSystem?.render?.();persist();
 });
 function addAnimalGroup(){
  const countRaw=Number(document.getElementById("bulkAnimalCount").value);
@@ -2573,7 +2590,8 @@ function addAnimalGroup(){
  const expectedDefault=type==="cow"?12:24;
  const expectedMilkAge=Math.max(0,Math.floor(Number(document.getElementById("bulkExpectedMilkAge").value)||expectedDefault));
  const milkStarted=type!=="pig"&&document.getElementById("bulkMilkStarted").checked;
- const selectedStall=document.getElementById("bulkAnimalStall")?.value||"";
+ const stallSelect=document.getElementById("bulkAnimalStall");
+ const selectedStall=stallSelect?.value||stallSelect?.options?.[1]?.value||"";
  const msg=document.getElementById("bulkAnimalMsg");
  if(!Number.isFinite(countRaw)||count<1||count>500){msg.textContent="Bitte eine Anzahl zwischen 1 und 500 Tieren eingeben.";return;}
  for(let i=0;i<count;i++){
@@ -2581,7 +2599,7 @@ function addAnimalGroup(){
   if(milkStarted)animal.milkStartMonth=startMonth;
   herd.push(animal);
  }
- renderHerd();renderAll();persist();
+ renderHerd();renderAll();persist();window.ls25StallSystem?.render?.();
  msg.textContent=`${count} ${animalTypeLabels[type]||"Tiere"} wurden einzeln im Bestand angelegt. Du kannst jedes Tier unten separat ändern.`;
 }
 document.getElementById("bulkAddAnimalsBtn").addEventListener("click",addAnimalGroup);
@@ -2765,7 +2783,7 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
  const read=(key,fallback)=>{try{const v=JSON.parse(localStorage.getItem(key));return v==null?fallback:v;}catch(_){return fallback;}};
  let stalls=read(STALL_KEY,[]),consumption=read(CONSUMPTION_KEY,{}),manualBase=read(MANUAL_KEY,{}),animalPlans=read(PLAN_KEY,{});
  if(!Array.isArray(stalls))stalls=[];
- if(!stalls.length)stalls=[{id:'stall-1',name:'Hauptstall',capacity:null}];
+ 
  if(!consumption||typeof consumption!=='object')consumption={};
  if(!manualBase||typeof manualBase!=='object')manualBase={};
  if(!animalPlans||typeof animalPlans!=='object')animalPlans={};
@@ -2773,7 +2791,12 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
  const year=()=>String(typeof activeYear==='function'?activeYear():(document.getElementById('year')?.value||'1'));
  const fmt=n=>Math.round(Number(n)||0).toLocaleString('de-DE');
  const getHerd=()=>typeof herd!=='undefined'&&Array.isArray(herd)?herd:[];
- const stallFor=a=>stalls.some(s=>s.id===a.stallId)?a.stallId:(stalls[0]?.id||'');
+ // Migriere den früher automatisch erzeugten Standardstall. Er war kein vom Nutzer angelegter Stall.
+ if(stalls.length===1 && stalls[0]?.id==='stall-1' && stalls[0]?.name==='Hauptstall'){
+  stalls=[];
+  getHerd().forEach(a=>{if(a.stallId==='stall-1')a.stallId='';});
+ }
+ const stallFor=a=>stalls.some(s=>s.id===a.stallId)?a.stallId:'';
  const save=()=>{
   localStorage.setItem(STALL_KEY,JSON.stringify(stalls));
   localStorage.setItem(CONSUMPTION_KEY,JSON.stringify(consumption));
@@ -2872,10 +2895,9 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
   });
   host.querySelectorAll('[data-delete-stall]').forEach(btn=>btn.onclick=()=>{
    const st=stalls.find(x=>x.id===btn.dataset.deleteStall);if(!st||stalls.length<=1)return;
-   const target=stalls.find(x=>x.id!==st.id);
    const count=getHerd().filter(a=>stallFor(a)===st.id).length;
-   if(!confirm(`Stall „${st.name}“ entfernen? ${count} Tiere werden dem Stall „${target.name}“ zugeordnet. Bereits erfasste Verbrauchswerte dieses Stalls bleiben in den historischen Summen erhalten.`))return;
-   getHerd().forEach(a=>{if(a.stallId===st.id)a.stallId=target.id;});
+   if(!confirm(`Stall „${st.name}“ entfernen? ${count} zugeordnete Tiere erhalten danach „Kein Stall“. Bereits erfasste Verbrauchswerte bleiben in den historischen Summen erhalten.`))return;
+   getHerd().forEach(a=>{if(a.stallId===st.id)a.stallId='';});
    // Verbrauchshistorie in den verbleibenden Stall übertragen, damit die Gesamtsummen erhalten bleiben.
    Object.keys(consumption).forEach(yy=>{
     const rec=consumption[yy]||{};
@@ -2895,7 +2917,7 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
   document.querySelectorAll('#animalRows tr.animal-data-row').forEach(tr=>{
    const first=tr.querySelector('[data-id]');const animal=getHerd().find(a=>String(a.id)===first?.dataset.id);if(!animal)return;
    let cell=tr.querySelector('.animal-stall-cell');if(!cell){cell=document.createElement('td');cell.className='animal-stall-cell';tr.insertBefore(cell,tr.lastElementChild);}
-   cell.innerHTML=`<select aria-label="Stall für Tier ${esc(animal.id)}">${stalls.map(st=>`<option value="${esc(st.id)}" ${stallFor(animal)===st.id?'selected':''}>${esc(st.name)}</option>`).join('')}</select>`;
+   cell.innerHTML=`<select aria-label="Stall für Tier ${esc(animal.id)}"><option value="">Kein Stall</option>${stalls.map(st=>`<option value="${esc(st.id)}" ${stallFor(animal)===st.id?'selected':''}>${esc(st.name)}</option>`).join('')}</select>`;
    cell.querySelector('select').onchange=e=>{animal.stallId=e.target.value;if(typeof persist==='function')persist();save();renderAllStallViews();};
   });
  }
@@ -2919,7 +2941,7 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
  function renderEntryStallSelects(){
   ['singleAnimalStall','bulkAnimalStall'].forEach(id=>{
    const el=document.getElementById(id);if(!el)return;const previous=el.value;
-   el.innerHTML='<option value="">Hauptstall / erster Stall</option>'+stalls.map(st=>`<option value="${esc(st.id)}">${esc(st.name)}</option>`).join('');
+   el.innerHTML='<option value="">Kein Stall zugeordnet</option>'+stalls.map(st=>`<option value="${esc(st.id)}">${esc(st.name)}</option>`).join('');
    if(stalls.some(st=>st.id===previous))el.value=previous;
   });
  }
@@ -2949,7 +2971,7 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
  if(typeof renderHerd==='function')renderHerd();
  if(typeof renderMonths==='function')renderMonths();
  renderAllStallViews();
- window.ls25StallSystem={render:renderAllStallViews,renderAssignments:renderAnimalAssignments,applyCombined,version:2};
+ window.ls25StallSystem={render:renderAllStallViews,renderAssignments:renderAnimalAssignments,renderSummary:()=>{renderStallList();renderStallAnalysis();},applyCombined,version:3};
 })();
 </script>
 
