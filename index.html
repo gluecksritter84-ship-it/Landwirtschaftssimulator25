@@ -332,15 +332,6 @@ footer{margin-top:24px;padding:16px 4px;font-size:11px}
  .compare-value{text-align:left}
 }
 
-.expense-kpi{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:12px}
-.expense-kpi strong{display:block;font-size:22px;color:#b4df82}
-.expense-bar{display:grid;grid-template-columns:minmax(110px,1fr) 3fr 90px;gap:9px;align-items:center;margin:9px 0;font-size:13px}
-.expense-bar-track{height:12px;background:#111913;border-radius:20px;overflow:hidden}
-.expense-bar-fill{height:100%;background:var(--yellow);border-radius:20px}
-.expense-thumb{max-width:150px;max-height:100px;border-radius:7px;border:1px solid var(--line);object-fit:contain}
-#expenseRows .expense-row{display:grid;grid-template-columns:100px minmax(130px,1fr) 100px 90px auto;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
-#expenseRows .expense-row small{display:block}
-@media(max-width:650px){#expenseRows .expense-row{grid-template-columns:1fr 1fr}#expenseRows .expense-row .expense-action{grid-column:1/-1}.expense-bar{grid-template-columns:95px 1fr 70px;font-size:12px}}
 
 /* V29 – echte Smartphone-Ansicht: Navigation im Fluss und Monatswerte als lesbare Karten */
 @media(max-width:650px){
@@ -615,7 +606,7 @@ label[for="quickMilkDelivered"]{display:none!important}
 .analysis-text-card:has(>#milkForecast){display:none!important}
 #analysisCharts .milk-chart,#analysisBars .milk-chart{display:none!important}
 
-/* V64: Veraltete Milch-, Fabrik-, Verkaufs- und Finanzfunktionen aus der Oberfläche nehmen. */
+/* Bereinigte Oberfläche: nicht mehr verwendete Finanz- und Alt-Milchmodule entfernt. */
 #factorySummary, #milkChart, #analysisMilk, #milkForecast,
 #analysisSummary .card:nth-child(4),
 #analysisCompare th:nth-child(n+15), #analysisCompare td:nth-child(n+15),
@@ -654,7 +645,6 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 #analysisBars .compare-legend span:last-child,
 #analysisBars .compare-bar-row:has(.demand) { display:none !important; }
 #dashboard .quick-entry-card .quick-entry-fields { grid-template-columns:repeat(3,minmax(0,1fr)); }
-
 </style>
 <meta content="#263b2c" name="theme-color"/>
 <meta content="yes" name="apple-mobile-web-app-capable"/>
@@ -981,22 +971,19 @@ input,select,textarea,button{max-width:100%;min-width:0}
 </div>
 <div class="grid">
 <div class="card span-12"><h2>📋 Betriebs-Cockpit</h2><p class="muted">Die Übersicht verbindet Tierbestand, Futterplanung, Ernte und Lager. Sie liest keine Daten direkt aus deinem Xbox-Spielstand.</p>
-<div class="grid management-kpis">
-<div class="card span-3"><div class="kpi-label">Einnahmen erfasst</div><div class="kpi" id="dashIncome">–</div></div>
-<div class="card span-3"><div class="kpi-label">Ausgaben erfasst</div><div class="kpi" id="dashExpenses">–</div></div>
-<div class="card span-3"><div class="kpi-label">Betriebssaldo</div><div class="kpi" id="dashBalance">–</div></div>
+
+
 </div>
 <div class="grid">
 <div class="card span-6"><h3>📦 Futtervorschau – nächste 12 Monate</h3><div id="dashFeedPlan"></div><button class="btn" data-jump-tab="production" type="button">Futterbedarf öffnen</button></div>
-<div class="card span-6"><h3>💶 Ergebnis nach LS25-Buchungen</h3><div id="dashFinanceBreakdown"></div><button class="btn" data-jump-tab="expenses" type="button">Finanzen öffnen</button></div>
 </div>
 </div>
+
 <div class="grid">
 <div class="card span-3"><div class="kpi-label">Tiere im Dezember</div><div class="kpi" id="kAnimals">–</div></div>
 <div class="card span-3"><div class="kpi-label">TMR-Jahresverbrauch</div><div class="kpi" id="kTmr">–</div></div>
 <div class="card span-3"><div class="kpi-label">Milchproduktion/Jahr</div><div class="kpi" id="kMilk">–</div></div>
 <div class="card span-3"><div class="kpi-label">Futterwagen/Jahr</div><div class="kpi" id="kWagons">–</div></div>
-<div class="card span-6"><h2>Milchproduktion und Fabrikbedarf</h2><div class="chartbox" id="milkChart"></div></div>
 <div class="card span-6"><h2>TMR und Einstreu je Monat</h2><div class="chartbox" id="feedChart"></div></div>
 <div class="card span-6"><h2>Altersentwicklung der Herde</h2><div class="chartbox" id="ageChart"></div></div>
 <div class="card span-6"><h2>Jahresbilanz</h2><div id="annualSummary"></div></div>
@@ -1006,7 +993,7 @@ input,select,textarea,button{max-width:100%;min-width:0}
 <div class="card span-12"><h2>Datensicherung &amp; Datenübertragung</h2><p class="muted">Sichere alle Tiere, Monatsdaten, Ernten, Lagerwerte und Einstellungen als Datei. Auf einem anderen Gerät kannst du die Datei wieder importieren.</p><div class="actions"><button class="btn primary" id="backupExportBtn" type="button">⬇ Backup exportieren</button><button class="btn" id="backupImportBtn" type="button">⬆ Backup importieren</button><input accept="application/json,.json" hidden="" id="backupFile" type="file"/></div><small aria-live="polite" id="backupMsg">Backup-Status wird geprüft …</small><small aria-live="polite" class="muted" id="backupReminder"></small></div>
 <div class="card span-12" id="driveSyncCard"><h2>☁ Google-Drive-Synchronisierung</h2><p class="muted">Synchronisiert deine Hofdaten über den geschützten Google-App-Datenordner zwischen MacBook und iPhone. Es werden nur Hofdaten übertragen, nicht deine übrigen Drive-Dateien.</p><div class="actions"><button class="btn primary" id="driveConnectBtn" type="button">Mit Google verbinden</button><button class="btn" disabled="" id="driveSyncBtn" type="button">Jetzt synchronisieren</button><button class="btn" disabled="" id="driveDisconnectBtn" type="button">Verbindung trennen</button></div><small id="driveSyncStatus" role="status">Noch nicht mit Google verbunden. Für die erste Verbindung bitte auf jedem Gerät anmelden.</small><p class="muted" style="font-size:12px">Hinweis: Die Google-Anmeldung muss auf jedem Gerät einmal bestätigt werden. Bei Änderungen auf mehreren Geräten erkennt die App mögliche Konflikte und fragt vor dem Überschreiben. Die lokale Speicherung bleibt als Sicherung bestehen.</p></div>
 </div>
-</div></section>
+</section>
 <section class="panel" id="master">
 <div class="grid">
 <div class="card span-6"><h2>Tierbestand</h2><div class="fields">
@@ -1085,7 +1072,6 @@ input,select,textarea,button{max-width:100%;min-width:0}
 <div class="grid">
 <div class="card span-12"><h2>Bedarf – Jahresübersicht</h2>
 <div class="year-page-toolbar"><label for="productionYear">Betriebsjahr dieser Seite</label><select class="year-page-select" id="productionYear"></select></div><p class="muted">Hier siehst du den gesamten ermittelten Bedarf aus deinen Monatseingaben: TMR-Gesamtmenge, die dafür benötigten Mengen an Stroh, Heu und Maissilage sowie Einstreu. Einstreu-Stroh wird ausschließlich in 7.000-Liter-Ballen ausgewiesen; TMR-Stroh bleibt in Litern.</p><div id="productionTable"></div></div>
-<div class="card span-12"><h2>Milchversorgung der Fabrik</h2><div id="factorySummary"></div></div>
 </div>
 </section>
 <section class="panel" id="harvest">
@@ -1147,79 +1133,6 @@ input,select,textarea,button{max-width:100%;min-width:0}
 </div>
 </div>
 </section>
-<section class="panel" id="expenses">
-<div class="grid">
-<div class="card span-12">
-<h2>💶 LS25-Betriebskosten erfassen</h2>
-<p class="muted">Erfasst werden nur Ausgabepositionen, die in der Finanzübersicht des Landwirtschafts-Simulator 25 tatsächlich aufgeführt sind. Kraftstoff, Saatgut oder Dünger werden nicht separat geführt, wenn das Spiel sie nur als Sammelposten ausweist. Lade einen Screenshot aus dem Spiel hoch. Die Texterkennung kann Datum und Geldbeträge vorschlagen. Bitte kontrolliere die erkannten Werte immer vor dem Speichern – besonders bei mehreren Buchungszeilen.</p>
-<div class="note">Die Texterkennung läuft im Browser über Tesseract.js. Beim ersten Start wird die OCR-Bibliothek und das deutsche Sprachpaket aus dem Internet geladen. Das Bild wird nicht an einen Chat oder Server dieser App gesendet.</div>
-<div class="fields" style="margin-top:14px">
-<div class="field"><label for="expensePhoto">Screenshot / Foto aus dem Spiel</label><input accept="image/*" capture="environment" id="expensePhoto" type="file"/></div>
-<div class="field"><label>Texterkennung</label><button class="btn primary" id="expenseOcrBtn" type="button">🔎 Foto auslesen</button><small id="expenseOcrStatus">Bild auswählen und Texterkennung starten.</small></div>
-</div>
-<div id="expensePhotoPreview" style="margin-top:8px"></div>
-<div class="field"><label for="expenseOcrText">Erkannter Text (zur Kontrolle und zum Kopieren)</label><textarea id="expenseOcrText" rows="4" style="width:100%;border:1px solid #536451;border-radius:8px;padding:10px;background:#151d17;color:var(--ink)"></textarea></div>
-</div>
-<div class="card span-6">
-<h2>LS25-Ausgabeposition speichern</h2>
-<div class="fields">
-<div class="field"><label for="expenseDate">Datum</label><input id="expenseDate" type="date"/></div>
-<div class="field"><label for="expenseCategory">Kostenposition laut LS25-Finanzübersicht</label><select id="expenseCategory">
-<option>Neue Fahrzeuge</option>
-<option>Neue Handwerkzeuge</option>
-<option>Neuer Viehbestand</option>
-<option>Baukosten</option>
-<option>Landkauf</option>
-<option>Laufende Fahrzeugkosten</option>
-<option>Leasingkosten Fahrzeuge</option>
-<option>Gebäudeunterhalt</option>
-<option>Produktionskosten</option>
-</select></div>
-<div class="field"><label for="expenseDescription">Beschreibung / Buchungstext</label><input id="expenseDescription" placeholder="z. B. Traktor-Reparatur"/></div>
-<div class="field"><label for="expenseAmount">Betrag (€)</label><input id="expenseAmount" min="0" placeholder="0,00" step="0.01" type="number"/></div>
-<div class="field"><label for="expenseVendor">Händler / Empfänger (optional)</label><input id="expenseVendor" placeholder="z. B. Werkstatt"/></div>
-<div class="field"><label for="expenseReference">Beleg / Notiz (optional)</label><input id="expenseReference" placeholder="z. B. Screenshot Tankstelle"/></div>
-</div>
-<div class="actions"><button class="btn primary" id="expenseSaveBtn" type="button">＋ Betriebskosten speichern</button><button class="btn" id="expenseClearBtn" type="button">Eingabe leeren</button></div>
-<small id="expenseFormMsg"></small>
-</div>
-<div class="card span-6">
-<h2>Auswertung Betriebskosten</h2>
-<div class="fields">
-<div class="field"><label for="expenseYearFilter">Betriebsjahr</label><select id="expenseYearFilter"><option value="all">Alle Betriebsjahre</option></select></div>
-<div class="field"><label for="expenseMonthFilter">Monat</label><select id="expenseMonthFilter"><option value="all">Gesamtes Jahr</option><option value="1">Januar</option><option value="2">Februar</option><option value="3">März</option><option value="4">April</option><option value="5">Mai</option><option value="6">Juni</option><option value="7">Juli</option><option value="8">August</option><option value="9">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Dezember</option></select></div>
-</div>
-<div class="fields" id="expenseKpis"></div>
-<div id="expenseCategoryBreakdown"></div>
-<div id="expensePositionBreakdown"></div>
-<div id="expenseMonthlyBreakdown"></div>
-<div class="actions"><button class="btn" id="expenseCsvBtn" type="button">⬇ Kosten als CSV exportieren</button><button class="btn" id="expensePrintBtn" type="button">🖨 Kostenbericht drucken / PDF</button></div>
-</div>
-<div class="card span-6">
-<h2>💰 Einnahmen erfassen</h2>
-<p class="muted">Trage Verkaufserlöse und sonstige Einnahmen manuell ein. Die App übernimmt keine erfundenen Marktpreise.</p>
-<div class="fields">
-<div class="field"><label for="incomeDate">Datum</label><input id="incomeDate" type="date"/></div>
-<div class="field"><label for="incomeType">Einnahmeart</label><select id="incomeType"><option>Milchverkauf</option><option>Tierverkauf</option><option>Ernteverkauf</option><option>Sonstige Einnahmen</option></select></div>
-<div class="field"><label for="incomeDescription">Beschreibung</label><input id="incomeDescription" placeholder="z. B. Milchlieferung November"/></div>
-<div class="field"><label for="incomeAmount">Betrag (€)</label><input id="incomeAmount" min="0" placeholder="0,00" step="0.01" type="number"/></div>
-<div class="field"><label for="incomeReference">Beleg / Notiz (optional)</label><input id="incomeReference" placeholder="z. B. Abrechnung Fabrik"/></div>
-</div>
-<div class="actions"><button class="btn primary" id="incomeSaveBtn" type="button">＋ Einnahme speichern</button></div>
-<small id="incomeFormMsg"></small>
-</div>
-<div class="card span-6">
-<h2>📈 Gewinn- und Verlustübersicht</h2>
-<div class="field"><label for="financeYearFilter">Betriebsjahr</label><select id="financeYearFilter"><option value="all">Alle Betriebsjahre</option></select></div>
-<div id="financeSummary"></div>
-</div>
-<div class="card span-12"><h2>Erfasste Einnahmen</h2><div id="incomeRows"></div></div>
-<div class="card span-12">
-<h2>Erfasste Einzelkosten</h2>
-<div id="expenseRows"></div>
-</div>
-</div>
-</section>
 <section class="panel" id="analysis">
 <div class="grid">
 <div class="card span-12">
@@ -1237,8 +1150,6 @@ input,select,textarea,button{max-width:100%;min-width:0}
 <div class="analysis-text-grid">
 <div class="card analysis-text-card"><h2>Futterbedarf &amp; Ernte</h2><div id="analysisNeed"></div></div>
 <div class="card analysis-text-card"><h2>Milchproduktion &amp; Lieferung</h2><div id="analysisMilk"></div></div>
-<div class="card analysis-text-card"><h2>🐃 Milchstart je Tier</h2><div id="milkStartAnalysis"></div></div>
-<div class="card analysis-text-card"><h2>🔮 Milch- und Produktionsprognose</h2><div id="milkForecast"></div></div>
 <div class="card analysis-text-card stock-report"><h2>Bestandsbericht</h2><div id="analysisStockText"></div></div>
 <div class="card analysis-text-card stock-report"><h2>🌾 Felderträge nach Betriebsjahr und Ernte</h2><div id="analysisFieldHarvest"></div></div>
 </div>
@@ -1550,13 +1461,6 @@ function updateMixer(){
 }
 
 function renderManagementCockpit(totals,stockNow){
- const incomeTotal=operatingIncomes.reduce((s,e)=>s+(Number(e.amount)||0),0);
- const runningTotal=operatingExpenses.filter(e=>!isInvestmentExpense(e)).reduce((s,e)=>s+(Number(e.amount)||0),0);
- const investmentTotal=operatingExpenses.filter(isInvestmentExpense).reduce((s,e)=>s+(Number(e.amount)||0),0);
- const expenseTotal=runningTotal+investmentTotal;
- const balance=incomeTotal-expenseTotal;
- const setText=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value;};
- setText("dashIncome",euro(incomeTotal));setText("dashExpenses",euro(expenseTotal));setText("dashBalance",euro(balance));
  const feedEl=document.getElementById("dashFeedPlan");
  if(feedEl){
   const items=[
@@ -1570,12 +1474,7 @@ function renderManagementCockpit(totals,stockNow){
    return `<tr><td><b>${it.name}</b></td><td>${fmt(monthly)} ${it.unit}</td><td>${fmt(it.need)} ${it.unit}</td><td class="feed-status" style="color:${shortage?'#e3bd43':'#b7e486'}">${runway===null?'–':runway.toFixed(1)+' Monate'}${shortage?' · Nachproduktion nötig':''}</td></tr>`;
   }).join('')}</tbody></table></div><p class="muted">Reichweite = rechnerischer Lager-Endbestand ÷ durchschnittlichem Monatsbedarf. Ernte- und Verbrauchsdaten aktuell halten.</p>`;
  }
- const breakdown=document.getElementById("dashFinanceBreakdown");
- if(breakdown){
-  const byCategory=operatingExpenses.reduce((acc,e)=>{const k=e.category||"Sonstige";acc[k]=(acc[k]||0)+(Number(e.amount)||0);return acc;},{});
-  const top=Object.entries(byCategory).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  breakdown.innerHTML=`<div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:8px"><div class="note"><small>Laufende Kosten</small><div><b>${euro(runningTotal)}</b></div></div><div class="note"><small>Investitionen</small><div><b>${euro(investmentTotal)}</b></div></div></div><p><b>Saldo aus erfassten Buchungen:</b> <span style="color:${balance>=0?'#b7e486':'#e3bd43'}"><b>${euro(balance)}</b></span></p><h4>Größte Ausgabepositionen</h4>${top.length?top.map(([k,v])=>`<p style="margin:5px 0">${escapeHtml(k)}: <b>${euro(v)}</b></p>`).join(''):'<p class="muted">Noch keine Ausgaben erfasst.</p>'}<p class="muted">Nur manuell erfasste Einnahmen und Ausgaben über alle Betriebsjahre. Kein automatischer Zugriff auf den Xbox-Spielstand.</p>`;
- }
+
 }
 
 function syncQuickMonth(){
@@ -1629,7 +1528,6 @@ function renderAll(save=true){
  document.getElementById("kMilk").textContent=fmt(totals.milk)+" L";
 
  document.getElementById("kWagons").textContent=fmt(totals.wagonsRounded);
- document.getElementById("milkChart").innerHTML=svgChart(rows,[{key:"milk",label:"Milchproduktion",color:"#2e7d55"},{key:"factory",label:"Fabrikbedarf",color:"#c69c55"}]);
  document.getElementById("feedChart").innerHTML=svgChart(rows,[{key:"tmr",label:"TMR",color:"#3978aa"},{key:"bedding",label:"Einstreu",color:"#b78343"}]);
  document.getElementById("ageChart").innerHTML=svgChart(rows,[{key:"age",label:"Durchschnittsalter (Monate)",color:"#7657a5"}]);
  document.getElementById("annualSummary").innerHTML=`
@@ -1656,7 +1554,6 @@ function renderAll(save=true){
  document.getElementById("productionTable").innerHTML=`<div class="table-wrap"><table><thead><tr><th>Bedarfskategorie</th><th>Benötigte Menge</th></tr></thead><tbody>${prod.map(([n,b,ballen,y])=>`<tr><td>${n}</td><td><b>${n==="Einstreu-Stroh"?fmt(b)+" Ballen à "+fmt(bale)+" L":fmt(b)+" L"}</b></td></tr>`).join("")}</tbody></table></div>
  <p><b>Gesamter ermittelter Bedarf:</b> ${fmt(totals.tmr)} L TMR. Die TMR setzt sich aus ${fmt(totals.straw)} L Stroh, ${fmt(totals.hay)} L Heu und ${fmt(totals.silage)} L Maissilage zusammen (insgesamt ${fmt(tmrComponents)} L). Für Einstreu werden zusätzlich <b>${fmt(totals.bales)} Ballen à ${fmt(bale)} L</b> benötigt.</p>
  <p><b>Futterwagenbedarf:</b> ${fmt(totals.wagonsExact)} rechnerische Ladungen bzw. <b>${fmt(totals.wagonsRounded)} volle Wagen</b> à ${fmt(cap)} L pro Jahr.</p>`;
- document.getElementById("factorySummary").innerHTML=`<div class="kpi">${fmt(totals.milk)} L</div><p>Jahresproduktion<br>Fabrikbedarf: <b>${fmt(totals.factory)} L</b><br>Deckung: <b>${totals.factory?(totals.milk/totals.factory*100).toFixed(1):0}%</b><br>Saldo: <b>${fmt(totals.milk-totals.factory)} L</b></p>`;
  renderHarvest();
  renderFields();
  renderStock();
@@ -2104,16 +2001,6 @@ function renderAnalysis(){
  document.getElementById("analysisMilk").innerHTML=`<p>Milchproduktion: <b>${fmt(milk)} L</b><br>Ausgeliefert: <b>${fmt(delivered)} L</b><br>Fabrikbedarf: <b>${fmt(factory)} L</b><br>Produktionssaldo: <b>${fmt(milk-factory)} L</b><br>Fabrikdeckung: <b>${factory?(milk/factory*100).toFixed(1):0} %</b></p>
  <hr><p>Startbestand Milchtank: <b>${fmt(milkTankOpening)} L</b><br>+ Produktion: <b>${fmt(milk)} L</b><br>− Auslieferung: <b>${fmt(delivered)} L</b><br>Verbleibend: <b>${fmt(Math.max(0,tankRemaining))} L</b>${tankRemaining<0?'<br><b class="compare-bad">Achtung: Auslieferungen übersteigen den verfügbaren Bestand.</b>':""}</p>`;
 
- const milkStartHost=document.getElementById("milkStartAnalysis");
- if(milkStartHost){
-  const animalsForMilk=chosen==="all"
-   ? [...new Map(years.flatMap(y=>getHerdForYear(y).map(a=>[String(a.id),{...a,year:y}]))).values()]
-   : getHerdForYear(Number(chosen)).map(a=>({...a,year:Number(chosen)}));
-  const activeMilk=animalsForMilk.filter(a=>a.milkStarted&&(a.type||"buffalo")!=="pig");
-  milkStartHost.innerHTML=activeMilk.length
-   ? `<p>Der Haken kennzeichnet Tiere, die bereits Milch geben. Das erwartete Alter beim Milchstart wird im Tierbestand separat eingetragen.</p><div class="table-wrap"><table><thead><tr><th>Tier</th><th>Betriebsjahr</th><th>Milchstart ab</th><th>Erwarteter Milchstart</th><th>Spitzenleistung/Monat</th></tr></thead><tbody>${activeMilk.map((a,i)=>{const sm=Math.max(1,Math.min(12,Number(a.milkStartMonth)||Number(a.startMonth)||1));const s=getSettingsForYear(a.year);return `<tr><td>Tier ${i+1}</td><td>${a.year}</td><td>${months[sm-1]}</td><td>${fmt(Number(a.expectedMilkAge??a.firstMilkAge??24)||24)} Monate</td><td>${fmt(Number(s.milkPerAnimal)||0)} L</td></tr>`;}).join("")}</tbody></table></div>`
-   : '<p class="muted">Noch keine Milchproduktion aktiviert. Setze bei einem Tier den Haken „Milchproduktion gestartet“, dann erscheint hier der Startmonat und die berechnete Milchleistung.</p>';
- }
  document.getElementById("analysisStockText").innerHTML=`<p><b>Lagerbilanz – ${chosen==="all"?"letztes erfasstes Betriebsjahr":"Betriebsjahr "+chosen}</b></p>`+Object.keys(labels).map(k=>{
    const r=selectedLedger.items[k],status=r.shortage>0?"Fehlmenge":r.belowMinimum?"Mindestbestand unterschritten":(r.opening||r.harvest||r.need||r.manualIn||r.manualOut)?"ausreichend":"noch nicht erfasst";
    const reach=yearsLeft(Math.max(0,r.closing),r.need);
@@ -2121,33 +2008,6 @@ function renderAnalysis(){
  }).join("");
 
  renderFieldHarvestAnalysis(entries);
- const forecastHost=document.getElementById("milkForecast");
- if(forecastHost){
-  const y=chosen==="all"?Math.max(...years,Number(activeYear())):Number(chosen);
-  const herdForForecast=getHerdForYear(y), settingsForForecast=getSettingsForYear(y);
-  const yearMonths=Array.isArray(yearData[String(y)])?yearData[String(y)]:emptyYearMonths();
-  const forecast=calc(yearMonths,herdForForecast,settingsForForecast);
-  const monthIndex=yearMonths.findIndex(d=>(Number(d.tmr)||0)>0||(Number(d.bedding)||0)>0||(Number(d.milkDelivered)||0)>0);
-  const lastMonth=monthIndex<0?0:Math.max(...yearMonths.map((d,i)=>((Number(d.tmr)||0)>0||(Number(d.bedding)||0)>0||(Number(d.milkDelivered)||0)>0)?i+1:0));
-  const activeMilkAnimals=herdForForecast.filter(a=>{
-   const age=animalAgeInYear(a,12);
-   const milkStartAge=Math.max(0,Number(a.expectedMilkAge??a.firstMilkAge??((a.type||"buffalo")==="cow"?12:24))||0);
-   return (a.type||"buffalo")!=="pig"&&!!a.milkStarted&&age>=milkStartAge;
-  }).length;
-  const monthlyPotential=herdForForecast.reduce((sum,a)=>sum+animalMilkPerMonth(a,animalAgeInYear(a,12),settingsForForecast),0);
-  const remaining=Math.max(0,12-lastMonth);
-  const annualPotential=forecast.totals.milk;
-  const annualFactory=forecast.totals.factory;
-  const monthsWithData=forecast.rows.filter(r=>r.tmr>0||r.bedding>0||r.milkDelivered>0).length;
-  forecastHost.innerHTML=`<div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
-   <div class="note"><small>Milchtiere zum Jahresende</small><div class="kpi">${activeMilkAnimals}</div></div>
-   <div class="note"><small>Prognose Milch je Monat</small><div class="kpi">${fmt(monthlyPotential)} L</div></div>
-   <div class="note"><small>Milch-Jahresprognose</small><div class="kpi">${fmt(annualPotential)} L</div></div>
-   <div class="note"><small>Fabrikbedarf Jahresprognose</small><div class="kpi">${fmt(annualFactory)} L</div></div>
-  </div>
-  <p class="muted">Berechnet aus Tierbestand, Milchstart, Alter bei erster Milch und deiner Einstellung „Milch je milchgebendem Tier/Monat“. ${monthsWithData} Monate enthalten bereits Verbrauchs- oder Lieferdaten. Die Jahreswerte werden für alle zwölf Monate anhand des Tierzugangs, des Milchstarts und der eingestellten Monatsleistung hochgerechnet; sie sind eine Planungsschätzung, keine garantierte Leistung.</p>`;
- }
-
  const stockCharts=Object.keys(labels).map(k=>{
    const r=selectedLedger.items[k],used=Math.min(r.need,r.available),remaining=Math.max(0,r.closing);
    return pieCard(labels[k]+" – Bedarf und Rest",[{label:"Verbrauch",value:used,unit:r.unit},{label:"Restbestand",value:remaining,unit:r.unit}],`Bilanz für ${chosen==="all"?"das letzte Betriebsjahr":"Betriebsjahr "+chosen}. Fehlmenge: ${fmt(r.shortage)} ${r.unit}.`);
@@ -2172,13 +2032,8 @@ function isYearClosed(year=activeYear()){return !!yearClosures[String(year)];}
 function makeYearSnapshot(year=activeYear()){
  const y=Number(year),result=calc(Array.isArray(yearData[String(y)])?yearData[String(y)]:data,getHerdForYear(y),getSettingsForYear(y));
  const need=yearlyNeed(y),harvest=yearlyHarvest(y),ledger=buildStockLedger(y).slice(-1)[0];
- const expenses=operatingExpenses.filter(e=>Number(e.year)===y).map(e=>({...e}));
- const incomes=operatingIncomes.filter(e=>Number(e.year)===y).map(e=>({...e}));
- const incomeTotal=incomes.reduce((s,e)=>s+(Number(e.amount)||0),0);
- const investmentTotal=expenses.filter(isInvestmentExpense).reduce((s,e)=>s+(Number(e.amount)||0),0);
- const runningTotal=expenses.filter(e=>!isInvestmentExpense(e)).reduce((s,e)=>s+(Number(e.amount)||0),0);
  const fieldHistory=farmFields.map(f=>({id:f.id,name:f.name,area:Number(f.area)||0,crop:f.crop,harvests:getHarvestForYear(y).filter(h=>String(h.fieldId||"")===String(f.id)).length}));
- return {year:y,closedAt:new Date().toISOString(),totals:result.totals,need,harvest,stock:ledger.items,months:(yearData[String(y)]||data).map(d=>({...d})),animalCount:getHerdForYear(y).length,finance:{incomes,expenses,incomeTotal,investmentTotal,runningTotal,balance:incomeTotal-investmentTotal-runningTotal},fieldHistory};
+ return {year:y,closedAt:new Date().toISOString(),totals:result.totals,need,harvest,stock:ledger.items,months:(yearData[String(y)]||data).map(d=>({...d})),animalCount:getHerdForYear(y).length,fieldHistory};
 }
 function getYearCloseChecklist(year=activeYear()){
  const y=Number(year),key=String(y),months=Array.isArray(yearData[key])?yearData[key]:data;
@@ -2223,7 +2078,7 @@ function renderYearClose(){
  const y=activeYear(),snap=yearClosures[y],status=document.getElementById("yearCloseStatus");if(!status)return;
  const audit=getYearCloseChecklist(y);status.innerHTML=snap?`<p><b>Abgeschlossen:</b> ${new Date(snap.closedAt).toLocaleString("de-DE")} · ${snap.animalCount} Tiere · TMR ${fmt(snap.totals.tmr)} L · Milch ${fmt(snap.totals.milk)} L</p><p class="muted">Abschluss gespeichert. Das Betriebsjahr ist schreibgeschützt.</p>`:`<p class="muted">Betriebsjahr ${y} ist noch offen.</p><div class="note"><b>Abschluss-Check</b><p>Monatswerte: ${audit.monthCount}/12 ${audit.monthsComplete?"✓":"· unvollständig"}<br>Erntevorgänge: ${audit.harvestCount}<br>Milchmonate: ${audit.milkCount}/12<br>Lagerwarnungen: ${audit.stockIssues}</p><small>Fehlende Einträge verhindern den Abschluss nicht, werden aber vor der Bestätigung angezeigt.</small></div>`;
  document.getElementById("closeYearBtn").disabled=!!snap;document.getElementById("reopenYearBtn").disabled=!snap;document.getElementById("createNextYearBtn").disabled=!snap;
- document.getElementById("yearCloseReport").innerHTML=snap?`<div class="report-block"><h3>Abschlussbericht Betriebsjahr ${y}</h3><p>Tierbestand: <b>${snap.animalCount}</b><br>Einnahmen: <b>${euro(snap.finance?.incomeTotal||0)}</b><br>Laufende Ausgaben: <b>${euro(snap.finance?.runningTotal||0)}</b><br>Investitionen: <b>${euro(snap.finance?.investmentTotal||0)}</b><br>Finanzsaldo: <b>${euro(snap.finance?.balance||0)}</b><br>TMR-Verbrauch: <b>${fmt(snap.totals.tmr)} L</b><br>Stroh TMR: <b>${fmt(snap.need.strawTmr)} L</b><br>Heu: <b>${fmt(snap.need.hay)} L</b><br>Maissilage: <b>${fmt(snap.need.silage)} L</b><br>Einstreu: <b>${fmt(snap.need.beddingBales)} Ballen</b><br>Milchproduktion: <b>${fmt(snap.totals.milk)} L</b><br>Milch ausgeliefert: <b>${fmt(snap.totals.milkDelivered)} L</b></p><h3>Lager-Endbestand</h3>${Object.entries(snap.stock).map(([k,v])=>`<p>${v.name}: <b>${fmt(Math.max(0,v.closing))} ${v.unit}</b> · Fehlmenge ${fmt(v.shortage)} ${v.unit}</p>`).join("")}</div>`:"";
+ document.getElementById("yearCloseReport").innerHTML=snap?`<div class="report-block"><h3>Abschlussbericht Betriebsjahr ${y}</h3><p>Tierbestand: <b>${snap.animalCount}</b><br>TMR-Verbrauch: <b>${fmt(snap.totals.tmr)} L</b><br>Stroh TMR: <b>${fmt(snap.need.strawTmr)} L</b><br>Heu: <b>${fmt(snap.need.hay)} L</b><br>Maissilage: <b>${fmt(snap.need.silage)} L</b><br>Einstreu: <b>${fmt(snap.need.beddingBales)} Ballen</b><br>Milchproduktion: <b>${fmt(snap.totals.milk)} L</b><br>Milch ausgeliefert: <b>${fmt(snap.totals.milkDelivered)} L</b></p><h3>Lager-Endbestand</h3>${Object.entries(snap.stock).map(([k,v])=>`<p>${v.name}: <b>${fmt(Math.max(0,v.closing))} ${v.unit}</b> · Fehlmenge ${fmt(v.shortage)} ${v.unit}</p>`).join("")}</div>`:"";
 }
 function applyYearLock(){
  const closed=isYearClosed();
@@ -2237,7 +2092,7 @@ function printYearReport(){
  const y=activeYear(),snap=yearClosures[y]||makeYearSnapshot(y);
  const rows=Object.entries(snap.stock||{}).map(([k,v])=>`<tr><td>${escapeHtml(v.name)}</td><td>${fmt(v.opening)} ${v.unit}</td><td>${fmt(v.harvest)} ${v.unit}</td><td>${fmt(v.need)} ${v.unit}</td><td>${fmt(Math.max(0,v.closing))} ${v.unit}</td><td>${fmt(v.shortage)} ${v.unit}</td></tr>`).join("");
  const needs=[ ["TMR-Stroh",snap.need.strawTmr||0,snap.harvest.strawTmr||0,"L"],["Heu",snap.need.hay||0,snap.harvest.hay||0,"L"],["Maissilage",snap.need.silage||0,snap.harvest.silage||0,"L"],["Einstreu-Stroh",snap.need.beddingBales||0,snap.harvest.beddingBales||0,"Ballen"] ];
- const html=`<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Jahresbericht ${y}</title><style>body{font:14px Arial,sans-serif;color:#172019;margin:28px}h1,h2{color:#315b2b}table{width:100%;border-collapse:collapse;margin:12px 0}td,th{border:1px solid #bbb;padding:8px;text-align:left}th{background:#e9f0e4}.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.box{border:1px solid #bbb;padding:12px;border-radius:8px}.muted{color:#555}@media print{button{display:none}}</style></head><body><h1>LS25 · LS 25 Hof Verwaltung mit Tierzucht</h1><h2>Jahresbericht Betriebsjahr ${y}</h2><p class="muted">Erstellt am ${new Date().toLocaleString("de-DE")}${yearClosures[y]?' · Jahresabschluss gespeichert':' · Vorschau, Jahr noch nicht abgeschlossen'}</p><div class="kpis"><div class="box"><b>Tierbestand</b><h2>${snap.animalCount}</h2></div><div class="box"><b>TMR-Verbrauch</b><h2>${fmt(snap.totals.tmr)} L</h2></div><div class="box"><b>Milchproduktion</b><h2>${fmt(snap.totals.milk)} L</h2></div><div class="box"><b>Milch ausgeliefert</b><h2>${fmt(snap.totals.milkDelivered)} L</h2></div></div><h2>Finanzübersicht</h2><table><tr><th>Position</th><th>Betrag</th></tr><tr><td>Einnahmen</td><td>${euro(snap.finance?.incomeTotal||0)}</td></tr><tr><td>Laufende Ausgaben</td><td>${euro(snap.finance?.runningTotal||0)}</td></tr><tr><td>Investitionen</td><td>${euro(snap.finance?.investmentTotal||0)}</td></tr><tr><td>Saldo</td><td>${euro(snap.finance?.balance||0)}</td></tr></table><h2>Feldhistorie</h2><table><tr><th>Feld</th><th>Fläche</th><th>Anbau</th><th>Ernten</th></tr>${(snap.fieldHistory||[]).map(f=>`<tr><td>${escapeHtml(f.name)}</td><td>${fmt(f.area)} ha</td><td>${escapeHtml(cropLabels[f.crop]||f.crop||"–")}</td><td>${f.harvests}</td></tr>`).join("")}</table><h2>Bedarf und Ernte</h2><table><tr><th>Produkt</th><th>Jahresbedarf</th><th>Ernte</th><th>Saldo Ernte − Bedarf</th></tr>${needs.map(([name,need,harvest,unit])=>`<tr><td>${name}</td><td>${fmt(need)} ${unit}</td><td>${fmt(harvest)} ${unit}</td><td>${fmt(harvest-need)} ${unit}</td></tr>`).join("")}</table><h2>Lagerabschluss</h2><table><tr><th>Produkt</th><th>Anfang</th><th>Ernte</th><th>Verbrauch</th><th>Endbestand</th><th>Fehlmenge</th></tr>${rows}</table><p class="muted">Dieser Bericht enthält die erfassten Einnahmen, Ausgaben und Investitionen. Der Finanzsaldo ist eine einfache betriebliche Übersicht auf Basis deiner manuellen Buchungen und keine Steuer- oder Bilanzrechnung.</p><button onclick="window.print()">Drucken / Als PDF speichern</button><script>setTimeout(()=>window.print(),500)<\/script>
+ const html=`<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Jahresbericht ${y}</title><style>body{font:14px Arial,sans-serif;color:#172019;margin:28px}h1,h2{color:#315b2b}table{width:100%;border-collapse:collapse;margin:12px 0}td,th{border:1px solid #bbb;padding:8px;text-align:left}th{background:#e9f0e4}.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.box{border:1px solid #bbb;padding:12px;border-radius:8px}.muted{color:#555}@media print{button{display:none}}</style></head><body><h1>LS25 · LS 25 Hof Verwaltung mit Tierzucht</h1><h2>Jahresbericht Betriebsjahr ${y}</h2><p class="muted">Erstellt am ${new Date().toLocaleString("de-DE")}${yearClosures[y]?' · Jahresabschluss gespeichert':' · Vorschau, Jahr noch nicht abgeschlossen'}</p><div class="kpis"><div class="box"><b>Tierbestand</b><h2>${snap.animalCount}</h2></div><div class="box"><b>TMR-Verbrauch</b><h2>${fmt(snap.totals.tmr)} L</h2></div><div class="box"><b>Milchproduktion</b><h2>${fmt(snap.totals.milk)} L</h2></div><div class="box"><b>Milch ausgeliefert</b><h2>${fmt(snap.totals.milkDelivered)} L</h2></div></div><h2>Feldhistorie</h2><table><tr><th>Feld</th><th>Fläche</th><th>Anbau</th><th>Ernten</th></tr>${(snap.fieldHistory||[]).map(f=>`<tr><td>${escapeHtml(f.name)}</td><td>${fmt(f.area)} ha</td><td>${escapeHtml(cropLabels[f.crop]||f.crop||"–")}</td><td>${f.harvests}</td></tr>`).join("")}</table><h2>Bedarf und Ernte</h2><table><tr><th>Produkt</th><th>Jahresbedarf</th><th>Ernte</th><th>Saldo Ernte − Bedarf</th></tr>${needs.map(([name,need,harvest,unit])=>`<tr><td>${name}</td><td>${fmt(need)} ${unit}</td><td>${fmt(harvest)} ${unit}</td><td>${fmt(harvest-need)} ${unit}</td></tr>`).join("")}</table><h2>Lagerabschluss</h2><table><tr><th>Produkt</th><th>Anfang</th><th>Ernte</th><th>Verbrauch</th><th>Endbestand</th><th>Fehlmenge</th></tr>${rows}</table><button onclick="window.print()">Drucken / Als PDF speichern</button><script>setTimeout(()=>window.print(),500)<\/script>
 
 
 <style id="iphone-month-entry-fix">
@@ -2312,149 +2167,6 @@ function printYearReport(){
  const w=window.open("","_blank");if(!w){alert("Bitte Pop-ups für diese App erlauben, um den PDF-Bericht zu erstellen.");return;}w.document.open();w.document.write(html);w.document.close();
 }
 
-const expenseMonths=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
-let expensePhotoData="";
-let expenseOcrLoaded=null;
-function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]))}
-function euro(n){return new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR"}).format(Number(n)||0)}
-function expenseYearFromDate(date){const d=new Date(date+"T12:00:00");return Number.isFinite(d.getTime())?d.getFullYear():new Date().getFullYear()}
-
-function financeYearOptions(){
- const el=document.getElementById("financeYearFilter");if(!el)return;
- const old=el.value||"all";
- const years=[...new Set([...Object.keys(yearData).map(Number),...operatingExpenses.map(e=>Number(e.year)||expenseYearFromDate(e.date)),...operatingIncomes.map(e=>Number(e.year)||expenseYearFromDate(e.date))].filter(y=>y>0))].sort((a,b)=>b-a);
- el.innerHTML='<option value="all">Alle Betriebsjahre</option>'+years.map(y=>`<option value="${y}">${y}</option>`).join("");
- el.value=old==="all"||years.includes(Number(old))?old:String(activeYear());
-}
-function isInvestmentExpense(e){
- const c=String(e.category||"").toLowerCase();
- return ["neue fahrzeuge","neue handwerkzeuge","baukosten","landkauf"].includes(c) ||
-        ["new vehicles","new handtools","construction cost","land purchase"].includes(c);
-}
-function renderFinance(){
- financeYearOptions();
- const filter=document.getElementById("financeYearFilter");if(!filter)return;
- const chosen=filter.value;
- const ex=operatingExpenses.filter(e=>chosen==="all"||Number(e.year)===Number(chosen));
- const inc=operatingIncomes.filter(e=>chosen==="all"||Number(e.year)===Number(chosen));
- const income=inc.reduce((s,e)=>s+(Number(e.amount)||0),0);
- const investments=ex.filter(isInvestmentExpense).reduce((s,e)=>s+(Number(e.amount)||0),0);
- const running=ex.filter(e=>!isInvestmentExpense(e)).reduce((s,e)=>s+(Number(e.amount)||0),0);
- const expenses=running+investments, result=income-expenses;
- const euroFmt=n=>euro(n);
- document.getElementById("financeSummary").innerHTML=`
- <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
-  <div class="note"><small>Einnahmen</small><div class="kpi">${euroFmt(income)}</div></div>
-  <div class="note"><small>Laufende Ausgaben</small><div class="kpi">${euroFmt(running)}</div></div>
-  <div class="note"><small>Investitionen</small><div class="kpi">${euroFmt(investments)}</div></div>
-  <div class="note"><small>Saldo nach allen Ausgaben</small><div class="kpi" style="color:${result>=0?'#b7e486':'#f0a19a'}">${euroFmt(result)}</div></div>
- </div>
- <p class="muted">${chosen==="all"?"Alle erfassten Betriebsjahre":"Betriebsjahr "+chosen} · ${inc.length} Einnahmen · ${ex.length} Ausgaben. Investitionen werden separat ausgewiesen und zusätzlich beim Gesamtsaldo berücksichtigt.</p>
- <h3>Ergebnis je Einnahmeart</h3>
- ${Object.entries(inc.reduce((a,e)=>{const k=e.type||"Sonstige Einnahmen";a[k]=(a[k]||0)+(Number(e.amount)||0);return a;},{})).map(([k,v])=>`<p>${escapeHtml(k)}: <b>${euroFmt(v)}</b></p>`).join("")||'<p class="muted">Noch keine Einnahmen erfasst.</p>'}`;
- document.getElementById("incomeRows").innerHTML=inc.length?inc.slice().sort((a,b)=>(b.date||"").localeCompare(a.date||"")).map(e=>`<div class="expense-row"><div><b>${escapeHtml(e.date||"")}</b><small>${escapeHtml(e.type||"")}</small></div><div><b>${escapeHtml(e.description||"")}</b><small>${escapeHtml(e.reference||"")}</small></div><div><b>${euro(e.amount)}</b></div><div></div><div class="expense-action"><button class="btn" type="button" data-income-delete="${e.id}">Löschen</button></div></div>`).join(""):'<p class="muted">Noch keine Einnahmen erfasst.</p>';
- document.querySelectorAll("[data-income-delete]").forEach(b=>b.addEventListener("click",()=>{if(!confirm("Diese Einnahme wirklich löschen?"))return;operatingIncomes=operatingIncomes.filter(e=>e.id!==Number(b.dataset.incomeDelete));persist();renderFinance()}));
- // Das Cockpit bleibt auch nach Änderungen an Einnahmen/Ausgaben aktuell.
- try{const current=calc(),ledger=buildStockLedger(Math.max(1,Math.floor(Number(val("year"))||1)));renderManagementCockpit(current.totals,ledger[ledger.length-1]);}catch(err){}
-}
-function saveIncome(){
- const date=document.getElementById("incomeDate").value, amount=Number(document.getElementById("incomeAmount").value);
- if(!date||!Number.isFinite(amount)||amount<=0){document.getElementById("incomeFormMsg").textContent="Bitte Datum und einen Betrag größer als 0 eingeben.";return;}
- operatingIncomes.push({id:nextIncomeId++,date,year:expenseYearFromDate(date),month:Number(date.slice(5,7)),type:document.getElementById("incomeType").value,description:document.getElementById("incomeDescription").value.trim(),amount,reference:document.getElementById("incomeReference").value.trim()});
- persist();document.getElementById("incomeDescription").value="";document.getElementById("incomeAmount").value="";document.getElementById("incomeReference").value="";
- document.getElementById("incomeFormMsg").textContent="Einnahme gespeichert.";renderFinance();
-}
-
-function renderExpenses(){
- const yf=document.getElementById("expenseYearFilter"),mf=document.getElementById("expenseMonthFilter");
- if(!yf)return;
- const old=yf.value||"all";
- const years=[...new Set([new Date().getFullYear(),...operatingExpenses.map(e=>Number(e.year)||expenseYearFromDate(e.date))])].sort((a,b)=>b-a);
- yf.innerHTML='<option value="all">Alle Betriebsjahre</option>'+years.map(y=>`<option value="${y}">${y}</option>`).join("");
- yf.value=old==="all"||years.includes(Number(old))?old:String(new Date().getFullYear());
- const chosenYear=yf.value,chosenMonth=mf.value;
- const filtered=operatingExpenses.filter(e=>(chosenYear==="all"||Number(e.year)===Number(chosenYear))&&(chosenMonth==="all"||Number(e.month)===Number(chosenMonth))).sort((a,b)=>(b.date||"").localeCompare(a.date||"")||b.id-a.id);
- const total=filtered.reduce((a,e)=>a+(Number(e.amount)||0),0);
- const monthCount=new Set(filtered.map(e=>e.date?.slice(0,7)).filter(Boolean)).size;
- document.getElementById("expenseKpis").innerHTML=`<div class="expense-kpi"><small>Gesamtkosten</small><strong>${euro(total)}</strong></div><div class="expense-kpi"><small>Einzelbuchungen</small><strong>${filtered.length}</strong></div><div class="expense-kpi"><small>Monate mit Buchungen</small><strong>${monthCount}</strong></div><div class="expense-kpi"><small>Durchschnitt je Buchung</small><strong>${euro(filtered.length?total/filtered.length:0)}</strong></div>`;
- const byCat={},byPosition={};
- filtered.forEach(e=>{
-  const cat=e.category||"Sonstige (Altbuchung)",position=e.position||e.category||"Sonstige (Altbuchung)",amount=Number(e.amount)||0;
-  byCat[cat]=(byCat[cat]||0)+amount;
-  if(!byPosition[position])byPosition[position]={amount:0,count:0,category:cat};
-  byPosition[position].amount+=amount;byPosition[position].count++;
- });
- const sorted=Object.entries(byCat).sort((a,b)=>b[1]-a[1]),max=Math.max(1,...sorted.map(x=>x[1]));
- document.getElementById("expenseCategoryBreakdown").innerHTML=sorted.length?'<h3 style="margin-top:18px">Zusammenfassung nach Hauptkategorie</h3>'+sorted.map(([cat,amount])=>`<div class="expense-bar"><b>${escapeHtml(cat)}</b><div class="expense-bar-track"><div class="expense-bar-fill" style="width:${amount/max*100}%"></div></div><span>${euro(amount)}</span></div>`).join(""):'<p class="muted">Für diese Auswahl sind noch keine Betriebskosten erfasst.</p>';
- const positions=Object.entries(byPosition).sort((a,b)=>b[1].amount-a[1].amount),pmax=Math.max(1,...positions.map(x=>x[1].amount));
- document.getElementById("expensePositionBreakdown").innerHTML=positions.length?`<h3 style="margin-top:20px">Einzelpositionen – ${chosenMonth==="all"?"Zeitraum gesamt":"Monatsauswertung"}</h3><div class="table-wrap"><table><thead><tr><th>Einzelposition</th><th>Hauptkategorie</th><th>Buchungen</th><th>Gesamtkosten</th><th>Anteil</th></tr></thead><tbody>${positions.map(([position,v])=>`<tr><td><b>${escapeHtml(position)}</b></td><td>${escapeHtml(v.category)}</td><td>${v.count}</td><td><b>${euro(v.amount)}</b></td><td>${total?(v.amount/total*100).toFixed(1):"0,0"} %</td></tr>`).join("")}</tbody></table></div>`:"";
- let monthlyHtml="";
- if(chosenYear!=="all"&&chosenMonth==="all"){
-  const monthly=Array.from({length:12},(_,i)=>({month:i+1,total:0,byPosition:{}}));
-  filtered.forEach(e=>{const m=Number(e.month)||Number((e.date||"").slice(5,7));if(m>=1&&m<=12){const pos=e.position||e.category||"Sonstige Betriebsausgabe";monthly[m-1].total+=Number(e.amount)||0;monthly[m-1].byPosition[pos]=(monthly[m-1].byPosition[pos]||0)+(Number(e.amount)||0)}});
-  monthlyHtml='<h3 style="margin-top:20px">Monatsübersicht im ausgewählten Jahr</h3><div class="table-wrap"><table><thead><tr><th>Monat</th><th>Gesamtkosten</th><th>Teuerste Einzelposition</th></tr></thead><tbody>'+monthly.map(m=>{const top=Object.entries(m.byPosition).sort((a,b)=>b[1]-a[1])[0];return `<tr><td>${months[m.month-1]}</td><td><b>${euro(m.total)}</b></td><td>${top?`${escapeHtml(top[0])}: ${euro(top[1])}`:"–"}</td></tr>`}).join("")+'</tbody></table></div>';
- }
- document.getElementById("expenseMonthlyBreakdown").innerHTML=monthlyHtml;
- renderFinance();
- document.getElementById("expenseRows").innerHTML=filtered.length?filtered.map(e=>`<div class="expense-row"><div><b>${escapeHtml(e.date||"")}</b><small>${escapeHtml(e.vendor||"")}</small></div><div><b>${escapeHtml(e.position||e.category||"")}</b><small>${escapeHtml(e.category||"")}</small><small>${escapeHtml(e.description||"")}</small>${e.reference?`<small>${escapeHtml(e.reference)}</small>`:""}</div><div><b>${euro(e.amount)}</b></div><div>${e.photo?`<img class="expense-thumb" src="${e.photo}" alt="Belegfoto">`:""}</div><div class="expense-action"><button class="btn" data-expense-edit="${e.id}" type="button">Bearbeiten</button> <button class="btn" data-expense-delete="${e.id}" type="button">Löschen</button></div></div>`).join(""):'<p class="muted">Noch keine Kostenbuchungen vorhanden.</p>';
- document.querySelectorAll("[data-expense-delete]").forEach(b=>b.addEventListener("click",()=>{if(!confirm("Diese Kostenbuchung wirklich löschen?"))return;operatingExpenses=operatingExpenses.filter(x=>x.id!==Number(b.dataset.expenseDelete));persist();renderExpenses()}));
- document.querySelectorAll("[data-expense-edit]").forEach(b=>b.addEventListener("click",()=>{const e=operatingExpenses.find(x=>x.id===Number(b.dataset.expenseEdit));if(!e)return;document.getElementById("expenseDate").value=e.date||"";document.getElementById("expenseCategory").value=e.category||"Sonstiges";document.getElementById("expenseDescription").value=e.description||"";document.getElementById("expenseAmount").value=e.amount||"";document.getElementById("expenseVendor").value=e.vendor||"";document.getElementById("expenseReference").value=e.reference||"";expensePhotoData=e.photo||"";document.getElementById("expenseFormMsg").textContent="Bearbeitungsmodus: Speichern legt eine aktualisierte Buchung an; die alte Buchung bitte anschließend löschen.";document.getElementById("expensePhotoPreview").innerHTML=expensePhotoData?`<img class="expense-thumb" src="${expensePhotoData}" alt="Ausgewählter Beleg">`:"";document.getElementById("expenseSaveBtn").dataset.editId=e.id;showTab("expenses");}));
-}
-function clearExpenseForm(){["expenseDescription","expenseAmount","expenseVendor","expenseReference","expenseOcrText"].forEach(id=>document.getElementById(id).value="");document.getElementById("stockBookingDate").value=new Date().toISOString().slice(0,10);document.getElementById("expenseDate").value=new Date().toISOString().slice(0,10);document.getElementById("expenseCategory").value="Laufende Fahrzeugkosten";expensePhotoData="";document.getElementById("expensePhoto").value="";document.getElementById("expensePhotoPreview").innerHTML="";document.getElementById("expenseSaveBtn").dataset.editId="";document.getElementById("expenseFormMsg").textContent=""}
-function compressExpenseImage(file){
- return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=reject;reader.onload=()=>{const img=new Image();img.onerror=reject;img.onload=()=>{const scale=Math.min(1,700/Math.max(img.width,img.height)),canvas=document.createElement("canvas");canvas.width=Math.round(img.width*scale);canvas.height=Math.round(img.height*scale);canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);resolve(canvas.toDataURL("image/jpeg",.48))};img.src=reader.result};reader.readAsDataURL(file)});
-}
-async function loadExpenseOcr(){
- if(expenseOcrLoaded)return expenseOcrLoaded;
- expenseOcrLoaded=new Promise((resolve,reject)=>{const script=document.createElement("script");script.src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";script.onload=()=>resolve(window.Tesseract);script.onerror=()=>reject(new Error("OCR-Bibliothek konnte nicht geladen werden. Bitte Internetverbindung prüfen."));document.head.appendChild(script)});
- return expenseOcrLoaded;
-}
-function suggestExpenseFromText(text){
- const amountMatches=[...text.matchAll(/(?:€|EUR)\s*([0-9]{1,3}(?:[.\s][0-9]{3})*(?:[,\.][0-9]{2})?)|([0-9]{1,3}(?:[.\s][0-9]{3})*[,\.][0-9]{2})\s*(?:€|EUR)/gi)];
- const raw=amountMatches.map(m=>m[1]||m[2]).filter(Boolean);
- const amounts=raw.map(v=>Number(v.replace(/\s/g,"").replace(/\./g,"").replace(",", "."))).filter(n=>Number.isFinite(n)&&n>0);
- if(amounts.length){document.getElementById("expenseAmount").value=Math.max(...amounts).toFixed(2);document.getElementById("expenseFormMsg").textContent=`Betragsvorschlag ${euro(Math.max(...amounts))} erkannt. Bitte prüfen – bei mehreren Summen kann der größte Wert auch ein Kontostand sein.`}
- const dateMatch=text.match(/\b(0?[1-9]|[12]\d|3[01])[./-](0?[1-9]|1[0-2])[./-](20\d{2})\b/);
- if(dateMatch)document.getElementById("expenseDate").value=`${dateMatch[3]}-${dateMatch[2].padStart(2,"0")}-${dateMatch[1].padStart(2,"0")}`;
-}
-async function runExpenseOcr(){
- const status=document.getElementById("expenseOcrStatus");
- if(!expensePhotoData){status.textContent="Bitte zuerst ein Foto auswählen.";return}
- const btn=document.getElementById("expenseOcrBtn");btn.disabled=true;status.textContent="Texterkennung wird geladen …";
- try{
-  const Tesseract=await loadExpenseOcr();status.textContent="Foto wird gelesen …";
-  const result=await Tesseract.recognize(expensePhotoData,"deu+eng",{logger:m=>{if(m.status==="recognizing text")status.textContent=`Texterkennung: ${Math.round((m.progress||0)*100)} %`;}});
-  const txt=result.data.text||"";document.getElementById("expenseOcrText").value=txt;suggestExpenseFromText(txt);
-  status.textContent=txt.trim()?"Texterkennung abgeschlossen. Werte bitte kontrollieren.":"Kein lesbarer Text erkannt. Betrag bitte manuell eintragen.";
- }catch(err){status.textContent=err.message||"Texterkennung fehlgeschlagen."}finally{btn.disabled=false}
-}
-async function chooseExpensePhoto(file){
- if(!file)return;
- try{expensePhotoData=await compressExpenseImage(file);document.getElementById("expensePhotoPreview").innerHTML=`<img class="expense-thumb" src="${expensePhotoData}" alt="Vorschau des Spiel-Screenshots">`;document.getElementById("expenseOcrStatus").textContent="Bild bereit. Jetzt Texterkennung starten."}
- catch(e){document.getElementById("expenseOcrStatus").textContent="Bild konnte nicht verarbeitet werden."}
-}
-function saveExpense(){
- const date=document.getElementById("expenseDate").value,amount=Number(document.getElementById("expenseAmount").value);
- if(!date||!Number.isFinite(amount)||amount<=0){document.getElementById("expenseFormMsg").textContent="Bitte Datum und einen Betrag größer als 0 eingeben.";return}
- const id=Number(document.getElementById("expenseSaveBtn").dataset.editId)||nextExpenseId++;
- const entry={id,date,year:expenseYearFromDate(date),month:Number(date.slice(5,7)),category:document.getElementById("expenseCategory").value,position:document.getElementById("expenseCategory").value,description:document.getElementById("expenseDescription").value.trim(),amount,vendor:document.getElementById("expenseVendor").value.trim(),reference:document.getElementById("expenseReference").value.trim(),photo:expensePhotoData};
- const idx=operatingExpenses.findIndex(e=>e.id===id);if(idx>=0)operatingExpenses[idx]=entry;else operatingExpenses.push(entry);
- persist();renderExpenses();clearExpenseForm();document.getElementById("expenseFormMsg").textContent="Betriebskosten gespeichert.";
-}
-function exportExpenseCsv(){
- const yf=document.getElementById("expenseYearFilter").value,mf=document.getElementById("expenseMonthFilter").value;
- const rows=operatingExpenses.filter(e=>(yf==="all"||Number(e.year)===Number(yf))&&(mf==="all"||Number(e.month)===Number(mf)));
- const csv="\uFEFF"+[["Datum","Betriebsjahr","Monat","Kategorie","Beschreibung","Händler","Betrag EUR","Notiz"],...rows.map(e=>[e.date,e.year,expenseMonths[(e.month||1)-1],e.category,e.description,e.vendor,e.amount,e.reference])].map(r=>r.map(v=>'"'+String(v??"").replaceAll('"','""')+'"').join(";")).join("\r\n");
- const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download="LS25_Betriebskosten_"+(yf==="all"?"alle_Jahre":yf)+(mf==="all"?"":"_Monat_"+mf)+".csv";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-}
-function printExpenseReport(){
- const yf=document.getElementById("expenseYearFilter").value,mf=document.getElementById("expenseMonthFilter").value;
- const rows=operatingExpenses.filter(e=>(yf==="all"||Number(e.year)===Number(yf))&&(mf==="all"||Number(e.month)===Number(mf)));
- const total=rows.reduce((a,e)=>a+(Number(e.amount)||0),0),cats={};rows.forEach(e=>cats[e.category]=(cats[e.category]||0)+(Number(e.amount)||0));
- const html=`<!doctype html><html lang="de"><meta charset="utf-8"><title>Betriebskostenbericht</title><style>body{font:14px Arial;margin:28px;color:#222}table{width:100%;border-collapse:collapse}td,th{border:1px solid #bbb;padding:7px;text-align:left}th{background:#e8eee5}</style><h1>LS25 – Betriebskostenbericht</h1><p>Zeitraum: ${yf==="all"?"Alle Betriebsjahre":"Betriebsjahr "+yf} · ${mf==="all"?"Gesamtes Jahr":expenseMonths[Number(mf)-1]}</p><h2>Gesamtkosten: ${euro(total)}</h2><h3>Nach Kostenart</h3><table><tr><th>Kategorie</th><th>Summe</th></tr>${Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<tr><td>${escapeHtml(k)}</td><td>${euro(v)}</td></tr>`).join("")}</table><h3>Einzelbuchungen</h3><table><tr><th>Datum</th><th>Hauptkategorie</th><th>Einzelposition</th><th>Beschreibung</th><th>Händler</th><th>Betrag</th></tr>${rows.map(e=>`<tr><td>${escapeHtml(e.date||"")}</td><td>${escapeHtml(e.category||"")}</td><td>${escapeHtml(e.position||e.category||"")}</td><td>${escapeHtml(e.description||"")}</td><td>${escapeHtml(e.vendor||"")}</td><td>${euro(e.amount)}</td></tr>`).join("")}</table><script>window.onload=()=>setTimeout(()=>window.print(),400)<\/script></html>`;
- const w=window.open("","_blank");if(!w){alert("Bitte Pop-ups erlauben, um den Kostenbericht als PDF zu speichern.");return}w.document.open();w.document.write(html);w.document.close();
-}
-
 document.querySelectorAll("[data-jump-tab]").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.jumpTab)));
 function showTab(tab){
  const valid=["dashboard","master","months","stalls","production","harvest","analysis","milk"].includes(tab)?tab:"dashboard";
@@ -2505,7 +2217,30 @@ const milkMonthNames=["Januar","Februar","März","April","Mai","Juni","Juli","Au
 // zentrale Konstanten statt an mehreren Stellen abweichend hardcodiert zu sein.
 const DAIRY_MONTHLY_NEED=1440;
 const DAIRY_FILLING_OUTPUT=2880;
-function refreshMilkYears(){const el=document.getElementById("milkYear");if(!el)return;const y=activeYear();const ys=knownYears(y).filter(n=>n!==24&&n!==2025);el.innerHTML=ys.map(n=>`<option value="${n}">Betriebsjahr ${n}</option>`).join("");el.value=ys.includes(Number(y))?y:String(ys[ys.length-1]||1);}
+function refreshMilkYears(selected=activeYear()){
+ const el=document.getElementById("milkYear");if(!el)return;
+ // Milchjahre werden unabhängig von initialisierten Hofjahren geführt.
+ const keys=[...knownYears(selected),...Object.keys(milkEntries||{}).map(Number),...Object.keys(milkYearClosures||{}).map(Number)]
+  .filter(n=>Number.isSafeInteger(Number(n))&&Number(n)>=1&&Number(n)!==24&&Number(n)!==2025).map(Number);
+ const ys=[...new Set(keys)].sort((a,b)=>a-b);
+ const y=Number(selected)||Number(activeYear());
+ if(!ys.includes(y))ys.push(y);
+ ys.sort((a,b)=>a-b);
+ el.innerHTML=ys.map(n=>`<option value="${n}">Milchjahr ${n}${milkYearClosures[String(n)]?" · abgeschlossen":""}</option>`).join("");
+ el.value=String(ys.includes(y)?y:ys[ys.length-1]||1);
+}
+function openNextMilkYear(closedYear){
+ const next=String(Number(closedYear)+1);
+ if(!Number.isSafeInteger(Number(next))||Number(next)<1)return;
+ // Nur Milchdaten vorbereiten; kein Hofjahr und keine Tierdaten werden dadurch angelegt.
+ milkEntries[next]=milkEntries[next]||{};
+ if(!Array.isArray(yearData[next]))yearData[next]=emptyYearMonths();
+ localStorage.setItem(MILK_KEY,JSON.stringify(milkEntries));
+ persist();
+ refreshMilkYears(next);
+ const selector=document.getElementById("milkYear");if(selector)selector.value=next;
+ renderMilkMonth();
+}
 function isMilkYearClosed(year){return !!milkYearClosures[String(year)];}
 function renderMilkMonth(){
  const y=document.getElementById("milkYear").value||activeYear(),m=Number(document.getElementById("milkMonth").value||1),idx=m-1;
@@ -2539,7 +2274,7 @@ document.getElementById("closeMilkYearBtn").addEventListener("click",()=>{
  const available=Array.from({length:12},(_,i)=>Math.max(0,Number(milkEntries[y]?.[i])||0)).reduce((a,b)=>a+b,0);
  const delivered=Array.from({length:12},(_,i)=>Math.max(0,Number(rows[i]?.milkDelivered)||0)).reduce((a,b)=>a+b,0);
  if(!confirm(`Milchjahr ${y} unabhängig vom allgemeinen Betriebsjahr abschließen?\n\nVerfügbare Milch: ${fmt(available)} L\nAn Fabrik ausgeliefert: ${fmt(delivered)} L\n\nDie Milcheingaben dieses Jahres werden danach gesperrt.`))return;
- milkYearClosures[y]={closedAt:new Date().toISOString(),available,delivered};localStorage.setItem("ls25buffalo_milk_year_closures",JSON.stringify(milkYearClosures));persist();renderMilkMonth();
+ milkYearClosures[y]={closedAt:new Date().toISOString(),available,delivered};localStorage.setItem("ls25buffalo_milk_year_closures",JSON.stringify(milkYearClosures));persist();openNextMilkYear(y);
 });
 document.getElementById("reopenMilkYearBtn").addEventListener("click",()=>{
  const y=String(document.getElementById("milkYear").value||activeYear());if(!isMilkYearClosed(y))return;
@@ -2594,6 +2329,7 @@ function changeBusinessYear(requested){
  applyYearSettings(newKey);
  yearInput.dataset.previous=newKey;
  refreshYearOptions(newKey);
+ refreshMilkYears(newKey);
  renderHerd();renderMonths();renderAll();persist();applyYearLock();
 }
 ["year","monthsYear","productionYear","harvestYear"].forEach(id=>{
@@ -2664,16 +2400,6 @@ document.getElementById("closeYearBtn").addEventListener("click",closeBusinessYe
 document.getElementById("reopenYearBtn").addEventListener("click",reopenBusinessYear);
 document.getElementById("createNextYearBtn").addEventListener("click",createNextBusinessYear);
 document.getElementById("printYearReportBtn").addEventListener("click",printYearReport);
-document.getElementById("expensePhoto").addEventListener("change",e=>chooseExpensePhoto(e.target.files?.[0]));
-document.getElementById("expenseOcrBtn").addEventListener("click",runExpenseOcr);
-document.getElementById("incomeSaveBtn").addEventListener("click",saveIncome);
-document.getElementById("financeYearFilter").addEventListener("change",renderFinance);
-document.getElementById("expenseSaveBtn").addEventListener("click",saveExpense);
-document.getElementById("expenseClearBtn").addEventListener("click",clearExpenseForm);
-document.getElementById("expenseYearFilter").addEventListener("change",renderExpenses);
-document.getElementById("expenseMonthFilter").addEventListener("change",renderExpenses);
-document.getElementById("expenseCsvBtn").addEventListener("click",exportExpenseCsv);
-document.getElementById("expensePrintBtn").addEventListener("click",printExpenseReport);
 document.getElementById("saveHarvestPlanBtn").addEventListener("click",saveHarvestPlan);
 document.getElementById("harvestPlanFromNeedBtn").addEventListener("click",setHarvestPlanFromNeed);
 document.getElementById("saveStockBtn").addEventListener("click",saveStockSettings);
@@ -2729,7 +2455,7 @@ document.getElementById("backupExportBtn").addEventListener("click",exportBackup
 document.getElementById("backupImportBtn").addEventListener("click",()=>document.getElementById("backupFile").click());
 document.getElementById("backupFile").addEventListener("change",e=>{if(e.target.files&&e.target.files[0])importBackup(e.target.files[0]);e.target.value="";});
 document.getElementById("mixerLoads").value=1;
-load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(lastSaved)setSaveIndicator("Zuletzt lokal gespeichert · "+new Date(lastSaved).toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"}));updateBackupReminder();document.getElementById("stockBookingDate").value=new Date().toISOString().slice(0,10);document.getElementById("expenseDate").value=new Date().toISOString().slice(0,10);document.getElementById("incomeDate").value=new Date().toISOString().slice(0,10);renderExpenses();refreshYearOptions(activeYear());document.getElementById("year").dataset.previous=activeYear();syncYearSelectors();data=data.map(d=>({...{tmr:0,bedding:0,milkDelivered:0},...d}));Object.keys(yearData).forEach(k=>{if(Array.isArray(yearData[k]))yearData[k]=yearData[k].map(d=>({...{tmr:0,bedding:0,milkDelivered:0},...d}));});Object.keys(yearHerdData).forEach(k=>{if(Array.isArray(yearHerdData[k]))yearHerdData[k]=yearHerdData[k].map(a=>({...a}));});yearHerdData[activeYear()]=herd.map(a=>({...a}));yearSettings[activeYear()]={...getSettings()};loadStockInputs();Object.values(harvestData).flatMap(v=>Array.isArray(v)?v:[]).forEach(h=>nextHarvestId=Math.max(nextHarvestId,(Number(h.id)||0)+1));renderHerd();renderMonths();renderAll(false);renderHarvest();renderFields();renderStock();renderYearClose();applyYearLock();setSaveIndicator("Lokale Daten geladen · Änderungen werden gespeichert");
+load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(lastSaved)setSaveIndicator("Zuletzt lokal gespeichert · "+new Date(lastSaved).toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"}));updateBackupReminder();document.getElementById("stockBookingDate").value=new Date().toISOString().slice(0,10);refreshYearOptions(activeYear());document.getElementById("year").dataset.previous=activeYear();syncYearSelectors();data=data.map(d=>({...{tmr:0,bedding:0,milkDelivered:0},...d}));Object.keys(yearData).forEach(k=>{if(Array.isArray(yearData[k]))yearData[k]=yearData[k].map(d=>({...{tmr:0,bedding:0,milkDelivered:0},...d}));});Object.keys(yearHerdData).forEach(k=>{if(Array.isArray(yearHerdData[k]))yearHerdData[k]=yearHerdData[k].map(a=>({...a}));});yearHerdData[activeYear()]=herd.map(a=>({...a}));yearSettings[activeYear()]={...getSettings()};loadStockInputs();Object.values(harvestData).flatMap(v=>Array.isArray(v)?v:[]).forEach(h=>nextHarvestId=Math.max(nextHarvestId,(Number(h.id)||0)+1));renderHerd();renderMonths();renderAll(false);renderHarvest();renderFields();renderStock();renderYearClose();applyYearLock();setSaveIndicator("Lokale Daten geladen · Änderungen werden gespeichert");
 </script>
 <style>
 #pwaInstallButton{position:fixed;right:14px;bottom:14px;z-index:9999;border:1px solid #d7b94c;background:#263b2c;color:#fff;padding:12px 16px;border-radius:14px;font-weight:800;box-shadow:0 5px 20px #0005;display:none;cursor:pointer}#pwaInstallButton:focus{outline:3px solid #e6c85a;outline-offset:3px}
@@ -3025,7 +2751,6 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
 #animalRows thead th.stall-head:nth-child(6){display:table-cell!important;visibility:visible!important;}
 @media(max-width:650px){#animalRows tr.animal-data-row > td.animal-stall-cell:nth-child(6){display:flex!important;flex-direction:column;min-width:0;}#animalRows tr.animal-data-row > td.animal-stall-cell:nth-child(6) select{min-width:0!important;}}
 </style>
-
 <style id="milk-delivery-analysis-visible">
 /* Aktuelle Milch-Auswertung sichtbar halten; ältere Legacy-Regeln blendeten sie aus. */
 #analysis .analysis-text-grid > .analysis-text-card:has(>#analysisMilk),
