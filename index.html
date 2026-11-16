@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="de">
 <head>
 <script>
@@ -20,9 +21,8 @@
  } catch(e){ console.error("Backup-Übernahme fehlgeschlagen",e); }
 })();
 </script>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>LS 2025 Hofverwaltung mit Tieren · Finale Version</title>
 <style>
 :root{
@@ -591,7 +591,7 @@ input[type=checkbox],input[type=radio]{width:22px;height:22px;min-height:22px;ac
    Vorhandene gespeicherte Daten bleiben unangetastet; Tieralter, Futter, Ernte und Lager bleiben aktiv. */
 nav button[data-tab="expenses"]{display:none!important}
 #expenses{display:none!important}
-#quickMilkDelivered{display:none!important}
+
 #quickMilkDelivered{display:none!important}
 label[for="quickMilkDelivered"]{display:none!important}
 #dashboard .management-kpis{display:none!important}
@@ -656,16 +656,15 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 #dashboard .quick-entry-card .quick-entry-fields { grid-template-columns:repeat(3,minmax(0,1fr)); }
 
 </style>
-<meta name="theme-color" content="#263b2c">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="LS25 Hofverwaltung">
-<link rel="manifest" href="./manifest.webmanifest">
-<link rel="apple-touch-icon" href="./icons/icon-192.png">
-
+<meta content="#263b2c" name="theme-color"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="LS25 Hofverwaltung" name="apple-mobile-web-app-title"/>
+<link href="./manifest.webmanifest" rel="manifest"/>
+<link href="./icons/icon-192.png" rel="apple-touch-icon"/>
 <style id="platform-final-overrides">
 /* V53 – finale Layoutregeln für macOS Chrome und iPhone Safari/PWA */
-*{box-sizing:border-box}
+
 html{width:100%;max-width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%}
 body{width:100%;max-width:100%;overflow-x:hidden}
 main{width:min(100%,1320px);max-width:1320px;margin-left:auto;margin-right:auto}
@@ -701,7 +700,7 @@ button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible
 }
 .table-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
 input,select,textarea{max-width:100%;font-size:16px}
-img,svg,canvas{max-width:100%}
+
 @media(max-width:900px){
  .management-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}
  nav[aria-label="Hauptnavigation"] button[data-tab]{flex:1 1 calc(33.333% - 8px)}
@@ -777,7 +776,7 @@ main {
 }
 
 /* V68 responsive scaling audit: keep every panel/card/form within viewport. */
-*{box-sizing:border-box}
+
 main,.panel,.grid,.card,.fields,.field{min-width:0;max-width:100%}
 .card{overflow-wrap:anywhere}
 input,select,textarea,button{max-width:100%;min-width:0}
@@ -793,12 +792,10 @@ input,select,textarea,button{max-width:100%;min-width:0}
 #dashboard.panel:not(.active){display:none!important}
 #dashboard.panel.active{display:block!important}
 </style>
-
-
 <style id="v65-clean-interface">
 /* V65: Alte Milch-, Fabrik-, Verkaufs- und Finanzmodule aus der Bedienoberfläche entfernen.
    Verborgene Legacy-Felder bleiben vorübergehend im DOM, damit alte Backups lesbar bleiben. */
-nav button[data-tab="expenses"], #expenses { display:none !important; }
+
 /* Dashboard: nur Tierbestand, Futter, Ernte, Lager und Datensicherung */
 #dashboard .card:has(#dashIncome),
 #dashboard .card:has(#dashExpenses),
@@ -838,8 +835,6 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
   #master .card:has(#animalRows) .table-wrap { overflow-x:auto; }
 }
 </style>
-
-
 <style id="milk-layout-fix-v70">
 /* Milchseite: KPI-Karten bekommen ein eigenes, ausreichend breites Raster. */
 #milk > .card { width:100%; min-width:0; padding:clamp(16px,2.2vw,24px); }
@@ -932,7 +927,6 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
   }
 }
 </style>
-
 <style id="stall-assignment-visibility-fix-v4">
 /* Die aktuelle Tierliste hat 7 Spalten; Stall steht an Position 6. */
 #master .card:has(#animalRows) #animalRows tr.animal-data-row > td.animal-stall-cell {display:table-cell !important;visibility:visible !important;opacity:1 !important;}
@@ -943,59 +937,58 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 </head>
 <body>
 <a class="skip-link" href="#dashboard">Zum Inhalt springen</a>
-<header><div class="header-inner"><div><h1>🐄 LS 2025 Hofverwaltung mit Tieren</h1><p>Tierbestand · Tieralter · Futter & TMR · Ernte & Lager · Jahresauswertung</p></div><div class="save-indicator" id="saveIndicator" role="status" aria-live="polite"><span class="save-dot"></span><span id="saveIndicatorText">Lokale Datenspeicherung</span></div></div></header>
+<header><div class="header-inner"><div><h1>🐄 LS 2025 Hofverwaltung mit Tieren</h1><p>Tierbestand · Tieralter · Futter &amp; TMR · Ernte &amp; Lager · Jahresauswertung</p></div><div aria-live="polite" class="save-indicator" id="saveIndicator" role="status"><span class="save-dot"></span><span id="saveIndicatorText">Lokale Datenspeicherung</span></div></div></header>
 <main>
 <div class="muted" style="font-size:12px;margin:0 2px 9px">HOFVERWALTUNG <span style="color:var(--yellow)">/</span> Betriebsjahr <b id="activeYearLabel">1</b></div>
 <nav aria-label="Hauptnavigation">
-<button type="button" class="active" data-tab="dashboard" aria-controls="dashboard" aria-pressed="true">🏡 Hofübersicht</button>
-<button type="button" data-tab="master" aria-controls="master">🐃 Tierbestand</button>
-<button type="button" data-tab="months" aria-controls="months">📅 Monatsplan</button>
-<button type="button" data-tab="stalls" aria-controls="stalls">🏠 Ställe</button>
-<button type="button" data-tab="production" aria-controls="production">📦 Futterbedarf</button>
-<button type="button" data-tab="harvest" aria-controls="harvest">🌾 Ernte & Lager</button>
-<button type="button" data-tab="analysis" aria-controls="analysis">📊 Auswertung</button>
-<button type="button" data-tab="milk" aria-controls="milk">🥛 Milch</button>
+<button aria-controls="dashboard" aria-pressed="true" class="active" data-tab="dashboard" type="button">🏡 Hofübersicht</button>
+<button aria-controls="master" data-tab="master" type="button">🐃 Tierbestand</button>
+<button aria-controls="months" data-tab="months" type="button">📅 Monatsplan</button>
+<button aria-controls="stalls" data-tab="stalls" type="button">🏠 Ställe</button>
+<button aria-controls="production" data-tab="production" type="button">📦 Futterbedarf</button>
+<button aria-controls="harvest" data-tab="harvest" type="button">🌾 Ernte &amp; Lager</button>
+<button aria-controls="analysis" data-tab="analysis" type="button">📊 Auswertung</button>
+<button aria-controls="milk" data-tab="milk" type="button">🥛 Milch</button>
 </nav>
-<div id="appError" class="note" hidden role="alert" style="margin-bottom:14px"></div>
-
-<section id="milk" class="panel">
-<div class="card span-12"><h2>🥛 Milchbestand & Molkerei</h2><p class="muted">Trage hier jeden Monat die tatsächlich verfügbare Büffelmilch ein. Die normale Molkerei verarbeitet je Zyklus 10 Liter Milch zu 20 Litern abgefüllter Büffelmilch. Bei 144 Zyklen pro Monat werden 1.440 Liter Büffelmilch benötigt.</p>
+<div class="note" hidden="" id="appError" role="alert" style="margin-bottom:14px"></div>
+<section class="panel" id="milk">
+<div class="card span-12"><h2>🥛 Milchbestand &amp; Molkerei</h2><p class="muted">Trage hier jeden Monat die tatsächlich verfügbare Büffelmilch ein. Die normale Molkerei verarbeitet je Zyklus 10 Liter Milch zu 20 Litern abgefüllter Büffelmilch. Bei 144 Zyklen pro Monat werden 1.440 Liter Büffelmilch benötigt.</p>
 <div class="grid milk-kpis"><div class="card"><div class="kpi-label">Bedarf pro Monat</div><div class="kpi">1.440 L</div></div><div class="card"><div class="kpi-label">Abfüllmenge pro Monat</div><div class="kpi">2.880 L</div></div><div class="card"><div class="kpi-label">Produktionszyklen</div><div class="kpi">144</div></div></div>
-<div class="fields"><div class="field"><label for="milkYear">Betriebsjahr</label><select id="milkYear"></select></div><div class="field"><label for="milkMonth">Monat</label><select id="milkMonth"></select></div><div class="field"><label for="milkAvailable">Verfügbare Büffelmilch (Liter)</label><input id="milkAvailable" type="number" min="0" step="1" placeholder="z. B. 1500"></div></div>
-<div class="actions"><button type="button" class="btn primary" id="saveMilkMonth">Milchbestand speichern</button></div><div id="milkResult" class="note" aria-live="polite">Monat auswählen und Milchbestand eintragen.</div>
-<div class="table-wrap"><table><thead><tr><th>Monat</th><th>Verfügbar</th><th>Bedarf</th><th>Überschuss / Fehlmenge</th><th>Status</th></tr></thead><tbody id="milkMonthRows"></tbody></table></div>
+<div class="fields"><div class="field"><label for="milkYear">Betriebsjahr</label><select id="milkYear"></select></div><div class="field"><label for="milkMonth">Monat</label><select id="milkMonth"></select></div><div class="field"><label for="milkAvailable">Verfügbare Büffelmilch für Molkerei (Liter)</label><input id="milkAvailable" min="0" placeholder="z. B. 1500" step="1" type="number"/></div><div class="field"><label for="milkDeliveredFactory">An Fabrik ausgeliefert (Liter)</label><input id="milkDeliveredFactory" min="0" placeholder="z. B. 1200" step="1" type="number"/></div></div>
+<div class="actions"><button class="btn primary" id="saveMilkMonth" type="button">Milchbestand speichern</button><button class="btn" id="closeMilkYearBtn" type="button">Milchjahr abschließen</button><button class="btn" id="reopenMilkYearBtn" type="button">Milchjahresabschluss aufheben</button></div><div aria-live="polite" class="note" id="milkYearStatus">Milchjahr noch offen.</div><div aria-live="polite" class="note" id="milkResult">Monat auswählen und Milchbestand eintragen.</div>
+<div class="table-wrap"><table><thead><tr><th>Monat</th><th>Verfügbar</th><th>Ausgeliefert</th><th>Bedarf</th><th>Überschuss / Fehlmenge</th><th>Status</th></tr></thead><tbody id="milkMonthRows"></tbody></table></div>
 </div></section>
-<section id="dashboard" class="panel active">
+<section class="panel active" id="dashboard">
 <div class="note storage-note"><b>Deine Daten werden lokal auf diesem Gerät gespeichert.</b> Wenn du Google Drive unter „Datensicherung“ verbunden hast, werden Änderungen bei bestehender Internetverbindung zusätzlich mit deinem privaten Google-App-Datenordner synchronisiert. Ohne Google-Verbindung bleiben die Daten nur auf diesem Gerät; regelmäßige JSON-Backups werden weiterhin empfohlen.</div>
-<div class="dashboard-shortcuts" aria-label="Schnellzugriff">
- <div><b>Was möchtest du erledigen?</b><small>Direkt zum passenden Bereich springen.</small></div>
- <button type="button" class="btn primary" data-jump-tab="master">＋ Tiere verwalten</button>
- <button type="button" class="btn" data-jump-tab="months">📅 Monatswerte eintragen</button>
- <button type="button" class="btn" data-jump-tab="harvest">🌾 Ernte / Lager erfassen</button>
- <button type="button" class="btn" data-jump-tab="analysis">📊 Auswertung öffnen</button>
+<div aria-label="Schnellzugriff" class="dashboard-shortcuts">
+<div><b>Was möchtest du erledigen?</b><small>Direkt zum passenden Bereich springen.</small></div>
+<button class="btn primary" data-jump-tab="master" type="button">＋ Tiere verwalten</button>
+<button class="btn" data-jump-tab="months" type="button">📅 Monatswerte eintragen</button>
+<button class="btn" data-jump-tab="harvest" type="button">🌾 Ernte / Lager erfassen</button>
+<button class="btn" data-jump-tab="analysis" type="button">📊 Auswertung öffnen</button>
 </div>
 <div class="card span-12 quick-entry-card">
- <h2>⚡ Schnelleingabe – Monatswerte</h2>
- <p class="muted">Hier kannst du die Monatswerte direkt eintragen. Sie landen in denselben Monatsdaten wie im Monatsplan – du musst sie nicht ein zweites Mal erfassen.</p>
- <div class="fields quick-entry-fields">
-  <div class="field"><label for="quickMonth">Monat</label><select id="quickMonth"><option value="0">Januar</option><option value="1">Februar</option><option value="2">März</option><option value="3">April</option><option value="4">Mai</option><option value="5">Juni</option><option value="6">Juli</option><option value="7">August</option><option value="8">September</option><option value="9">Oktober</option><option value="10">November</option><option value="11">Dezember</option></select></div>
-  <div class="field"><label for="quickTmr">TMR-Verbrauch (Liter)</label><input id="quickTmr" type="number" min="0" step="1" placeholder="0"></div>
-  <div class="field"><label for="quickBedding">Einstreu (Liter)</label><input id="quickBedding" type="number" min="0" step="1" placeholder="0"></div>
-  <div class="field"><label for="quickMilkDelivered">Milch ausgeliefert (Liter)</label><input id="quickMilkDelivered" type="number" min="0" step="1" placeholder="0"></div>
- </div>
- <div class="actions"><button type="button" class="btn primary" id="quickSaveMonth">Monatswerte speichern</button><button type="button" class="btn" id="quickCopyPrevious">Werte vom Vormonat übernehmen</button><button type="button" class="btn" data-jump-tab="months">Alle Monate öffnen</button></div>
- <small id="quickEntryStatus" aria-live="polite">Betriebsjahr und Monat wählen, Werte eintragen und einmal speichern.</small>
+<h2>⚡ Schnelleingabe – Monatswerte</h2>
+<p class="muted">Hier kannst du die Monatswerte direkt eintragen. Sie landen in denselben Monatsdaten wie im Monatsplan – du musst sie nicht ein zweites Mal erfassen.</p>
+<div class="fields quick-entry-fields">
+<div class="field"><label for="quickMonth">Monat</label><select id="quickMonth"><option value="0">Januar</option><option value="1">Februar</option><option value="2">März</option><option value="3">April</option><option value="4">Mai</option><option value="5">Juni</option><option value="6">Juli</option><option value="7">August</option><option value="8">September</option><option value="9">Oktober</option><option value="10">November</option><option value="11">Dezember</option></select></div>
+<div class="field"><label for="quickTmr">TMR-Verbrauch (Liter)</label><input id="quickTmr" min="0" placeholder="0" step="1" type="number"/></div>
+<div class="field"><label for="quickBedding">Einstreu (Liter)</label><input id="quickBedding" min="0" placeholder="0" step="1" type="number"/></div>
+<div class="field"><label for="quickMilkDelivered">Milch ausgeliefert (Liter)</label><input id="quickMilkDelivered" min="0" placeholder="0" step="1" type="number"/></div>
+</div>
+<div class="actions"><button class="btn primary" id="quickSaveMonth" type="button">Monatswerte speichern</button><button class="btn" id="quickCopyPrevious" type="button">Werte vom Vormonat übernehmen</button><button class="btn" data-jump-tab="months" type="button">Alle Monate öffnen</button></div>
+<small aria-live="polite" id="quickEntryStatus">Betriebsjahr und Monat wählen, Werte eintragen und einmal speichern.</small>
 </div>
 <div class="grid">
 <div class="card span-12"><h2>📋 Betriebs-Cockpit</h2><p class="muted">Die Übersicht verbindet Tierbestand, Futterplanung, Ernte und Lager. Sie liest keine Daten direkt aus deinem Xbox-Spielstand.</p>
 <div class="grid management-kpis">
- <div class="card span-3"><div class="kpi-label">Einnahmen erfasst</div><div class="kpi" id="dashIncome">–</div></div>
- <div class="card span-3"><div class="kpi-label">Ausgaben erfasst</div><div class="kpi" id="dashExpenses">–</div></div>
- <div class="card span-3"><div class="kpi-label">Betriebssaldo</div><div class="kpi" id="dashBalance">–</div></div>
+<div class="card span-3"><div class="kpi-label">Einnahmen erfasst</div><div class="kpi" id="dashIncome">–</div></div>
+<div class="card span-3"><div class="kpi-label">Ausgaben erfasst</div><div class="kpi" id="dashExpenses">–</div></div>
+<div class="card span-3"><div class="kpi-label">Betriebssaldo</div><div class="kpi" id="dashBalance">–</div></div>
 </div>
 <div class="grid">
- <div class="card span-6"><h3>📦 Futtervorschau – nächste 12 Monate</h3><div id="dashFeedPlan"></div><button type="button" class="btn" data-jump-tab="production">Futterbedarf öffnen</button></div>
- <div class="card span-6"><h3>💶 Ergebnis nach LS25-Buchungen</h3><div id="dashFinanceBreakdown"></div><button type="button" class="btn" data-jump-tab="expenses">Finanzen öffnen</button></div>
+<div class="card span-6"><h3>📦 Futtervorschau – nächste 12 Monate</h3><div id="dashFeedPlan"></div><button class="btn" data-jump-tab="production" type="button">Futterbedarf öffnen</button></div>
+<div class="card span-6"><h3>💶 Ergebnis nach LS25-Buchungen</h3><div id="dashFinanceBreakdown"></div><button class="btn" data-jump-tab="expenses" type="button">Finanzen öffnen</button></div>
 </div>
 </div>
 <div class="grid">
@@ -1003,72 +996,68 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 <div class="card span-3"><div class="kpi-label">TMR-Jahresverbrauch</div><div class="kpi" id="kTmr">–</div></div>
 <div class="card span-3"><div class="kpi-label">Milchproduktion/Jahr</div><div class="kpi" id="kMilk">–</div></div>
 <div class="card span-3"><div class="kpi-label">Futterwagen/Jahr</div><div class="kpi" id="kWagons">–</div></div>
-<div class="card span-6"><h2>Milchproduktion und Fabrikbedarf</h2><div id="milkChart" class="chartbox"></div></div>
-<div class="card span-6"><h2>TMR und Einstreu je Monat</h2><div id="feedChart" class="chartbox"></div></div>
-<div class="card span-6"><h2>Altersentwicklung der Herde</h2><div id="ageChart" class="chartbox"></div></div>
+<div class="card span-6"><h2>Milchproduktion und Fabrikbedarf</h2><div class="chartbox" id="milkChart"></div></div>
+<div class="card span-6"><h2>TMR und Einstreu je Monat</h2><div class="chartbox" id="feedChart"></div></div>
+<div class="card span-6"><h2>Altersentwicklung der Herde</h2><div class="chartbox" id="ageChart"></div></div>
 <div class="card span-6"><h2>Jahresbilanz</h2><div id="annualSummary"></div></div>
 <div class="card span-6"><h2>Aktueller Lagerstatus</h2><div id="dashboardStock"></div><div id="stockAlerts"></div></div>
 <div class="card span-6"><h2>Milchtank – aktueller Bestand</h2><div id="dashboardMilkTank"></div></div>
-<div class="card span-12"><h2>TMR-Mischungsrechner</h2><p class="muted">Gib die gewünschte Anzahl vollständiger Mischwagen ein. Die Zutatenmengen werden nach deiner Rezeptur berechnet.</p><div class="fields"><div class="field"><label for="mixerLoads">Anzahl Mischwagen</label><input id="mixerLoads" type="number" min="0" step="0.1" value="1"></div><div class="field"><label>Gesamtmenge</label><div class="kpi" id="mixerTotal">45.000 L</div></div></div><div id="mixerResult"></div><div id="recipeBars"></div><div class="note">Rezept je 45.000-L-Wagen: 9.000 L Stroh + 13.500 L Heu + 22.500 L Maissilage. Rezeptanteile und Kapazität basieren auf den Hofeinstellungen.</div></div>
-<div class="card span-12"><h2>Datensicherung & Datenübertragung</h2><p class="muted">Sichere alle Tiere, Monatsdaten, Ernten, Lagerwerte und Einstellungen als Datei. Auf einem anderen Gerät kannst du die Datei wieder importieren.</p><div class="actions"><button class="btn primary" id="backupExportBtn" type="button">⬇ Backup exportieren</button><button class="btn" id="backupImportBtn" type="button">⬆ Backup importieren</button><input id="backupFile" type="file" accept="application/json,.json" hidden></div><small id="backupMsg" aria-live="polite">Backup-Status wird geprüft …</small><small id="backupReminder" class="muted" aria-live="polite"></small></div>
-<div class="card span-12" id="driveSyncCard"><h2>☁ Google-Drive-Synchronisierung</h2><p class="muted">Synchronisiert deine Hofdaten über den geschützten Google-App-Datenordner zwischen MacBook und iPhone. Es werden nur Hofdaten übertragen, nicht deine übrigen Drive-Dateien.</p><div class="actions"><button class="btn primary" id="driveConnectBtn" type="button">Mit Google verbinden</button><button class="btn" id="driveSyncBtn" type="button" disabled>Jetzt synchronisieren</button><button class="btn" id="driveDisconnectBtn" type="button" disabled>Verbindung trennen</button></div><small id="driveSyncStatus" role="status">Noch nicht mit Google verbunden. Für die erste Verbindung bitte auf jedem Gerät anmelden.</small><p class="muted" style="font-size:12px">Hinweis: Die Google-Anmeldung muss auf jedem Gerät einmal bestätigt werden. Bei Änderungen auf mehreren Geräten erkennt die App mögliche Konflikte und fragt vor dem Überschreiben. Die lokale Speicherung bleibt als Sicherung bestehen.</p></div>
+<div class="card span-12"><h2>TMR-Mischungsrechner</h2><p class="muted">Gib die gewünschte Anzahl vollständiger Mischwagen ein. Die Zutatenmengen werden nach deiner Rezeptur berechnet.</p><div class="fields"><div class="field"><label for="mixerLoads">Anzahl Mischwagen</label><input id="mixerLoads" min="0" step="0.1" type="number" value="1"/></div><div class="field"><label>Gesamtmenge</label><div class="kpi" id="mixerTotal">45.000 L</div></div></div><div id="mixerResult"></div><div id="recipeBars"></div><div class="note">Rezept je 45.000-L-Wagen: 9.000 L Stroh + 13.500 L Heu + 22.500 L Maissilage. Rezeptanteile und Kapazität basieren auf den Hofeinstellungen.</div></div>
+<div class="card span-12"><h2>Datensicherung &amp; Datenübertragung</h2><p class="muted">Sichere alle Tiere, Monatsdaten, Ernten, Lagerwerte und Einstellungen als Datei. Auf einem anderen Gerät kannst du die Datei wieder importieren.</p><div class="actions"><button class="btn primary" id="backupExportBtn" type="button">⬇ Backup exportieren</button><button class="btn" id="backupImportBtn" type="button">⬆ Backup importieren</button><input accept="application/json,.json" hidden="" id="backupFile" type="file"/></div><small aria-live="polite" id="backupMsg">Backup-Status wird geprüft …</small><small aria-live="polite" class="muted" id="backupReminder"></small></div>
+<div class="card span-12" id="driveSyncCard"><h2>☁ Google-Drive-Synchronisierung</h2><p class="muted">Synchronisiert deine Hofdaten über den geschützten Google-App-Datenordner zwischen MacBook und iPhone. Es werden nur Hofdaten übertragen, nicht deine übrigen Drive-Dateien.</p><div class="actions"><button class="btn primary" id="driveConnectBtn" type="button">Mit Google verbinden</button><button class="btn" disabled="" id="driveSyncBtn" type="button">Jetzt synchronisieren</button><button class="btn" disabled="" id="driveDisconnectBtn" type="button">Verbindung trennen</button></div><small id="driveSyncStatus" role="status">Noch nicht mit Google verbunden. Für die erste Verbindung bitte auf jedem Gerät anmelden.</small><p class="muted" style="font-size:12px">Hinweis: Die Google-Anmeldung muss auf jedem Gerät einmal bestätigt werden. Bei Änderungen auf mehreren Geräten erkennt die App mögliche Konflikte und fragt vor dem Überschreiben. Die lokale Speicherung bleibt als Sicherung bestehen.</p></div>
 </div>
-</section>
-
-<section id="master" class="panel">
+</div></section>
+<section class="panel" id="master">
 <div class="grid">
 <div class="card span-6"><h2>Tierbestand</h2><div class="fields">
-<div class="field"><label>Startbestand Milchtank (Liter)</label><input id="milkTankOpening" type="number" min="0" step="1" value="0"></div>
-<div class="field"><label>Aktuelles Betriebsjahr</label><select id="year" aria-label="Betriebsjahr auswählen"></select></div>
+<div class="field"><label>Startbestand Milchtank (Liter)</label><input id="milkTankOpening" min="0" step="1" type="number" value="0"/></div>
+<div class="field"><label>Aktuelles Betriebsjahr</label><select aria-label="Betriebsjahr auswählen" id="year"></select></div>
 <div class="field"><label>Anzahl Tiere</label><div class="kpi" id="herdCount">0</div><small>Jedes Tier wird unten einzeln verwaltet.</small></div>
-<div class="field"><label>Wasserbüffel: Milch je Tier/Monat (Liter, eigener Richtwert)</label><input id="milkPerAnimal" type="number" value="500" min="0"></div>
-<div class="field"><label>Fabrikbedarf pro Monat (Liter)</label><input id="factory" type="number" value="8000" min="0"></div>
+<div class="field"><label>Wasserbüffel: Milch je Tier/Monat (Liter, eigener Richtwert)</label><input id="milkPerAnimal" min="0" type="number" value="500"/></div>
+<div class="field"><label>Fabrikbedarf pro Monat (Liter)</label><input id="factory" min="0" type="number" value="8000"/></div>
 </div></div>
-
 <div class="card span-12"><h2>📊 Altersabhängiger Futter- und Einstreubedarf</h2>
 <p class="muted">Lege einen Referenzverbrauch für ein ausgewachsenes Tier pro Monat fest. Die Faktoren darunter gewichten den Bedarf nach Alter. Die Startfaktoren sind frei änderbare Planungsannahmen und keine festen Vanilla-Werte. Kühe und Wasserbüffel können im LS25 Gras, Heu, Silage oder TMR erhalten. Schweine benötigen dagegen eine ausgewogene Ration aus Grundfutter-, Protein- und Hackfruchtgruppen; sie werden deshalb nicht als TMR- oder Einstreu-Verbraucher gerechnet. Eine vollständige Schweinerationsberechnung ist in dieser Version noch nicht enthalten.</p>
 <div class="fields">
- <div class="field"><label for="adultTmrMonthly">TMR je erwachsenem Tier / Monat (L)</label><input id="adultTmrMonthly" type="number" min="0" step="1" value="0"></div>
- <div class="field"><label for="adultBeddingMonthly">Einstreu je erwachsenem Tier / Monat (L)</label><input id="adultBeddingMonthly" type="number" min="0" step="1" value="0"></div>
+<div class="field"><label for="adultTmrMonthly">TMR je erwachsenem Tier / Monat (L)</label><input id="adultTmrMonthly" min="0" step="1" type="number" value="0"/></div>
+<div class="field"><label for="adultBeddingMonthly">Einstreu je erwachsenem Tier / Monat (L)</label><input id="adultBeddingMonthly" min="0" step="1" type="number" value="0"/></div>
 </div>
 <div class="table-wrap"><table><thead><tr><th>Altersgruppe</th><th>Alter</th><th>TMR-Faktor</th><th>Einstreu-Faktor</th></tr></thead><tbody>
-<tr><td>Jungtier</td><td>0–5 Monate</td><td><input id="tmrFactorCalf" type="number" min="0" step="0.05" value="0.35"></td><td><input id="beddingFactorCalf" type="number" min="0" step="0.05" value="0.4"></td></tr>
-<tr><td>Absetzer</td><td>6–11 Monate</td><td><input id="tmrFactorYoung" type="number" min="0" step="0.05" value="0.55"></td><td><input id="beddingFactorYoung" type="number" min="0" step="0.05" value="0.65"></td></tr>
-<tr><td>Jungrind</td><td>12–23 Monate</td><td><input id="tmrFactorSubadult" type="number" min="0" step="0.05" value="0.75"></td><td><input id="beddingFactorSubadult" type="number" min="0" step="0.05" value="0.85"></td></tr>
-<tr><td>Ausgewachsen</td><td>ab 24 Monaten</td><td><input id="tmrFactorAdult" type="number" min="0" step="0.05" value="1"></td><td><input id="beddingFactorAdult" type="number" min="0" step="0.05" value="1"></td></tr>
+<tr><td>Jungtier</td><td>0–5 Monate</td><td><input id="tmrFactorCalf" min="0" step="0.05" type="number" value="0.35"/></td><td><input id="beddingFactorCalf" min="0" step="0.05" type="number" value="0.4"/></td></tr>
+<tr><td>Absetzer</td><td>6–11 Monate</td><td><input id="tmrFactorYoung" min="0" step="0.05" type="number" value="0.55"/></td><td><input id="beddingFactorYoung" min="0" step="0.05" type="number" value="0.65"/></td></tr>
+<tr><td>Jungrind</td><td>12–23 Monate</td><td><input id="tmrFactorSubadult" min="0" step="0.05" type="number" value="0.75"/></td><td><input id="beddingFactorSubadult" min="0" step="0.05" type="number" value="0.85"/></td></tr>
+<tr><td>Ausgewachsen</td><td>ab 24 Monaten</td><td><input id="tmrFactorAdult" min="0" step="0.05" type="number" value="1"/></td><td><input id="beddingFactorAdult" min="0" step="0.05" type="number" value="1"/></td></tr>
 </tbody></table></div>
 <p class="muted">Faktor 1,00 = voller Referenzbedarf. Faktor 0,50 = die Hälfte. Bei 0 L Referenzverbrauch bleibt die jeweilige Bedarfsschätzung deaktiviert. Die tatsächlich erfassten Verbrauchswerte werden nicht verändert.</p>
 </div>
-
 <div class="card span-12"><h2>🥛 Milchleistung nach Laktationsalter</h2>
 <p class="muted">Für Kühe verwendet die Einzelbewertung den Vanilla-Richtwert von bis zu 150 L/Monat bei TMR; Heu/Silage liegen laut veröffentlichtem FS25-Leitfaden bei ca. 120 L und Gras bei ca. 60 L. Die Faktoren bilden den Verlauf nach Milchstart als Planungsannahme ab. Für Wasserbüffel ist die Literbasis mangels belastbarer öffentlicher Vanilla-Kurve separat einstellbar. Bei vorhandenen Monatsdaten verteilt die Einzelbewertung den tatsächlich erfassten TMR- und Einstreuverbrauch als Betriebsdurchschnitt auf die vorhandenen Rinder/Büffel; ohne Ist-Daten nutzt sie das Altersmodell. Im LS25 sind Kuhmilch und Büffelmilch unterschiedliche Produkte; die Hofverwaltung fasst sie in dieser Auswertung derzeit als Milchmenge zusammen.</p>
 <div class="fields">
-<div class="field"><label for="milkFactorStart">Monat 1–6 nach Milchstart</label><input id="milkFactorStart" type="number" min="0" step="0.05" value="0.65"></div>
-<div class="field"><label for="milkFactorRise">Monat 7–12</label><input id="milkFactorRise" type="number" min="0" step="0.05" value="0.85"></div>
-<div class="field"><label for="milkFactorPeak">Monat 13–36</label><input id="milkFactorPeak" type="number" min="0" step="0.05" value="1"></div>
-<div class="field"><label for="milkFactorLate">Ab Monat 37</label><input id="milkFactorLate" type="number" min="0" step="0.05" value="0.85"></div>
+<div class="field"><label for="milkFactorStart">Monat 1–6 nach Milchstart</label><input id="milkFactorStart" min="0" step="0.05" type="number" value="0.65"/></div>
+<div class="field"><label for="milkFactorRise">Monat 7–12</label><input id="milkFactorRise" min="0" step="0.05" type="number" value="0.85"/></div>
+<div class="field"><label for="milkFactorPeak">Monat 13–36</label><input id="milkFactorPeak" min="0" step="0.05" type="number" value="1"/></div>
+<div class="field"><label for="milkFactorLate">Ab Monat 37</label><input id="milkFactorLate" min="0" step="0.05" type="number" value="0.85"/></div>
 </div></div>
 <div class="note span-12" style="margin:12px 0"><b>LS25-Grundspiel – wichtige Abgrenzung:</b> Kühe und Wasserbüffel nutzen Gras, Heu, Silage oder TMR; TMR verbessert die Milchleistung. Stroh ist für die Mistproduktion relevant. Schweine benötigen mehrere Futtergruppen (Grundfutter/Getreide, Protein und Hackfrüchte) und keine Rinder-TMR. Deshalb fließen Schweine in dieser Version nicht in die TMR-/Stroh-Einstreu-Bedarfsrechnung oder in eine automatische Gewinn-/Verkaufsempfehlung ein. Exakte Preise, Rationsmengen und Produktionsraten können je nach Patch, Karte und Schwierigkeitsgrad abweichen.</div>
 <div class="card span-12"><h2>Tiergruppe auf einmal hinzufügen</h2>
 <p class="muted">Hier kannst du mehrere gleichartige Tiere mit denselben Startdaten gleichzeitig anlegen. Jedes Tier wird trotzdem als eigener Datensatz gespeichert und kann danach einzeln bearbeitet oder entfernt werden.</p>
 <div class="fields">
- <div class="field"><label for="bulkAnimalCount">Anzahl Tiere</label><input id="bulkAnimalCount" type="number" min="1" max="500" step="1" value="25"></div>
- <div class="field"><label for="bulkAnimalType">Tierart</label><select id="bulkAnimalType"><option value="buffalo">Wasserbüffel</option><option value="cow">Kuh</option><option value="pig">Schwein</option></select></div>
- <div class="field"><label for="bulkAnimalMonth">Zugang ab Monat</label><select id="bulkAnimalMonth"><option value="1">Januar</option><option value="2">Februar</option><option value="3">März</option><option value="4">April</option><option value="5">Mai</option><option value="6">Juni</option><option value="7">Juli</option><option value="8">August</option><option value="9">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Dezember</option></select></div>
- <div class="field"><label for="bulkAnimalAge">Alter bei Zugang (Monate)</label><input id="bulkAnimalAge" type="number" min="0" step="1" value="0"></div>
- <div class="field"><label for="bulkExpectedMilkAge">Erwarteter Milchstart (Monate)</label><input id="bulkExpectedMilkAge" type="number" min="0" step="1" value="24"></div>
- <div class="field" style="display:flex;align-items:center;gap:10px"><input id="bulkMilkStarted" type="checkbox" style="width:22px;height:22px"><label for="bulkMilkStarted">Milchproduktion hat bereits begonnen</label></div>
+<div class="field"><label for="bulkAnimalCount">Anzahl Tiere</label><input id="bulkAnimalCount" max="500" min="1" step="1" type="number" value="25"/></div>
+<div class="field"><label for="bulkAnimalType">Tierart</label><select id="bulkAnimalType"><option value="buffalo">Wasserbüffel</option><option value="cow">Kuh</option><option value="pig">Schwein</option></select></div>
+<div class="field"><label for="bulkAnimalMonth">Zugang ab Monat</label><select id="bulkAnimalMonth"><option value="1">Januar</option><option value="2">Februar</option><option value="3">März</option><option value="4">April</option><option value="5">Mai</option><option value="6">Juni</option><option value="7">Juli</option><option value="8">August</option><option value="9">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Dezember</option></select></div>
+<div class="field"><label for="bulkAnimalAge">Alter bei Zugang (Monate)</label><input id="bulkAnimalAge" min="0" step="1" type="number" value="0"/></div>
+<div class="field"><label for="bulkExpectedMilkAge">Erwarteter Milchstart (Monate)</label><input id="bulkExpectedMilkAge" min="0" step="1" type="number" value="24"/></div>
+<div class="field" style="display:flex;align-items:center;gap:10px"><input id="bulkMilkStarted" style="width:22px;height:22px" type="checkbox"/><label for="bulkMilkStarted">Milchproduktion hat bereits begonnen</label></div>
 </div>
 <div class="field" style="max-width:360px;margin:10px 0"><label for="bulkAnimalStall">Stall für die gesamte Tiergruppe</label><select id="bulkAnimalStall"><option value="">Hauptstall / erster Stall</option></select></div>
 <div class="actions"><button class="btn primary" id="bulkAddAnimalsBtn" type="button">＋ Tiergruppe hinzufügen</button></div>
-<small id="bulkAnimalMsg" aria-live="polite">Beispiel: 25 Wasserbüffel auswählen und gemeinsam hinzufügen.</small>
+<small aria-live="polite" id="bulkAnimalMsg">Beispiel: 25 Wasserbüffel auswählen und gemeinsam hinzufügen.</small>
 </div>
-
 <div class="card span-12"><h2>Einzelne Tiere verwalten</h2><p class="muted">Trage das Alter zu Beginn des Zugangsmonats ein. Bei übernommenen Tieren ist der Zugangsmonat Januar. Bei nachgekauften Tieren wählst du den Monat, ab dem sie zum Bestand zählen. Die Hofverwaltung zeigt das laufende Tieralter an. Du kannst jedes Tier einzeln bearbeiten oder entfernen.</p><div class="table-wrap"><table style="min-width:700px"><thead><tr><th>Tierart</th><th>Zugang ab Monat</th><th>Alter bei Zugang (Monate)</th><th>Milchproduktion gestartet?</th><th>Erwarteter Milchstart (Alter in Monaten)</th><th>Aktion</th></tr></thead><tbody id="animalRows"></tbody></table></div><div class="field" style="max-width:360px;margin:10px 0"><label for="singleAnimalStall">Stall für das neue Tier</label><select id="singleAnimalStall"><option value="">Hauptstall / erster Stall</option></select></div><div class="actions"><button class="btn primary" id="addAnimalBtn" type="button">＋ Tier hinzufügen</button></div></div>
-<div class="card span-6"><h2>Futter & Erträge</h2><div class="fields">
-<div class="field"><label>Futterwagen-Kapazität (Liter)</label><input id="capacity" type="number" value="45000" min="1"></div>
-<div class="field" style="grid-column:1/-1"><label>Ertrag je Hektar – automatisch aus deinen Ernten</label><div id="autoYields" class="note">Noch keine zugeordneten Ernten vorhanden.</div></div>
-<div class="field"><label>Strohballen Einstreu (Liter/Ballen)</label><input id="bale" type="number" value="7000" min="1"></div>
+<div class="card span-6"><h2>Futter &amp; Erträge</h2><div class="fields">
+<div class="field"><label>Futterwagen-Kapazität (Liter)</label><input id="capacity" min="1" type="number" value="45000"/></div>
+<div class="field" style="grid-column:1/-1"><label>Ertrag je Hektar – automatisch aus deinen Ernten</label><div class="note" id="autoYields">Noch keine zugeordneten Ernten vorhanden.</div></div>
+<div class="field"><label>Strohballen Einstreu (Liter/Ballen)</label><input id="bale" min="1" type="number" value="7000"/></div>
 </div><p class="muted">Die Rezeptur ist auf die genannten Liter je 45.000-L-Wagen festgelegt. Die Hektarerträge werden aus zugeordneten Ernten und der Größe deiner Felder berechnet. Ohne Feldzuordnung wird kein Ertrag geschätzt.</p></div>
 <div class="card span-12"><h2>Feste TMR-Rezeptur</h2><div class="grid">
 <div class="span-4"><div class="kpi">9.000 L</div><b>Stroh · 20 %</b></div>
@@ -1077,34 +1066,29 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 </div><div class="actions"><button class="btn primary" id="saveBtn">Einstellungen speichern</button><button class="btn" id="resetBtn">Hofdaten komplett zurücksetzen</button></div><small id="saveMsg">Änderungen werden lokal im Browser gespeichert. Ein kompletter Reset löscht die Hofdaten dieses Browsers; exportiere vorher bei Bedarf ein Backup.</small></div>
 </div>
 </section>
-
-<section id="months" class="panel">
+<section class="panel" id="months">
 <div class="card">
 <h2>Monatliche Verbrauchs- und Bestandsplanung</h2>
-<div class="year-page-toolbar"><label for="monthsYear">Betriebsjahr dieser Seite</label><select id="monthsYear" class="year-page-select"></select><span class="year-page-hint">Verbrauchsdaten und Tierbedarf werden getrennt je Betriebsjahr gespeichert.</span></div>
+<div class="year-page-toolbar"><label for="monthsYear">Betriebsjahr dieser Seite</label><select class="year-page-select" id="monthsYear"></select><span class="year-page-hint">Verbrauchsdaten und Tierbedarf werden getrennt je Betriebsjahr gespeichert.</span></div>
 <p class="muted">Trage TMR-Verbrauch und Einstreu in Litern ein. Tierbestand und Alter werden aus den Einzeltieren übernommen; jedes Tier wird monatlich automatisch ein Monat älter.</p>
-
 <div class="table-wrap"><table><thead><tr><th>Monat</th><th>Tiere</th><th>Alter Ø (Mon.)</th><th>TMR-Verbrauch (L)</th><th>Einstreu (L)</th><th>Stroh TMR (L)</th><th>Heu TMR (L)</th><th>Maissilage (L)</th><th>Wagen (45.000 L)</th><th class="legacy-milk-col">Milchproduktion (L)</th><th class="legacy-milk-col">Milch ausgeliefert (L)</th><th class="legacy-milk-col">Fabrikdeckung</th><th>Einstreu-Ballen</th></tr></thead><tbody id="monthRows"></tbody></table></div>
 <div class="card span-12" id="stallConsumptionMonth">
 <h2>🏠 Verbrauch je Stall erfassen</h2>
 <p class="muted">Trage hier den monatlichen TMR- und Einstreuverbrauch für jeden Stall ein. Die Summe wird automatisch zum Gesamtverbrauch im Monatsplan addiert. Der Gesamtverbrauch bleibt dort weiterhin manuell bearbeitbar; beim Bearbeiten wird nur der manuelle Zusatzanteil angepasst, damit nichts doppelt gezählt wird.</p>
 <div class="table-wrap"><table><thead><tr><th>Monat</th><th>Stall</th><th>TMR (L)</th><th>Einstreu (L)</th></tr></thead><tbody id="stallConsumptionRows"></tbody></table></div>
-<div id="stallConsumptionStatus" class="note" aria-live="polite"></div>
+<div aria-live="polite" class="note" id="stallConsumptionStatus"></div>
 </div>
 <div class="actions"><button class="btn primary" id="updateBtn">Berechnungen aktualisieren</button><button class="btn" id="csvBtn">Monatsdaten als CSV exportieren</button></div>
 </div>
 </section>
-
-<section id="production" class="panel">
+<section class="panel" id="production">
 <div class="grid">
 <div class="card span-12"><h2>Bedarf – Jahresübersicht</h2>
-<div class="year-page-toolbar"><label for="productionYear">Betriebsjahr dieser Seite</label><select id="productionYear" class="year-page-select"></select></div><p class="muted">Hier siehst du den gesamten ermittelten Bedarf aus deinen Monatseingaben: TMR-Gesamtmenge, die dafür benötigten Mengen an Stroh, Heu und Maissilage sowie Einstreu. Einstreu-Stroh wird ausschließlich in 7.000-Liter-Ballen ausgewiesen; TMR-Stroh bleibt in Litern.</p><div id="productionTable"></div></div>
+<div class="year-page-toolbar"><label for="productionYear">Betriebsjahr dieser Seite</label><select class="year-page-select" id="productionYear"></select></div><p class="muted">Hier siehst du den gesamten ermittelten Bedarf aus deinen Monatseingaben: TMR-Gesamtmenge, die dafür benötigten Mengen an Stroh, Heu und Maissilage sowie Einstreu. Einstreu-Stroh wird ausschließlich in 7.000-Liter-Ballen ausgewiesen; TMR-Stroh bleibt in Litern.</p><div id="productionTable"></div></div>
 <div class="card span-12"><h2>Milchversorgung der Fabrik</h2><div id="factorySummary"></div></div>
-
 </div>
 </section>
-
-<section id="harvest" class="panel">
+<section class="panel" id="harvest">
 <div class="grid">
 <div class="card span-12">
 <h2>🚜 Meine Felder</h2>
@@ -1114,7 +1098,7 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 </div>
 <div class="card span-12">
 <h2>Ernten – mehrere Erntevorgänge erfassen</h2>
-<div class="year-page-toolbar"><label for="harvestYear">Betriebsjahr dieser Seite</label><select id="harvestYear" class="year-page-select"></select></div>
+<div class="year-page-toolbar"><label for="harvestYear">Betriebsjahr dieser Seite</label><select class="year-page-select" id="harvestYear"></select></div>
 <p class="muted">Du kannst beliebig viele Erntevorgänge pro Betriebsjahr eintragen. Stroh für TMR wird in Litern erfasst. Stroh für Einstreu wird ausschließlich als 7.000-Liter-Ballen erfasst.</p>
 <div class="actions"><button class="btn primary" id="addHarvestBtn" type="button">＋ Ernte hinzufügen</button></div>
 <div id="harvestRows"></div>
@@ -1127,119 +1111,116 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 <div id="harvestPlan"></div>
 </div>
 <div class="card span-12">
-<h2>Lagerverwaltung – Startbestand & Mindestbestand</h2>
+<h2>Lagerverwaltung – Startbestand &amp; Mindestbestand</h2>
 <p class="muted">Der Startbestand wird einmalig zu Beginn von Betriebsjahr 1 eingetragen. Ernten werden addiert und der errechnete Verbrauch wird abgezogen. Der Restbestand wird automatisch ins nächste Betriebsjahr übernommen.</p>
 <div class="fields">
-<div class="field"><label for="openingStrawTmr">Startbestand Stroh für TMR (Liter)</label><input id="openingStrawTmr" type="number" min="0" step="1" value="0"></div>
-<div class="field"><label for="openingBeddingBales">Startbestand Einstreu-Stroh (7.000-L-Ballen)</label><input id="openingBeddingBales" type="number" min="0" step="1" value="0"></div>
-<div class="field"><label for="openingHay">Startbestand Heu (Liter)</label><input id="openingHay" type="number" min="0" step="1" value="0"></div>
-<div class="field"><label for="openingSilage">Startbestand Maissilage (Liter)</label><input id="openingSilage" type="number" min="0" step="1" value="0"></div>
-<div class="field"><label for="minimumStrawTmr">Mindestbestand TMR-Stroh (Liter)</label><input id="minimumStrawTmr" type="number" min="0" step="1" value="0"></div>
-<div class="field"><label for="minimumBeddingBales">Mindestbestand Einstreu (Ballen)</label><input id="minimumBeddingBales" type="number" min="0" step="1" value="0"></div>
-<div class="field"><label for="minimumHay">Mindestbestand Heu (Liter)</label><input id="minimumHay" type="number" min="0" step="1" value="0"></div>
-<div class="field"><label for="minimumSilage">Mindestbestand Maissilage (Liter)</label><input id="minimumSilage" type="number" min="0" step="1" value="0"></div>
+<div class="field"><label for="openingStrawTmr">Startbestand Stroh für TMR (Liter)</label><input id="openingStrawTmr" min="0" step="1" type="number" value="0"/></div>
+<div class="field"><label for="openingBeddingBales">Startbestand Einstreu-Stroh (7.000-L-Ballen)</label><input id="openingBeddingBales" min="0" step="1" type="number" value="0"/></div>
+<div class="field"><label for="openingHay">Startbestand Heu (Liter)</label><input id="openingHay" min="0" step="1" type="number" value="0"/></div>
+<div class="field"><label for="openingSilage">Startbestand Maissilage (Liter)</label><input id="openingSilage" min="0" step="1" type="number" value="0"/></div>
+<div class="field"><label for="minimumStrawTmr">Mindestbestand TMR-Stroh (Liter)</label><input id="minimumStrawTmr" min="0" step="1" type="number" value="0"/></div>
+<div class="field"><label for="minimumBeddingBales">Mindestbestand Einstreu (Ballen)</label><input id="minimumBeddingBales" min="0" step="1" type="number" value="0"/></div>
+<div class="field"><label for="minimumHay">Mindestbestand Heu (Liter)</label><input id="minimumHay" min="0" step="1" type="number" value="0"/></div>
+<div class="field"><label for="minimumSilage">Mindestbestand Maissilage (Liter)</label><input id="minimumSilage" min="0" step="1" type="number" value="0"/></div>
 </div>
 <div class="actions"><button class="btn primary" id="saveStockBtn" type="button">Start- und Mindestbestand speichern</button></div>
-<hr>
+<hr/>
 <h3>Manuelle Lagerbewegung buchen</h3>
 <p class="muted">Zusätzliche Ein- und Ausbuchungen, zum Beispiel Zukauf, Lieferung oder Entnahme. Diese Buchungen ergänzen die automatische Ernte- und Verbrauchsberechnung und werden im Backup gespeichert.</p>
 <div class="fields">
- <div class="field"><label for="stockBookingType">Buchungsart</label><select id="stockBookingType"><option value="in">Einbuchung (+)</option><option value="out">Ausbuchung (−)</option></select></div>
- <div class="field"><label for="stockBookingProduct">Lagerprodukt</label><select id="stockBookingProduct"><option value="strawTmr">Stroh für TMR (Liter)</option><option value="beddingBales">Einstreu-Stroh (Ballen)</option><option value="hay">Heu (Liter)</option><option value="silage">Maissilage (Liter)</option></select></div>
- <div class="field"><label for="stockBookingQuantity">Menge</label><input id="stockBookingQuantity" type="number" min="0.01" step="any" inputmode="decimal" placeholder="Menge eingeben"></div>
- <div class="field"><label for="stockBookingDate">Datum</label><input id="stockBookingDate" type="date"></div>
- <div class="field" style="grid-column:1/-1"><label for="stockBookingNote">Bemerkung (optional)</label><input id="stockBookingNote" type="text" maxlength="120" placeholder="z. B. Futterzukauf oder Lieferung"></div>
+<div class="field"><label for="stockBookingType">Buchungsart</label><select id="stockBookingType"><option value="in">Einbuchung (+)</option><option value="out">Ausbuchung (−)</option></select></div>
+<div class="field"><label for="stockBookingProduct">Lagerprodukt</label><select id="stockBookingProduct"><option value="strawTmr">Stroh für TMR (Liter)</option><option value="beddingBales">Einstreu-Stroh (Ballen)</option><option value="hay">Heu (Liter)</option><option value="silage">Maissilage (Liter)</option></select></div>
+<div class="field"><label for="stockBookingQuantity">Menge</label><input id="stockBookingQuantity" inputmode="decimal" min="0.01" placeholder="Menge eingeben" step="any" type="number"/></div>
+<div class="field"><label for="stockBookingDate">Datum</label><input id="stockBookingDate" type="date"/></div>
+<div class="field" style="grid-column:1/-1"><label for="stockBookingNote">Bemerkung (optional)</label><input id="stockBookingNote" maxlength="120" placeholder="z. B. Futterzukauf oder Lieferung" type="text"/></div>
 </div>
 <div class="actions"><button class="btn primary" id="stockBookingSaveBtn" type="button">Lagerbewegung buchen</button></div>
-<div id="stockBookingStatus" class="muted" aria-live="polite"></div>
+<div aria-live="polite" class="muted" id="stockBookingStatus"></div>
 <div id="stockTransactionsList"></div>
 <div id="stockSummary"></div>
 </div>
 <div class="card span-12"><h2>Jahresabschluss</h2>
 <p class="muted">Schließt das ausgewählte Betriebsjahr mit einer Momentaufnahme von Verbrauch, Ernte, Milch und Lagerbilanz ab. Ein abgeschlossenes Jahr wird gegen Änderungen gesperrt. Der Restbestand wird für das Folgejahr aus der Lagerbilanz übernommen.</p>
 <div id="yearCloseStatus"></div>
-<div class="actions"><button type="button" class="btn primary" id="closeYearBtn">Jahr abschließen</button><button type="button" class="btn" id="reopenYearBtn">Abschluss aufheben</button><button type="button" class="btn" id="createNextYearBtn">Folgejahr anlegen</button><button type="button" class="btn" id="printYearReportBtn">PDF-Jahresbericht / Drucken</button></div>
+<div class="actions"><button class="btn primary" id="closeYearBtn" type="button">Jahr abschließen</button><button class="btn" id="reopenYearBtn" type="button">Abschluss aufheben</button><button class="btn" id="createNextYearBtn" type="button">Folgejahr anlegen</button><button class="btn" id="printYearReportBtn" type="button">PDF-Jahresbericht / Drucken</button></div>
 <div id="yearCloseReport"></div>
 </div>
 </div>
 </section>
-
-<section id="expenses" class="panel">
+<section class="panel" id="expenses">
 <div class="grid">
- <div class="card span-12">
-  <h2>💶 LS25-Betriebskosten erfassen</h2>
-  <p class="muted">Erfasst werden nur Ausgabepositionen, die in der Finanzübersicht des Landwirtschafts-Simulator 25 tatsächlich aufgeführt sind. Kraftstoff, Saatgut oder Dünger werden nicht separat geführt, wenn das Spiel sie nur als Sammelposten ausweist. Lade einen Screenshot aus dem Spiel hoch. Die Texterkennung kann Datum und Geldbeträge vorschlagen. Bitte kontrolliere die erkannten Werte immer vor dem Speichern – besonders bei mehreren Buchungszeilen.</p>
-  <div class="note">Die Texterkennung läuft im Browser über Tesseract.js. Beim ersten Start wird die OCR-Bibliothek und das deutsche Sprachpaket aus dem Internet geladen. Das Bild wird nicht an einen Chat oder Server dieser App gesendet.</div>
-  <div class="fields" style="margin-top:14px">
-   <div class="field"><label for="expensePhoto">Screenshot / Foto aus dem Spiel</label><input id="expensePhoto" type="file" accept="image/*" capture="environment"></div>
-   <div class="field"><label>Texterkennung</label><button type="button" class="btn primary" id="expenseOcrBtn">🔎 Foto auslesen</button><small id="expenseOcrStatus">Bild auswählen und Texterkennung starten.</small></div>
-  </div>
-  <div id="expensePhotoPreview" style="margin-top:8px"></div>
-  <div class="field"><label for="expenseOcrText">Erkannter Text (zur Kontrolle und zum Kopieren)</label><textarea id="expenseOcrText" rows="4" style="width:100%;border:1px solid #536451;border-radius:8px;padding:10px;background:#151d17;color:var(--ink)"></textarea></div>
- </div>
- <div class="card span-6">
-  <h2>LS25-Ausgabeposition speichern</h2>
-  <div class="fields">
-   <div class="field"><label for="expenseDate">Datum</label><input id="expenseDate" type="date"></div>
-   <div class="field"><label for="expenseCategory">Kostenposition laut LS25-Finanzübersicht</label><select id="expenseCategory">
-    <option>Neue Fahrzeuge</option>
-    <option>Neue Handwerkzeuge</option>
-    <option>Neuer Viehbestand</option>
-    <option>Baukosten</option>
-    <option>Landkauf</option>
-    <option>Laufende Fahrzeugkosten</option>
-    <option>Leasingkosten Fahrzeuge</option>
-    <option>Gebäudeunterhalt</option>
-    <option>Produktionskosten</option>
-   </select></div>
-   <div class="field"><label for="expenseDescription">Beschreibung / Buchungstext</label><input id="expenseDescription" placeholder="z. B. Traktor-Reparatur"></div>
-   <div class="field"><label for="expenseAmount">Betrag (€)</label><input id="expenseAmount" type="number" min="0" step="0.01" placeholder="0,00"></div>
-   <div class="field"><label for="expenseVendor">Händler / Empfänger (optional)</label><input id="expenseVendor" placeholder="z. B. Werkstatt"></div>
-   <div class="field"><label for="expenseReference">Beleg / Notiz (optional)</label><input id="expenseReference" placeholder="z. B. Screenshot Tankstelle"></div>
-  </div>
-  <div class="actions"><button type="button" class="btn primary" id="expenseSaveBtn">＋ Betriebskosten speichern</button><button type="button" class="btn" id="expenseClearBtn">Eingabe leeren</button></div>
-  <small id="expenseFormMsg"></small>
- </div>
- <div class="card span-6">
-  <h2>Auswertung Betriebskosten</h2>
-  <div class="fields">
-   <div class="field"><label for="expenseYearFilter">Betriebsjahr</label><select id="expenseYearFilter"><option value="all">Alle Betriebsjahre</option></select></div>
-   <div class="field"><label for="expenseMonthFilter">Monat</label><select id="expenseMonthFilter"><option value="all">Gesamtes Jahr</option><option value="1">Januar</option><option value="2">Februar</option><option value="3">März</option><option value="4">April</option><option value="5">Mai</option><option value="6">Juni</option><option value="7">Juli</option><option value="8">August</option><option value="9">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Dezember</option></select></div>
-  </div>
-  <div id="expenseKpis" class="fields"></div>
-  <div id="expenseCategoryBreakdown"></div>
-  <div id="expensePositionBreakdown"></div>
-  <div id="expenseMonthlyBreakdown"></div>
-  <div class="actions"><button type="button" class="btn" id="expenseCsvBtn">⬇ Kosten als CSV exportieren</button><button type="button" class="btn" id="expensePrintBtn">🖨 Kostenbericht drucken / PDF</button></div>
- </div>
-
- <div class="card span-6">
-  <h2>💰 Einnahmen erfassen</h2>
-  <p class="muted">Trage Verkaufserlöse und sonstige Einnahmen manuell ein. Die App übernimmt keine erfundenen Marktpreise.</p>
-  <div class="fields">
-   <div class="field"><label for="incomeDate">Datum</label><input id="incomeDate" type="date"></div>
-   <div class="field"><label for="incomeType">Einnahmeart</label><select id="incomeType"><option>Milchverkauf</option><option>Tierverkauf</option><option>Ernteverkauf</option><option>Sonstige Einnahmen</option></select></div>
-   <div class="field"><label for="incomeDescription">Beschreibung</label><input id="incomeDescription" placeholder="z. B. Milchlieferung November"></div>
-   <div class="field"><label for="incomeAmount">Betrag (€)</label><input id="incomeAmount" type="number" min="0" step="0.01" placeholder="0,00"></div>
-   <div class="field"><label for="incomeReference">Beleg / Notiz (optional)</label><input id="incomeReference" placeholder="z. B. Abrechnung Fabrik"></div>
-  </div>
-  <div class="actions"><button type="button" class="btn primary" id="incomeSaveBtn">＋ Einnahme speichern</button></div>
-  <small id="incomeFormMsg"></small>
- </div>
- <div class="card span-6">
-  <h2>📈 Gewinn- und Verlustübersicht</h2>
-  <div class="field"><label for="financeYearFilter">Betriebsjahr</label><select id="financeYearFilter"><option value="all">Alle Betriebsjahre</option></select></div>
-  <div id="financeSummary"></div>
- </div>
- <div class="card span-12"><h2>Erfasste Einnahmen</h2><div id="incomeRows"></div></div>
- <div class="card span-12">
-  <h2>Erfasste Einzelkosten</h2>
-  <div id="expenseRows"></div>
- </div>
+<div class="card span-12">
+<h2>💶 LS25-Betriebskosten erfassen</h2>
+<p class="muted">Erfasst werden nur Ausgabepositionen, die in der Finanzübersicht des Landwirtschafts-Simulator 25 tatsächlich aufgeführt sind. Kraftstoff, Saatgut oder Dünger werden nicht separat geführt, wenn das Spiel sie nur als Sammelposten ausweist. Lade einen Screenshot aus dem Spiel hoch. Die Texterkennung kann Datum und Geldbeträge vorschlagen. Bitte kontrolliere die erkannten Werte immer vor dem Speichern – besonders bei mehreren Buchungszeilen.</p>
+<div class="note">Die Texterkennung läuft im Browser über Tesseract.js. Beim ersten Start wird die OCR-Bibliothek und das deutsche Sprachpaket aus dem Internet geladen. Das Bild wird nicht an einen Chat oder Server dieser App gesendet.</div>
+<div class="fields" style="margin-top:14px">
+<div class="field"><label for="expensePhoto">Screenshot / Foto aus dem Spiel</label><input accept="image/*" capture="environment" id="expensePhoto" type="file"/></div>
+<div class="field"><label>Texterkennung</label><button class="btn primary" id="expenseOcrBtn" type="button">🔎 Foto auslesen</button><small id="expenseOcrStatus">Bild auswählen und Texterkennung starten.</small></div>
+</div>
+<div id="expensePhotoPreview" style="margin-top:8px"></div>
+<div class="field"><label for="expenseOcrText">Erkannter Text (zur Kontrolle und zum Kopieren)</label><textarea id="expenseOcrText" rows="4" style="width:100%;border:1px solid #536451;border-radius:8px;padding:10px;background:#151d17;color:var(--ink)"></textarea></div>
+</div>
+<div class="card span-6">
+<h2>LS25-Ausgabeposition speichern</h2>
+<div class="fields">
+<div class="field"><label for="expenseDate">Datum</label><input id="expenseDate" type="date"/></div>
+<div class="field"><label for="expenseCategory">Kostenposition laut LS25-Finanzübersicht</label><select id="expenseCategory">
+<option>Neue Fahrzeuge</option>
+<option>Neue Handwerkzeuge</option>
+<option>Neuer Viehbestand</option>
+<option>Baukosten</option>
+<option>Landkauf</option>
+<option>Laufende Fahrzeugkosten</option>
+<option>Leasingkosten Fahrzeuge</option>
+<option>Gebäudeunterhalt</option>
+<option>Produktionskosten</option>
+</select></div>
+<div class="field"><label for="expenseDescription">Beschreibung / Buchungstext</label><input id="expenseDescription" placeholder="z. B. Traktor-Reparatur"/></div>
+<div class="field"><label for="expenseAmount">Betrag (€)</label><input id="expenseAmount" min="0" placeholder="0,00" step="0.01" type="number"/></div>
+<div class="field"><label for="expenseVendor">Händler / Empfänger (optional)</label><input id="expenseVendor" placeholder="z. B. Werkstatt"/></div>
+<div class="field"><label for="expenseReference">Beleg / Notiz (optional)</label><input id="expenseReference" placeholder="z. B. Screenshot Tankstelle"/></div>
+</div>
+<div class="actions"><button class="btn primary" id="expenseSaveBtn" type="button">＋ Betriebskosten speichern</button><button class="btn" id="expenseClearBtn" type="button">Eingabe leeren</button></div>
+<small id="expenseFormMsg"></small>
+</div>
+<div class="card span-6">
+<h2>Auswertung Betriebskosten</h2>
+<div class="fields">
+<div class="field"><label for="expenseYearFilter">Betriebsjahr</label><select id="expenseYearFilter"><option value="all">Alle Betriebsjahre</option></select></div>
+<div class="field"><label for="expenseMonthFilter">Monat</label><select id="expenseMonthFilter"><option value="all">Gesamtes Jahr</option><option value="1">Januar</option><option value="2">Februar</option><option value="3">März</option><option value="4">April</option><option value="5">Mai</option><option value="6">Juni</option><option value="7">Juli</option><option value="8">August</option><option value="9">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Dezember</option></select></div>
+</div>
+<div class="fields" id="expenseKpis"></div>
+<div id="expenseCategoryBreakdown"></div>
+<div id="expensePositionBreakdown"></div>
+<div id="expenseMonthlyBreakdown"></div>
+<div class="actions"><button class="btn" id="expenseCsvBtn" type="button">⬇ Kosten als CSV exportieren</button><button class="btn" id="expensePrintBtn" type="button">🖨 Kostenbericht drucken / PDF</button></div>
+</div>
+<div class="card span-6">
+<h2>💰 Einnahmen erfassen</h2>
+<p class="muted">Trage Verkaufserlöse und sonstige Einnahmen manuell ein. Die App übernimmt keine erfundenen Marktpreise.</p>
+<div class="fields">
+<div class="field"><label for="incomeDate">Datum</label><input id="incomeDate" type="date"/></div>
+<div class="field"><label for="incomeType">Einnahmeart</label><select id="incomeType"><option>Milchverkauf</option><option>Tierverkauf</option><option>Ernteverkauf</option><option>Sonstige Einnahmen</option></select></div>
+<div class="field"><label for="incomeDescription">Beschreibung</label><input id="incomeDescription" placeholder="z. B. Milchlieferung November"/></div>
+<div class="field"><label for="incomeAmount">Betrag (€)</label><input id="incomeAmount" min="0" placeholder="0,00" step="0.01" type="number"/></div>
+<div class="field"><label for="incomeReference">Beleg / Notiz (optional)</label><input id="incomeReference" placeholder="z. B. Abrechnung Fabrik"/></div>
+</div>
+<div class="actions"><button class="btn primary" id="incomeSaveBtn" type="button">＋ Einnahme speichern</button></div>
+<small id="incomeFormMsg"></small>
+</div>
+<div class="card span-6">
+<h2>📈 Gewinn- und Verlustübersicht</h2>
+<div class="field"><label for="financeYearFilter">Betriebsjahr</label><select id="financeYearFilter"><option value="all">Alle Betriebsjahre</option></select></div>
+<div id="financeSummary"></div>
+</div>
+<div class="card span-12"><h2>Erfasste Einnahmen</h2><div id="incomeRows"></div></div>
+<div class="card span-12">
+<h2>Erfasste Einzelkosten</h2>
+<div id="expenseRows"></div>
+</div>
 </div>
 </section>
-
-<section id="analysis" class="panel">
+<section class="panel" id="analysis">
 <div class="grid">
 <div class="card span-12">
 <h2>Auswertung nach Betriebsjahr</h2>
@@ -1247,46 +1228,43 @@ nav button[data-tab="expenses"], #expenses { display:none !important; }
 <div class="field" style="max-width:320px"><label for="analysisYear">Auswertung anzeigen</label><select id="analysisYear" style="width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:10px;font:inherit"><option value="all">Gesamt – alle Betriebsjahre</option></select></div>
 <div id="analysisSummary"></div>
 <div class="analysis-compare-card"><h2>Jahresvergleich – Bedarf und Produktion</h2><p class="muted">Jedes Betriebsjahr wird separat gegenübergestellt. So erkennst du sofort, was benötigt, geerntet bzw. produziert wurde und wo Überschüsse oder Fehlmengen entstehen.</p><div id="analysisCompare"></div></div>
-<div class="analysis-switch" role="group" aria-label="Auswertungsdarstellung">
-<button type="button" id="analysisTextBtn" class="active" aria-pressed="true">☷ Textauswertung</button>
-<button type="button" id="analysisChartBtn" aria-pressed="false">◔ Kreisdiagramme</button>
+<div aria-label="Auswertungsdarstellung" class="analysis-switch" role="group">
+<button aria-pressed="true" class="active" id="analysisTextBtn" type="button">☷ Textauswertung</button>
+<button aria-pressed="false" id="analysisChartBtn" type="button">◔ Kreisdiagramme</button>
 </div>
 </div>
-<div id="analysisTextView" class="analysis-view">
+<div class="analysis-view" id="analysisTextView">
 <div class="analysis-text-grid">
-<div class="card analysis-text-card"><h2>Futterbedarf & Ernte</h2><div id="analysisNeed"></div></div>
-<div class="card analysis-text-card"><h2>Milchproduktion & Lieferung</h2><div id="analysisMilk"></div></div>
+<div class="card analysis-text-card"><h2>Futterbedarf &amp; Ernte</h2><div id="analysisNeed"></div></div>
+<div class="card analysis-text-card"><h2>Milchproduktion &amp; Lieferung</h2><div id="analysisMilk"></div></div>
 <div class="card analysis-text-card"><h2>🐃 Milchstart je Tier</h2><div id="milkStartAnalysis"></div></div>
-
 <div class="card analysis-text-card"><h2>🔮 Milch- und Produktionsprognose</h2><div id="milkForecast"></div></div>
 <div class="card analysis-text-card stock-report"><h2>Bestandsbericht</h2><div id="analysisStockText"></div></div>
 <div class="card analysis-text-card stock-report"><h2>🌾 Felderträge nach Betriebsjahr und Ernte</h2><div id="analysisFieldHarvest"></div></div>
 </div>
 </div>
-<div id="analysisChartView" class="analysis-view" hidden>
+<div class="analysis-view" hidden="" id="analysisChartView">
 <div class="analysis-grid" id="analysisCharts"></div>
 <div class="analysis-compare-card"><h2>Produktion im Vergleich zum Bedarf</h2><div id="analysisBars"></div></div>
 </div>
 </div>
 </section>
-<footer>LS 2025 Hofverwaltung mit Tieren – Tieralter, Futterplanung, Ernte & Lager. Die App ist eine manuelle Begleitverwaltung für Tieralter, Futter, Ernte und Lager und liest keine Daten direkt aus der Xbox. Daten werden lokal im jeweiligen Browser gespeichert; für iPhone-/MacBook-Wechsel bitte die Backup-Funktion verwenden. Tier- und Produktionsannahmen können je nach LS25-Version, Karte und Mods abweichen.</footer>
-
-<section id="stalls" class="panel">
+<footer>LS 2025 Hofverwaltung mit Tieren – Tieralter, Futterplanung, Ernte &amp; Lager. Die App ist eine manuelle Begleitverwaltung für Tieralter, Futter, Ernte und Lager und liest keine Daten direkt aus der Xbox. Daten werden lokal im jeweiligen Browser gespeichert; für iPhone-/MacBook-Wechsel bitte die Backup-Funktion verwenden. Tier- und Produktionsannahmen können je nach LS25-Version, Karte und Mods abweichen.</footer>
+<section class="panel" id="stalls">
 <div class="grid">
- <div class="card span-12" id="stallManager">
-  <h2>🏠 Stallverwaltung</h2>
-  <p class="muted">Zu Beginn gibt es keine vorgegebenen Ställe. Lege hier deine Ställe selbst an und verwalte Namen und Kapazitäten und ordne die Tiere im Menü „Tierbestand“ den Ställen zu.</p>
-  <div class="fields">
-   <div class="field"><label for="stallNewName">Neuer Stall – Name</label><input id="stallNewName" placeholder="z. B. Wasserbüffelstall Nord"></div>
-   <div class="field"><label for="stallNewCapacity">Kapazität (optional)</label><input id="stallNewCapacity" type="number" min="1" step="1" placeholder="Anzahl Plätze"></div>
-  </div>
-  <div class="actions"><button class="btn primary" type="button" id="stallAdd">＋ Stall anlegen</button></div>
-  <div id="stallList"></div>
- </div>
- <div class="card span-12"><h2>📊 Auswertung je Stall</h2><p class="muted">Hier siehst du Tierbestand, Kapazität und den aufsummierten Futter- und Einstreuverbrauch des ausgewählten Betriebsjahres.</p><div id="stallMenuAnalysis"></div></div>
+<div class="card span-12" id="stallManager">
+<h2>🏠 Stallverwaltung</h2>
+<p class="muted">Zu Beginn gibt es keine vorgegebenen Ställe. Lege hier deine Ställe selbst an und verwalte Namen und Kapazitäten und ordne die Tiere im Menü „Tierbestand“ den Ställen zu.</p>
+<div class="fields">
+<div class="field"><label for="stallNewName">Neuer Stall – Name</label><input id="stallNewName" placeholder="z. B. Wasserbüffelstall Nord"/></div>
+<div class="field"><label for="stallNewCapacity">Kapazität (optional)</label><input id="stallNewCapacity" min="1" placeholder="Anzahl Plätze" step="1" type="number"/></div>
+</div>
+<div class="actions"><button class="btn primary" id="stallAdd" type="button">＋ Stall anlegen</button></div>
+<div id="stallList"></div>
+</div>
+<div class="card span-12"><h2>📊 Auswertung je Stall</h2><p class="muted">Hier siehst du Tierbestand, Kapazität und den aufsummierten Futter- und Einstreuverbrauch des ausgewählten Betriebsjahres.</p><div id="stallMenuAnalysis"></div></div>
 </div>
 </section>
-
 </main>
 <script>
 const months=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
@@ -1538,7 +1516,7 @@ function renderMonths(){
  const tb=document.getElementById("monthRows");tb.innerHTML="";
  months.forEach((m,i)=>{
   let tr=document.createElement("tr");
-  tr.innerHTML=`<td data-label="Monat"><b>${m}</b></td><td data-label="Tiere" id="animals${i}">–</td><td data-label="Alter Ø (Mon.)" id="age${i}">–</td><td data-label="TMR-Verbrauch (L)"><input aria-label="${m} TMR" type="number" min="0" step="1" data-i="${i}" data-k="tmr" value="${data[i].tmr}"></td><td data-label="Einstreu (L)"><input aria-label="${m} Einstreu" type="number" min="0" step="1" data-i="${i}" data-k="bedding" value="${data[i].bedding}"></td><td data-label="Stroh TMR (L)" id="straw${i}">–</td><td data-label="Heu TMR (L)" id="hay${i}">–</td><td data-label="Maissilage (L)" id="silage${i}">–</td><td data-label="Wagen" id="wag${i}">–</td><td data-label="Milchproduktion (L)" id="milk${i}">–</td><td data-label="Milch ausgeliefert (L)"><input aria-label="${m} ausgelieferte Milch" type="number" min="0" step="1" data-i="${i}" data-k="milkDelivered" value="${Number(data[i].milkDelivered)||0}"></td><td data-label="Fabrikdeckung" id="coverage${i}">–</td><td data-label="Einstreu-Ballen" id="bales${i}">–</td>`;
+  tr.innerHTML=`<td data-label="Monat"><b>${m}</b></td><td data-label="Tiere" id="animals${i}">–</td><td data-label="Alter Ø (Mon.)" id="age${i}">–</td><td data-label="TMR-Verbrauch (L)"><input aria-label="${m} TMR" type="number" min="0" step="1" data-i="${i}" data-k="tmr" value="${data[i].tmr}"></td><td data-label="Einstreu (L)"><input aria-label="${m} Einstreu" type="number" min="0" step="1" data-i="${i}" data-k="bedding" value="${data[i].bedding}"></td><td data-label="Stroh TMR (L)" id="straw${i}">–</td><td data-label="Heu TMR (L)" id="hay${i}">–</td><td data-label="Maissilage (L)" id="silage${i}">–</td><td data-label="Wagen" id="wag${i}">–</td><td data-label="Milchproduktion (L)" id="milk${i}">–</td><td data-label="Milch ausgeliefert (L)"><input aria-label="${m} ausgelieferte Milch" type="number" min="0" step="1" data-i="${i}" data-k="milkDelivered" value="${Number(data[i].milkDelivered)||0}" ${typeof isMilkYearClosed==="function"&&isMilkYearClosed(activeYear())?"disabled":""}></td><td data-label="Fabrikdeckung" id="coverage${i}">–</td><td data-label="Einstreu-Ballen" id="bales${i}">–</td>`;
   tb.appendChild(tr);
  });
  tb.querySelectorAll("input").forEach(inp=>{
@@ -1606,9 +1584,10 @@ function syncQuickMonth(){
  document.getElementById("quickTmr").value=Number(row.tmr)||0;
  document.getElementById("quickBedding").value=Number(row.bedding)||0;
  document.getElementById("quickMilkDelivered").value=Number(row.milkDelivered)||0;
+ document.getElementById("quickMilkDelivered").disabled=typeof isMilkYearClosed==="function"&&isMilkYearClosed(activeYear());
 }
 function saveQuickMonth(){
- if(isYearClosed()){document.getElementById("quickEntryStatus").textContent="Dieses Betriebsjahr ist abgeschlossen und schreibgeschützt.";return;}
+ if(isYearClosed()||(typeof isMilkYearClosed==="function"&&isMilkYearClosed(activeYear()))){document.getElementById("quickEntryStatus").textContent="Dieses Betriebsjahr ist für die Milch abgeschlossen bzw. insgesamt schreibgeschützt.";return;}
  const i=Math.max(0,Math.min(11,Number(document.getElementById("quickMonth").value)||0));
  data[i]={tmr:Math.max(0,Number(document.getElementById("quickTmr").value)||0),bedding:Math.max(0,Number(document.getElementById("quickBedding").value)||0),milkDelivered:Math.max(0,Number(document.getElementById("quickMilkDelivered").value)||0)};
  persist();renderMonths();renderAll(false);
@@ -2215,14 +2194,20 @@ function closeBusinessYear(){
  const audit=getYearCloseChecklist(y);
  const auditText="\n\nPrüfung vor dem Abschluss:\n• Monatswerte erfasst: "+audit.monthCount+"/12\n• Erntevorgänge: "+audit.harvestCount+"\n• Milchmonate erfasst: "+audit.milkCount+"/12\n• Lagerwarnungen: "+audit.stockIssues+"\n\nDu kannst auch mit unvollständigen Angaben abschließen.";
  if(yearClosures[y]){alert("Dieses Betriebsjahr ist bereits abgeschlossen.");return;}
- if(!confirm("Betriebsjahr "+y+" verbindlich abschließen? Die Werte werden gespeichert und gesperrt. Anschließend wird automatisch das nächste Betriebsjahr begonnen."+auditText))return;
- saveActiveYearData(y);yearClosures[y]=makeYearSnapshot(y);persist();renderYearClose();applyYearLock();
+ if(!confirm("Betriebsjahr "+y+" verbindlich abschließen? Die Werte werden gespeichert und gesperrt. Das zugehörige Milchjahr wird dabei ebenfalls automatisch abgeschlossen. Anschließend wird automatisch das nächste Betriebsjahr begonnen."+auditText))return;
+ saveActiveYearData(y);yearClosures[y]=makeYearSnapshot(y);
+ // Ein allgemeiner Jahresabschluss schließt das Milchjahr desselben Jahres automatisch mit.
+ if(typeof closeMilkYearWithBusinessYear==="function")closeMilkYearWithBusinessYear(y);
+ persist();renderYearClose();applyYearLock();
  createNextBusinessYear();
 }
 function reopenBusinessYear(){
  const y=activeYear();if(!yearClosures[y])return;
- if(!confirm("Jahresabschluss für Betriebsjahr "+y+" wirklich aufheben? Das Jahr wird wieder bearbeitbar."))return;
- delete yearClosures[y];persist();renderYearClose();applyYearLock();
+ if(!confirm("Jahresabschluss für Betriebsjahr "+y+" wirklich aufheben? Das Jahr wird wieder bearbeitbar. Ein dadurch automatisch erzeugter Milchjahresabschluss wird ebenfalls aufgehoben."))return;
+ delete yearClosures[y];
+ if(milkYearClosures[String(y)]?.source==="business")delete milkYearClosures[String(y)];
+ localStorage.setItem("ls25buffalo_milk_year_closures",JSON.stringify(milkYearClosures));
+ persist();renderYearClose();applyYearLock();
  refreshMilkYears();renderMilkMonth();
 }
 function createNextBusinessYear(){
@@ -2501,16 +2486,66 @@ function showTab(tab){
 const MILK_KEY="ls25buffalo_monthly_factory_milk_v68";
 let milkEntries={};
 try{milkEntries=JSON.parse(localStorage.getItem(MILK_KEY)||"{}")||{};}catch(e){milkEntries={};}
+let milkYearClosures={};
+try{milkYearClosures=JSON.parse(localStorage.getItem("ls25buffalo_milk_year_closures")||"{}")||{};}catch(e){milkYearClosures={};}
+// Repariert auch bereits abgeschlossene Betriebsjahre aus älteren App-Versionen:
+// Wenn der Hofabschluss existiert, darf das zugehörige Milchjahr nicht offen bleiben.
+function closeMilkYearWithBusinessYear(year){
+ const y=String(year);
+ if(milkYearClosures[y])return;
+ const rows=Number(y)===Number(activeYear())?data:(yearData[y]||[]);
+ const available=Array.from({length:12},(_,i)=>Math.max(0,Number(milkEntries[y]?.[i])||0)).reduce((a,b)=>a+b,0);
+ const delivered=Array.from({length:12},(_,i)=>Math.max(0,Number(rows[i]?.milkDelivered)||0)).reduce((a,b)=>a+b,0);
+ milkYearClosures[y]={closedAt:yearClosures[y]?.closedAt||new Date().toISOString(),available,delivered,source:"business"};
+ localStorage.setItem("ls25buffalo_milk_year_closures",JSON.stringify(milkYearClosures));
+}
+Object.keys(yearClosures||{}).forEach(y=>{if(yearClosures[y])closeMilkYearWithBusinessYear(y);});
 const milkMonthNames=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
 // Eigenständige Molkerei-Rezeptur: Monatsbedarf und Abfüllmenge bleiben
 // zentrale Konstanten statt an mehreren Stellen abweichend hardcodiert zu sein.
 const DAIRY_MONTHLY_NEED=1440;
 const DAIRY_FILLING_OUTPUT=2880;
 function refreshMilkYears(){const el=document.getElementById("milkYear");if(!el)return;const y=activeYear();const ys=knownYears(y).filter(n=>n!==24&&n!==2025);el.innerHTML=ys.map(n=>`<option value="${n}">Betriebsjahr ${n}</option>`).join("");el.value=ys.includes(Number(y))?y:String(ys[ys.length-1]||1);}
-function renderMilkMonth(){const y=document.getElementById("milkYear").value||activeYear(),m=Number(document.getElementById("milkMonth").value||1),v=Math.max(0,Number(milkEntries[y]?.[m-1])||0),need=DAIRY_MONTHLY_NEED,diff=v-need;document.getElementById("milkAvailable").value=milkEntries[y]?.[m-1]??"";document.getElementById("milkResult").innerHTML=`<b>${v>=need?"Molkerei ausreichend versorgt":"Milch fehlt"}</b><br>Verfügbar: ${fmt(v)} L · Monatsbedarf: ${fmt(need)} L · ${diff>=0?"Überschuss":"Fehlmenge"}: ${fmt(Math.abs(diff))} L<br>Abfüllmenge bei vollem Bedarf: ${fmt(DAIRY_FILLING_OUTPUT)} L`;document.getElementById("milkMonthRows").innerHTML=milkMonthNames.map((name,i)=>{const q=Math.max(0,Number(milkEntries[y]?.[i])||0),d=q-need;return `<tr><td>${name}</td><td>${fmt(q)} L</td><td>${fmt(need)} L</td><td>${d>=0?"+":"−"}${fmt(Math.abs(d))} L</td><td>${q>=need?"Ausreichend":"Fehlmenge"}</td></tr>`;}).join("");}
+function isMilkYearClosed(year){return !!milkYearClosures[String(year)];}
+function renderMilkMonth(){
+ const y=document.getElementById("milkYear").value||activeYear(),m=Number(document.getElementById("milkMonth").value||1),idx=m-1;
+ const v=Math.max(0,Number(milkEntries[y]?.[idx])||0),need=DAIRY_MONTHLY_NEED,diff=v-need;
+ const yearRows=Number(y)===Number(activeYear())?data:(yearData[String(y)]||[]);
+ const delivered=Math.max(0,Number(yearRows[idx]?.milkDelivered)||0);
+ const closed=isMilkYearClosed(y);
+ document.getElementById("milkAvailable").value=milkEntries[y]?.[idx]??"";
+ document.getElementById("milkDeliveredFactory").value=delivered||"";
+ document.getElementById("milkAvailable").disabled=closed;document.getElementById("milkDeliveredFactory").disabled=closed;document.getElementById("saveMilkMonth").disabled=closed;
+ document.getElementById("closeMilkYearBtn").disabled=closed;document.getElementById("reopenMilkYearBtn").disabled=!closed;
+ const closure=milkYearClosures[y];document.getElementById("milkYearStatus").innerHTML=closed?`<b>Milchjahr ${y} abgeschlossen</b> · ${new Date(closure.closedAt).toLocaleString("de-DE")}<br>Verfügbar gesamt: ${fmt(closure.available)} L · Ausgeliefert gesamt: ${fmt(closure.delivered)} L. Die Monatseingaben sind gesperrt.`:`Milchjahr ${y} ist offen. Du kannst die Monatswerte unabhängig vom allgemeinen Betriebsjahresabschluss bearbeiten und abschließen.`;
+ document.getElementById("milkResult").innerHTML=`<b>${v>=need?"Molkerei ausreichend versorgt":"Milch fehlt"}</b><br>Verfügbar: ${fmt(v)} L · Monatsbedarf: ${fmt(need)} L · ${diff>=0?"Überschuss":"Fehlmenge"}: ${fmt(Math.abs(diff))} L<br>Auslieferung an Fabrik: ${fmt(delivered)} L · Abfüllmenge bei vollem Bedarf: ${fmt(DAIRY_FILLING_OUTPUT)} L`;
+ document.getElementById("milkMonthRows").innerHTML=milkMonthNames.map((name,i)=>{const q=Math.max(0,Number(milkEntries[y]?.[i])||0),d=q-need,yr=Number(y)===Number(activeYear())?data:(yearData[String(y)]||[]),out=Math.max(0,Number(yr[i]?.milkDelivered)||0);return `<tr><td>${name}</td><td>${fmt(q)} L</td><td>${fmt(out)} L</td><td>${fmt(need)} L</td><td>${d>=0?"+":"−"}${fmt(Math.abs(d))} L</td><td>${q>=need?"Ausreichend":"Fehlmenge"}</td></tr>`;}).join("");
+}
 document.getElementById("milkMonth").innerHTML=milkMonthNames.map((m,i)=>`<option value="${i+1}">${m}</option>`).join("");
 document.getElementById("milkYear").addEventListener("change",renderMilkMonth);document.getElementById("milkMonth").addEventListener("change",renderMilkMonth);
-document.getElementById("saveMilkMonth").addEventListener("click",()=>{const y=document.getElementById("milkYear").value,m=Number(document.getElementById("milkMonth").value),v=Math.max(0,Number(document.getElementById("milkAvailable").value)||0);milkEntries[y]=milkEntries[y]||{};milkEntries[y][m-1]=v;localStorage.setItem(MILK_KEY,JSON.stringify(milkEntries));renderMilkMonth();document.getElementById("milkResult").innerHTML+="<br><b>Gespeichert.</b>";});
+document.getElementById("saveMilkMonth").addEventListener("click",()=>{
+ const y=String(document.getElementById("milkYear").value||activeYear()),m=Number(document.getElementById("milkMonth").value),idx=m-1;
+ if(isMilkYearClosed(y)){alert("Dieses Milchjahr ist abgeschlossen. Hebe den Milchjahresabschluss zuerst auf.");return;}
+ const v=Math.max(0,Number(document.getElementById("milkAvailable").value)||0),delivered=Math.max(0,Number(document.getElementById("milkDeliveredFactory").value)||0);
+ milkEntries[y]=milkEntries[y]||{};milkEntries[y][idx]=v;
+ if(Number(y)===Number(activeYear())){data[idx]??={tmr:0,bedding:0,milkDelivered:0};data[idx].milkDelivered=delivered;}
+ else {yearData[y]??=Array.from({length:12},()=>({tmr:0,bedding:0,milkDelivered:0}));yearData[y][idx]??={tmr:0,bedding:0,milkDelivered:0};yearData[y][idx].milkDelivered=delivered;}
+ localStorage.setItem(MILK_KEY,JSON.stringify(milkEntries));persist();renderMilkMonth();renderAll(false);renderAnalysis();
+ document.getElementById("milkResult").innerHTML+="<br><b>Verfügbarkeit und Fabrikauslieferung gespeichert.</b>";
+});
+document.getElementById("closeMilkYearBtn").addEventListener("click",()=>{
+ const y=String(document.getElementById("milkYear").value||activeYear());if(isMilkYearClosed(y))return;
+ const rows=Number(y)===Number(activeYear())?data:(yearData[y]||[]);
+ const available=Array.from({length:12},(_,i)=>Math.max(0,Number(milkEntries[y]?.[i])||0)).reduce((a,b)=>a+b,0);
+ const delivered=Array.from({length:12},(_,i)=>Math.max(0,Number(rows[i]?.milkDelivered)||0)).reduce((a,b)=>a+b,0);
+ if(!confirm(`Milchjahr ${y} unabhängig vom allgemeinen Betriebsjahr abschließen?\n\nVerfügbare Milch: ${fmt(available)} L\nAn Fabrik ausgeliefert: ${fmt(delivered)} L\n\nDie Milcheingaben dieses Jahres werden danach gesperrt.`))return;
+ milkYearClosures[y]={closedAt:new Date().toISOString(),available,delivered};localStorage.setItem("ls25buffalo_milk_year_closures",JSON.stringify(milkYearClosures));persist();renderMilkMonth();
+});
+document.getElementById("reopenMilkYearBtn").addEventListener("click",()=>{
+ const y=String(document.getElementById("milkYear").value||activeYear());if(!isMilkYearClosed(y))return;
+ if(!confirm(`Milchjahresabschluss für Betriebsjahr ${y} aufheben? Die Monatseingaben werden wieder bearbeitbar.`))return;
+ delete milkYearClosures[y];localStorage.setItem("ls25buffalo_milk_year_closures",JSON.stringify(milkYearClosures));persist();renderMilkMonth();
+});
 refreshMilkYears();renderMilkMonth();
 const mainNav=document.querySelector("nav[aria-label='Hauptnavigation']");
 if(mainNav){
@@ -2578,7 +2613,7 @@ document.getElementById("saveBtn").addEventListener("click",()=>{persist();docum
 document.getElementById("resetBtn").addEventListener("click",()=>{
  if(!confirm("Wirklich alle gespeicherten Hofdaten, Ernten und Lagerbestände zurücksetzen?"))return;
  ids.forEach(id=>document.getElementById(id).value=defaults[id]);
- data=months.map(()=>({tmr:0,bedding:0,milkDelivered:0}));yearData={};yearHerdData={};yearSettings={};yearInitialized={};harvestData={};farmFields=[];nextFieldId=1;harvestPlans={};yearClosures={};operatingExpenses=[];nextExpenseId=1;
+ data=months.map(()=>({tmr:0,bedding:0,milkDelivered:0}));yearData={};yearHerdData={};yearSettings={};yearInitialized={};harvestData={};farmFields=[];nextFieldId=1;harvestPlans={};yearClosures={};milkYearClosures={};localStorage.setItem("ls25buffalo_milk_year_closures",JSON.stringify(milkYearClosures));operatingExpenses=[];nextExpenseId=1;
  stockSettings={strawTmr:0,beddingBales:0,hay:0,silage:0,minStrawTmr:0,minBeddingBales:0,minHay:0,minSilage:0};stockTransactions=[];nextStockTransactionId=1;milkTankOpening=0;document.getElementById("milkTankOpening").value=0;milkEntries={};localStorage.setItem(MILK_KEY,JSON.stringify(milkEntries));
  loadStockInputs();
  nextAnimalId=1;nextHarvestId=1;
@@ -2661,7 +2696,7 @@ function updateBackupReminder(){
 }
 function exportBackup(){
  const backup={format:"LS2025-Hofverwaltung-Backup",version:21,createdAt:new Date().toISOString(),
- settings:{...getSettings(),year:Number(activeYear())},months:data,yearData,yearHerdData,yearSettings,yearInitialized,harvestData,farmFields,nextFieldId,harvestPlans,yearClosures,operatingExpenses,nextExpenseId,operatingIncomes,nextIncomeId,stockSettings,stockTransactions,nextStockTransactionId,herd,nextAnimalId,nextHarvestId,milkTankOpening,milkEntries,stallData:{stalls:JSON.parse(localStorage.getItem("ls25buffalo_stalls")||"[]"),consumption:JSON.parse(localStorage.getItem("ls25buffalo_stall_consumption_v1")||"{}"),manualBase:JSON.parse(localStorage.getItem("ls25buffalo_stall_manual_base_v1")||"{}"),monthPlans:JSON.parse(localStorage.getItem("ls25buffalo_stall_month_plans")||"{}")}};
+ settings:{...getSettings(),year:Number(activeYear())},months:data,yearData,yearHerdData,yearSettings,yearInitialized,harvestData,farmFields,nextFieldId,harvestPlans,yearClosures,milkYearClosures,operatingExpenses,nextExpenseId,operatingIncomes,nextIncomeId,stockSettings,stockTransactions,nextStockTransactionId,herd,nextAnimalId,nextHarvestId,milkTankOpening,milkEntries,stallData:{stalls:JSON.parse(localStorage.getItem("ls25buffalo_stalls")||"[]"),consumption:JSON.parse(localStorage.getItem("ls25buffalo_stall_consumption_v1")||"{}"),manualBase:JSON.parse(localStorage.getItem("ls25buffalo_stall_manual_base_v1")||"{}"),monthPlans:JSON.parse(localStorage.getItem("ls25buffalo_stall_month_plans")||"{}")}};
  const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
  const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;
  a.download="LS_2025_Hofverwaltung_Backup_"+new Date().toISOString().slice(0,10)+".json";a.click();
@@ -2677,7 +2712,7 @@ function importBackup(file){
    ids.forEach(id=>{if(b.settings[id]!==undefined)document.getElementById(id).value=b.settings[id]});
    if(b.settings.year)document.getElementById("year").value=b.settings.year;
    if(b.stallData){localStorage.setItem("ls25buffalo_stalls",JSON.stringify(Array.isArray(b.stallData.stalls)?b.stallData.stalls:[]));localStorage.setItem("ls25buffalo_stall_consumption_v1",JSON.stringify(b.stallData.consumption||{}));localStorage.setItem("ls25buffalo_stall_manual_base_v1",JSON.stringify(b.stallData.manualBase||{}));localStorage.setItem("ls25buffalo_stall_month_plans",JSON.stringify(b.stallData.monthPlans||{}));}
-   yearData=b.yearData;yearHerdData=b.yearHerdData||{};yearSettings=b.yearSettings||{};yearInitialized=b.yearInitialized||{};if(!Object.keys(yearHerdData).length){Object.keys(yearData).forEach(k=>yearHerdData[k]=b.herd.map(a=>({...a})));}harvestData=b.harvestData;farmFields=Array.isArray(b.farmFields)?b.farmFields:[];nextFieldId=Number(b.nextFieldId)||Math.max(0,...farmFields.map(f=>Number(f.id)||0))+1;harvestPlans=b.harvestPlans||{};yearClosures=b.yearClosures||{};operatingExpenses=Array.isArray(b.operatingExpenses)?b.operatingExpenses:[];nextExpenseId=Number(b.nextExpenseId)||Math.max(0,...operatingExpenses.map(x=>Number(x.id)||0))+1;operatingIncomes=Array.isArray(b.operatingIncomes)?b.operatingIncomes:[];nextIncomeId=Number(b.nextIncomeId)||Math.max(0,...operatingIncomes.map(x=>Number(x.id)||0))+1;stockSettings={...stockSettings,...(b.stockSettings||{})};stockTransactions=Array.isArray(b.stockTransactions)?b.stockTransactions:[];nextStockTransactionId=Number(b.nextStockTransactionId)||Math.max(0,...stockTransactions.map(x=>Number(x.id)||0))+1;
+   yearData=b.yearData;yearHerdData=b.yearHerdData||{};yearSettings=b.yearSettings||{};yearInitialized=b.yearInitialized||{};if(!Object.keys(yearHerdData).length){Object.keys(yearData).forEach(k=>yearHerdData[k]=b.herd.map(a=>({...a})));}harvestData=b.harvestData;farmFields=Array.isArray(b.farmFields)?b.farmFields:[];nextFieldId=Number(b.nextFieldId)||Math.max(0,...farmFields.map(f=>Number(f.id)||0))+1;harvestPlans=b.harvestPlans||{};yearClosures=b.yearClosures||{};milkYearClosures=b.milkYearClosures||{};localStorage.setItem("ls25buffalo_milk_year_closures",JSON.stringify(milkYearClosures));operatingExpenses=Array.isArray(b.operatingExpenses)?b.operatingExpenses:[];nextExpenseId=Number(b.nextExpenseId)||Math.max(0,...operatingExpenses.map(x=>Number(x.id)||0))+1;operatingIncomes=Array.isArray(b.operatingIncomes)?b.operatingIncomes:[];nextIncomeId=Number(b.nextIncomeId)||Math.max(0,...operatingIncomes.map(x=>Number(x.id)||0))+1;stockSettings={...stockSettings,...(b.stockSettings||{})};stockTransactions=Array.isArray(b.stockTransactions)?b.stockTransactions:[];nextStockTransactionId=Number(b.nextStockTransactionId)||Math.max(0,...stockTransactions.map(x=>Number(x.id)||0))+1;
    herd=b.herd;nextAnimalId=Number(b.nextAnimalId)||Math.max(0,...herd.map(a=>Number(a.id)||0))+1;
    nextHarvestId=Number(b.nextHarvestId)||1;milkTankOpening=Math.max(0,Number(b.milkTankOpening)||0);
    if(b.milkEntries&&typeof b.milkEntries==="object"&&!Array.isArray(b.milkEntries)){milkEntries=b.milkEntries;localStorage.setItem(MILK_KEY,JSON.stringify(milkEntries));}
@@ -2696,7 +2731,6 @@ document.getElementById("backupFile").addEventListener("change",e=>{if(e.target.
 document.getElementById("mixerLoads").value=1;
 load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(lastSaved)setSaveIndicator("Zuletzt lokal gespeichert · "+new Date(lastSaved).toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"}));updateBackupReminder();document.getElementById("stockBookingDate").value=new Date().toISOString().slice(0,10);document.getElementById("expenseDate").value=new Date().toISOString().slice(0,10);document.getElementById("incomeDate").value=new Date().toISOString().slice(0,10);renderExpenses();refreshYearOptions(activeYear());document.getElementById("year").dataset.previous=activeYear();syncYearSelectors();data=data.map(d=>({...{tmr:0,bedding:0,milkDelivered:0},...d}));Object.keys(yearData).forEach(k=>{if(Array.isArray(yearData[k]))yearData[k]=yearData[k].map(d=>({...{tmr:0,bedding:0,milkDelivered:0},...d}));});Object.keys(yearHerdData).forEach(k=>{if(Array.isArray(yearHerdData[k]))yearHerdData[k]=yearHerdData[k].map(a=>({...a}));});yearHerdData[activeYear()]=herd.map(a=>({...a}));yearSettings[activeYear()]={...getSettings()};loadStockInputs();Object.values(harvestData).flatMap(v=>Array.isArray(v)?v:[]).forEach(h=>nextHarvestId=Math.max(nextHarvestId,(Number(h.id)||0)+1));renderHerd();renderMonths();renderAll(false);renderHarvest();renderFields();renderStock();renderYearClose();applyYearLock();setSaveIndicator("Lokale Daten geladen · Änderungen werden gespeichert");
 </script>
-
 <style>
 #pwaInstallButton{position:fixed;right:14px;bottom:14px;z-index:9999;border:1px solid #d7b94c;background:#263b2c;color:#fff;padding:12px 16px;border-radius:14px;font-weight:800;box-shadow:0 5px 20px #0005;display:none;cursor:pointer}#pwaInstallButton:focus{outline:3px solid #e6c85a;outline-offset:3px}
 /* Tierverwaltung: reduzierte Bestandstabelle ohne Preis- und Verkaufsbewertung */
@@ -2723,7 +2757,7 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
  #animalRows .animal-data-row td.animal-stall-cell select { width:100%; min-width:0; max-width:100%; }
 }
 </style>
-<button id="pwaInstallButton" type="button" aria-label="Hofverwaltung als App installieren">⬇ App installieren</button>
+<button aria-label="Hofverwaltung als App installieren" id="pwaInstallButton" type="button">⬇ App installieren</button>
 <script>
 (()=>{
  let deferredPrompt=null;
@@ -2738,7 +2772,7 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
  if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('Offline-Speicherung konnte nicht aktiviert werden',err)));}
 })();
 </script>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script async="" defer="" src="https://accounts.google.com/gsi/client"></script>
 <script>
 (()=>{
  const CLIENT_ID='901793571354-8vlgikvk8lb4e63bqgoledebjlibjo1f.apps.googleusercontent.com';
@@ -2769,10 +2803,6 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
  updateButtons();
 })();
 </script>
-
-
-
-
 <style id="ls25-stall-layout-style">
 #stallManager .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid var(--line)}
 #stallConsumptionMonth .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -2986,7 +3016,6 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
  window.ls25StallSystem={render:renderAllStallViews,renderAssignments:renderAnimalAssignments,renderSummary:()=>{renderStallList();renderStallAnalysis();},applyCombined,version:3};
 })();
 </script>
-
 </body>
 </html>
 <style id="stall-assignment-final-layout-fix">
@@ -2995,4 +3024,13 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
 #animalRows tr.animal-data-row > td.animal-stall-cell:nth-child(6) select{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;width:100%!important;min-width:110px!important;position:relative;z-index:3;}
 #animalRows thead th.stall-head:nth-child(6){display:table-cell!important;visibility:visible!important;}
 @media(max-width:650px){#animalRows tr.animal-data-row > td.animal-stall-cell:nth-child(6){display:flex!important;flex-direction:column;min-width:0;}#animalRows tr.animal-data-row > td.animal-stall-cell:nth-child(6) select{min-width:0!important;}}
+</style>
+
+<style id="milk-delivery-analysis-visible">
+/* Aktuelle Milch-Auswertung sichtbar halten; ältere Legacy-Regeln blendeten sie aus. */
+#analysis .analysis-text-grid > .analysis-text-card:has(>#analysisMilk),
+#analysisMilk { display:block !important; visibility:visible !important; }
+#milkDeliveredFactory { min-height:48px; width:100%; font-size:16px; }
+@media(max-width:760px){ #milk .fields { grid-template-columns:repeat(2,minmax(0,1fr)) !important; } }
+@media(max-width:460px){ #milk .fields { grid-template-columns:1fr !important; } }
 </style>
