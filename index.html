@@ -1207,18 +1207,21 @@ function activeYear(){return String(Math.max(1,Math.floor(Number(document.getEle
 function knownYears(selected=activeYear()){
  // Nur Betriebsjahre anzeigen, die tatsächlich initialisiert oder abgeschlossen wurden.
  // Das aktuell aktive Jahr bleibt sichtbar; ein fester Eintrag für Jahr 1 erzeugt keine Geisterjahre.
+ const hiddenLegacyYears=new Set([24,2026]);
  const keys=[...Object.keys(yearInitialized).filter(k=>yearInitialized[k]),...Object.keys(yearClosures)]
-   .map(Number).filter(n=>Number.isSafeInteger(n)&&n>=1);
+   .map(Number).filter(n=>Number.isSafeInteger(n)&&n>=1&&!hiddenLegacyYears.has(n));
  const current=Number(selected)||Number(activeYear());
- if(Number.isSafeInteger(current)&&current>=1&&(yearInitialized[String(current)]||yearClosures[String(current)]||keys.length===0))keys.push(current);
+ if(Number.isSafeInteger(current)&&current>=1&&!hiddenLegacyYears.has(current)&&(yearInitialized[String(current)]||yearClosures[String(current)]||keys.length===0))keys.push(current);
  return [...new Set(keys)].sort((a,b)=>a-b);
 }
 function refreshYearOptions(selected=activeYear()){
  const years=knownYears(selected);
+ const requested=Number(selected);
+ const safeSelected=years.includes(requested)?String(requested):String(years[years.length-1]||1);
  ["year","monthsYear","productionYear","harvestYear"].forEach(id=>{
    const el=document.getElementById(id);if(!el)return;
    el.innerHTML=years.map(y=>`<option value="${y}">Betriebsjahr ${y}${y===Math.max(...years)?" · neues Jahr":""}</option>`).join("");
-   el.value=String(selected);
+   el.value=safeSelected;
  });
 }
 function syncYearSelectors(){
