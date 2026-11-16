@@ -1199,6 +1199,8 @@ let stockSettings={strawTmr:0,beddingBales:0,hay:0,silage:0,minStrawTmr:0,minBed
 let stockTransactions=[];let nextStockTransactionId=1;
 let milkTankOpening=0;
 const fmt=n=>new Intl.NumberFormat("de-DE",{maximumFractionDigits:1}).format(Number(n)||0);
+// Gemeinsame HTML-Escaping-Funktion für Auswertungen, Tabellen und Feldnamen.
+function escapeHtml(value){return String(value??"").replace(/[&<>"\']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;", "\'":"&#39;"}[ch]));}
 const val=id=>Math.max(0,Number(document.getElementById(id).value)||0);
 function getSettings(){let o={};ids.forEach(id=>o[id]=val(id));o.year=Number(activeYear());return o}
 function activeYear(){return String(Math.max(1,Math.floor(Number(document.getElementById("year").value)||1)))}
