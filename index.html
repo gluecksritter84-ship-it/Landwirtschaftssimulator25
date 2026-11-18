@@ -939,6 +939,7 @@ input,select,textarea,button{max-width:100%;min-width:0}
 <button aria-controls="harvest" data-tab="harvest" type="button">🌾 Ernte &amp; Lager</button>
 <button aria-controls="analysis" data-tab="analysis" type="button">📊 Auswertung</button>
 <button aria-controls="milk" data-tab="milk" type="button">🥛 Milch</button>
+<button aria-controls="planner" data-tab="planner" type="button">🗓️ Jahresplaner</button>
 </nav>
 <div class="note" hidden="" id="appError" role="alert" style="margin-bottom:14px"></div>
 <section class="panel" id="milk">
@@ -970,10 +971,7 @@ input,select,textarea,button{max-width:100%;min-width:0}
 <small aria-live="polite" id="quickEntryStatus">Betriebsjahr und Monat wählen, Werte eintragen und einmal speichern.</small>
 </div>
 <div class="grid">
-<div class="card span-12"><h2>📋 Betriebs-Cockpit</h2><p class="muted">Die Übersicht verbindet Tierbestand, Futterplanung, Ernte und Lager. Sie liest keine Daten direkt aus deinem Xbox-Spielstand.</p>
-
-
-</div>
+<div class="card span-12"><h2>📋 Betriebs-Cockpit</h2><p class="muted">Die Übersicht verbindet Tierbestand, Futterplanung, Ernte und Lager. Sie liest keine Daten direkt aus deinem Xbox-Spielstand.</p><div id="farmOverviewSummary" class="farm-overview-summary" aria-live="polite"><p class="muted">Hofübersicht wird berechnet …</p></div></div>
 <div class="grid">
 <div class="card span-6"><h3>📦 Futtervorschau – nächste 12 Monate</h3><div id="dashFeedPlan"></div><button class="btn" data-jump-tab="production" type="button">Futterbedarf öffnen</button></div>
 </div>
@@ -1176,6 +1174,17 @@ input,select,textarea,button{max-width:100%;min-width:0}
 <div class="card span-12"><h2>📊 Auswertung je Stall</h2><p class="muted">Hier siehst du Tierbestand, Kapazität und den aufsummierten Futter- und Einstreuverbrauch des ausgewählten Betriebsjahres.</p><div id="stallMenuAnalysis"></div></div>
 </div>
 </section>
+
+<section class="panel" id="planner">
+ <div class="card span-12">
+  <h2>🗓️ Jahresplaner – Betriebsjahr <span id="plannerYearLabel">1</span></h2>
+  <p class="muted">Monatliche Hof-Checkliste für Futter, Tiere, Milch, Lager und Feldplanung. Die Aufgaben sind bewusst als Prüfpunkte formuliert – konkrete Aussaat- und Erntetermine werden nicht geraten, sondern richten sich nach deiner Karte und deinen eingetragenen Ernten.</p>
+  <div class="note" id="plannerProgress" aria-live="polite">Noch keine Aufgaben erledigt.</div>
+  <div id="plannerAutoTasks" style="margin:12px 0"></div><div class="grid" id="plannerMonths"></div>
+  <div class="actions"><button class="btn" type="button" id="plannerReset">Checkliste dieses Betriebsjahres zurücksetzen</button></div>
+ </div>
+</section>
+
 </main>
 <script>
 const months=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
@@ -1204,14 +1213,18 @@ function escapeHtml(value){return String(value??"").replace(/[&<>"\']/g,ch=>({"&
 const val=id=>Math.max(0,Number(document.getElementById(id).value)||0);
 function getSettings(){let o={};ids.forEach(id=>o[id]=val(id));o.year=Number(activeYear());return o}
 function activeYear(){return String(Math.max(1,Math.floor(Number(document.getElementById("year").value)||1)))}
+// Zentrale Sperrliste für alte, versehentlich angelegte Jahresdatensätze.
+// Diese Datensätze bleiben in den gespeicherten Daten/Backups erhalten,
+// werden aber in keiner Jahresauswahl als aktive Betriebsjahre angeboten.
+const HIDDEN_LEGACY_YEARS=new Set([24,2026]);
+function isHiddenLegacyYear(year){return HIDDEN_LEGACY_YEARS.has(Number(year));}
 function knownYears(selected=activeYear()){
  // Nur Betriebsjahre anzeigen, die tatsächlich initialisiert oder abgeschlossen wurden.
  // Das aktuell aktive Jahr bleibt sichtbar; ein fester Eintrag für Jahr 1 erzeugt keine Geisterjahre.
- const hiddenLegacyYears=new Set([24,2026]);
  const keys=[...Object.keys(yearInitialized).filter(k=>yearInitialized[k]),...Object.keys(yearClosures)]
-   .map(Number).filter(n=>Number.isSafeInteger(n)&&n>=1&&!hiddenLegacyYears.has(n));
+   .map(Number).filter(n=>Number.isSafeInteger(n)&&n>=1&&!isHiddenLegacyYear(n));
  const current=Number(selected)||Number(activeYear());
- if(Number.isSafeInteger(current)&&current>=1&&!hiddenLegacyYears.has(current)&&(yearInitialized[String(current)]||yearClosures[String(current)]||keys.length===0))keys.push(current);
+ if(Number.isSafeInteger(current)&&current>=1&&!isHiddenLegacyYear(current)&&(yearInitialized[String(current)]||yearClosures[String(current)]||keys.length===0))keys.push(current);
  return [...new Set(keys)].sort((a,b)=>a-b);
 }
 function refreshYearOptions(selected=activeYear()){
@@ -1234,7 +1247,13 @@ function seedYearFromPrevious(year){
  const prior=Array.isArray(yearHerdData[prev])?yearHerdData[prev]:herd;
  // Nur der Tierbestand und die Grundeinstellungen werden übernommen.
  // Verbrauch, Ernten und Monatswerte starten in jedem neuen Jahr bei null.
- yearHerdData[key]=prior.map(a=>({...a,age:Math.max(0,Number(a.age)||0)+12,startMonth:1}));
+ yearHerdData[key]=prior.map(a=>{
+  // Alter am Ende des Vorjahres plus ein Monat bis Januar des Folgejahres.
+  // Bei unterjährigem Zugang muss der Zugangsmonat berücksichtigt werden.
+  const startMonth=Math.max(1,Math.min(12,Math.floor(Number(a.startMonth)||1)));
+  const ageAtYearStart=Math.max(0,Number(a.age)||0)+(12-startMonth)+1;
+  return {...a,age:ageAtYearStart,startMonth:1};
+ });
  yearSettings[key]={...(yearSettings[prev]||getSettings()),year:n};
  yearData[key]=emptyYearMonths();
  harvestData[key]=[];
@@ -1314,14 +1333,16 @@ function load(){try{
  nextStockTransactionId=Number(localStorage.getItem("ls25buffalo_next_stock_transaction_id"))||Math.max(0,...stockTransactions.map(x=>Number(x.id)||0))+1;
  let d=JSON.parse(localStorage.getItem("ls25buffalo_months")||"null");if(Array.isArray(d)&&d.length===12)data=d;
  const savedYear=Math.max(1,Math.floor(Number(s?.year)||1));
- const currentYear=String(savedYear);
  // Ältere Backups hatten teilweise noch keine yearInitialized-Markierung.
  // Vorhandene Jahresdaten und Abschlüsse werden deshalb als begonnen erkannt.
  Object.keys(yearData).forEach(k=>{if(Array.isArray(yearData[k])&&Number(k)>=1)yearInitialized[k]=true;});
  Object.keys(yearClosures).forEach(k=>{if(Number(k)>=1)yearInitialized[k]=true;});
+ // Erst die sichtbare, gültige Jahresauswahl bestimmen. Ein ausgeblendetes
+ // Altjahr (z. B. 24 oder 2026) darf nicht als Datenquelle aktiv bleiben.
+ refreshYearOptions(savedYear);
+ const currentYear=String(Math.max(1,Math.floor(Number(document.getElementById("year").value)||1)));
  yearInitialized[currentYear]=true;
  if(Array.isArray(yearData[currentYear]))data=yearData[currentYear];else yearData[currentYear]=data;
- refreshYearOptions(savedYear);
  milkTankOpening=Math.max(0,Number(localStorage.getItem("ls25buffalo_milk_tank_opening"))||0);
  document.getElementById("milkTankOpening").value=milkTankOpening;
  let h=JSON.parse(localStorage.getItem("ls25buffalo_herd")||"null");
@@ -1465,6 +1486,31 @@ function updateMixer(){
  if(out)out.innerHTML=`<div class="grid"><div class="card span-4"><div class="kpi">${fmt(straw)} L</div><b>Stroh · 20 %</b></div><div class="card span-4"><div class="kpi">${fmt(hay)} L</div><b>Heu · 30 %</b></div><div class="card span-4"><div class="kpi">${fmt(silage)} L</div><b>Maissilage · 50 %</b></div></div>`;
 }
 
+function estimateAgeBasedFeedDemand(sourceHerd=herd, sourceSettings=getSettings()){
+ const settings=sourceSettings||{};
+ const result={tmr:0,bedding:0,months:[],animals:0,missingTmr:!(Number(settings.adultTmrMonthly)>0),missingBedding:!(Number(settings.adultBeddingMonthly)>0)};
+ const factorFor=(age,kind)=>{
+  const group=age<6?'Calf':age<12?'Young':age<24?'Subadult':'Adult';
+  const value=Number(settings[`${kind}Factor${group}`]);
+  return Number.isFinite(value)?Math.max(0,value):0;
+ };
+ for(let month=1;month<=12;month++){
+  let tmr=0,bedding=0,count=0;
+  (Array.isArray(sourceHerd)?sourceHerd:[]).forEach(animal=>{
+   if((animal.type||'buffalo')==='pig')return;
+   const start=Math.max(1,Math.min(12,Number(animal.startMonth)||1));
+   if(start>month)return;
+   const age=Math.max(0,Number(animal.age)||0)+(month-start);
+   count++;
+   if(!result.missingTmr)tmr+=Number(settings.adultTmrMonthly)*factorFor(age,'tmr');
+   if(!result.missingBedding)bedding+=Number(settings.adultBeddingMonthly)*factorFor(age,'bedding');
+  });
+  result.months.push({month,count,tmr,bedding});
+  result.tmr+=tmr;result.bedding+=bedding;result.animals=Math.max(result.animals,count);
+ }
+ return result;
+}
+
 function renderManagementCockpit(totals,stockNow){
  const feedEl=document.getElementById("dashFeedPlan");
  if(feedEl){
@@ -1474,12 +1520,57 @@ function renderManagementCockpit(totals,stockNow){
    {key:"silage",name:"Maissilage",need:Number(totals.silage)||0,unit:"L"},
    {key:"beddingBales",name:"Einstreu-Stroh",need:Number(totals.bales)||0,unit:"Ballen"}
   ];
-  feedEl.innerHTML=`<p class="muted">Hochrechnung aus dem ausgewählten Betriebsjahr, auf zwölf Monate verteilt. Verwendet werden deine erfassten Monatsverbräuche bzw. die hinterlegten Bedarfsmodelle.</p><div class="table-wrap"><table class="feed-plan-table"><thead><tr><th>Produkt</th><th>Ø / Monat</th><th>12 Monate</th><th>Lagerreichweite</th></tr></thead><tbody>${items.map(it=>{
-   const stock=stockNow?.items?.[it.key],closing=Math.max(0,Number(stock?.closing)||0),monthly=it.need/12,runway=monthly>0?closing/monthly:null,shortage=it.need>closing;
-   return `<tr><td><b>${it.name}</b></td><td>${fmt(monthly)} ${it.unit}</td><td>${fmt(it.need)} ${it.unit}</td><td class="feed-status" style="color:${shortage?'#e3bd43':'#b7e486'}">${runway===null?'–':runway.toFixed(1)+' Monate'}${shortage?' · Nachproduktion nötig':''}</td></tr>`;
-  }).join('')}</tbody></table></div><p class="muted">Reichweite = rechnerischer Lager-Endbestand ÷ durchschnittlichem Monatsbedarf. Ernte- und Verbrauchsdaten aktuell halten.</p>`;
+  const animalCount=(typeof getHerd==='function'?getHerd():herd||[]).filter(a=>(a.type||'buffalo')!=='pig').length;
+  const monthRows=Array.isArray(data)?data:[];
+  // TMR und Einstreu getrennt zählen: Ein erfasster TMR-Monat darf nicht
+  // fälschlich als erfasster Einstreu-Monat (oder umgekehrt) gelten.
+  const tmrMonths=monthRows.filter(d=>(Number(d.tmr)||0)>0).length;
+  const beddingMonths=monthRows.filter(d=>(Number(d.bedding)||0)>0).length;
+  const settings=getSettings();
+  const missingTmr=animalCount>0&&Number(settings.adultTmrMonthly)<=0&&!(Number(totals.tmr)>0);
+  const missingBedding=animalCount>0&&Number(settings.adultBeddingMonthly)<=0&&!(Number(totals.bedding)>0);
+  const projectedItems=items.map(it=>{
+   // TMR-Komponenten werden nur durch Monate mit TMR-Eintrag geteilt;
+   // Einstreu nur durch Monate mit Einstreu-Eintrag.
+   const denominator=it.key==="beddingBales"?beddingMonths:tmrMonths;
+   const monthly=denominator>0?Math.max(0,Number(it.need)||0)/denominator:0;
+   return {...it,monthly,annual:monthly*12,recordedMonths:denominator};
+  });
+  const incomplete=(tmrMonths>0&&tmrMonths<12)||(beddingMonths>0&&beddingMonths<12);
+  const warnings=[];
+  if(missingTmr||tmrMonths===0)warnings.push("Für TMR fehlen Monatsverbrauchswerte oder ein Referenzwert je erwachsenem Tier.");
+  if(missingBedding||beddingMonths===0)warnings.push("Für Einstreu fehlen Monatsverbrauchswerte oder ein Referenzwert je erwachsenem Tier.");
+  const warningHtml=warnings.length?`<div class="note"><b>Futterplanung teilweise unvollständig</b><p>${warnings.join(" ")} Fehlende Werte werden nicht als bestätigter Bedarf ausgegeben.</p></div>`:"";
+  const emptyHtml=tmrMonths===0&&beddingMonths===0?`<div class="note"><b>Noch keine Verbrauchsmonate erfasst</b><p>Eine belastbare Hochrechnung ist erst möglich, wenn du mindestens einen Monatsverbrauch für TMR oder Einstreu einträgst.</p></div>`:"";
+  const ageEstimate=estimateAgeBasedFeedDemand(typeof getHerd==='function'?getHerd():herd,settings);
+  const ageEstimateHtml=`<div class="note"><b>Altersabhängiger Planbedarf (separate Schätzung)</b><p>${ageEstimate.missingTmr?'TMR: Referenzwert je erwachsenem Tier fehlt.':`TMR: ${fmt(ageEstimate.tmr)} L/Jahr (${fmt(ageEstimate.tmr/12)} L/Monat im Jahresmittel).`}<br>${ageEstimate.missingBedding?'Einstreu: Referenzwert je erwachsenem Tier fehlt.':`Einstreu: ${fmt(ageEstimate.bedding)} L/Jahr (${fmt(ageEstimate.bedding/12)} L/Monat im Jahresmittel).`}</p><small>Berechnet aus Tieralter, Zugangsmonat und den einstellbaren Altersfaktoren. Dies ist eine Planannahme, kein aus dem Spiel ausgelesener Vanilla-Wert. Der erfasste Ist-Verbrauch bleibt davon getrennt.</small></div>`;
+  const projectionText=incomplete?`Vorläufige Hochrechnung: TMR aus ${tmrMonths}/12 und Einstreu aus ${beddingMonths}/12 erfassten Monaten.`:`Hochrechnung auf 12 Monate anhand der erfassten Verbrauchsmonate.`;
+  feedEl.innerHTML=`${warningHtml}${emptyHtml}${ageEstimateHtml}<p class="muted">${projectionText} Die Werte sind eine Planungshilfe und keine automatische LS25-Auslesung.</p><div class="table-wrap"><table class="feed-plan-table"><thead><tr><th>Produkt</th><th>Ø / Monat</th><th>Hochrechnung 12 Monate</th><th>Reichweite ab Jahresende</th></tr></thead><tbody>${projectedItems.map(it=>{
+   const stock=stockNow?.items?.[it.key],closing=Math.max(0,Number(stock?.closing)||0),monthly=it.monthly,annual=it.annual,runway=monthly>0?closing/monthly:null,shortage=annual>closing;
+   return `<tr><td><b>${it.name}</b></td><td>${fmt(monthly)} ${it.unit}</td><td>${fmt(annual)} ${it.unit}</td><td class="feed-status" style="color:${shortage?'#e3bd43':'#b7e486'}">${runway===null?'–':runway.toFixed(1)+' Monate'}${shortage?' · Nachproduktion nötig':''}</td></tr>`;
+  }).join('')}</tbody></table></div><p class="muted">Reichweite = aktueller Lager-Endbestand ÷ durchschnittlichem Monatsbedarf. Bei weniger als 12 erfassten Monaten ist die Jahresmenge eine Hochrechnung. Ernte- und Verbrauchsdaten aktuell halten.</p>`;
  }
 
+ const summaryEl=document.getElementById("farmOverviewSummary");
+ if(summaryEl){
+  const currentHerd=(typeof getHerd==='function'?getHerd():Array.isArray(herd)?herd:[]);
+  const buffaloCount=currentHerd.filter(a=>(a.type||'buffalo')==='buffalo').length;
+  const pigCount=currentHerd.filter(a=>a.type==='pig').length;
+  let fieldList=[];try{fieldList=JSON.parse(localStorage.getItem("ls25buffalo_fields")||"[]");}catch(e){fieldList=[];}
+  const area=Array.isArray(fieldList)?fieldList.reduce((sum,f)=>sum+Math.max(0,Number(f.area)||0),0):0;
+  const stockKeys=["strawTmr","beddingBales","hay","silage"];
+  const stockValues=stockKeys.map(k=>stockNow?.items?.[k]).filter(Boolean);
+  const hasStockActivity=x=>!!x&&(Number(x.opening)>0||Number(x.harvest)>0||Number(x.manualIn)>0||Number(x.manualOut)>0||Number(x.need)>0);
+  const missingStock=stockKeys.filter(k=>!hasStockActivity(stockNow?.items?.[k])).length;
+  const criticalStock=stockValues.filter(x=>hasStockActivity(x)&&((Number(x.shortage)||0)>0||x.belowMinimum===true)).length;
+  const stockState=missingStock?`${missingStock} Lagerdaten fehlen`:criticalStock?`${criticalStock} Lager kritisch`:stockValues.length===stockKeys.length?"Lagerdaten vollständig":"Lagerdaten unvollständig";
+  const monthRows=Array.isArray(data)?data:[];
+  const tmrRecorded=monthRows.filter(d=>(Number(d.tmr)||0)>0).length;
+  const beddingRecorded=monthRows.filter(d=>(Number(d.bedding)||0)>0).length;
+  const dataState=tmrRecorded===0&&beddingRecorded===0?"Noch keine Monatsverbräuche":`TMR ${tmrRecorded}/12 · Einstreu ${beddingRecorded}/12`;
+  const statusColor=criticalStock||missingStock||recorded===0?"#e3bd43":"#b7e486";
+  summaryEl.innerHTML=`<div class="farm-overview-grid"><div class="farm-overview-tile"><small>Wasserbüffel</small><b>${fmt(buffaloCount)}</b></div><div class="farm-overview-tile"><small>Weitere Tiere</small><b>${fmt(pigCount)}</b></div><div class="farm-overview-tile"><small>Erfasste Feldfläche</small><b>${fmt(area)} ha</b></div><div class="farm-overview-tile"><small>Verbrauchsdaten</small><b>${dataState}</b></div><div class="farm-overview-tile farm-overview-status"><small>Lagerstatus</small><b style="color:${statusColor}">${stockState}</b></div></div><p class="muted">Die Kennzahlen beziehen sich auf das ausgewählte Betriebsjahr. Fehlende Lager- oder Verbrauchsdaten werden ausdrücklich als unvollständig ausgewiesen.</p>`;
+ }
 }
 
 function syncQuickMonth(){
@@ -1663,8 +1754,58 @@ function renderFieldYields(){
  const summary=Object.entries({straw:"Stroh",hay:"Heu",silage:"Maissilage"}).map(([k,label])=>{
   const v=r[k];return `<p><b>${label}:</b> ${v.area>0?`${fmt(v.amount/v.area)} L/ha (${fmt(v.amount)} L auf ${fmt(v.area)} ha)`:"Noch keine zugeordnete Ernte"}</p>`;
  }).join("");
- const box=document.getElementById("fieldYieldSummary");if(box)box.innerHTML="<h3>Ertrag pro Hektar – Betriebsjahr "+activeYear()+"</h3>"+summary+'<small>Bei mehreren Ernten desselben Feldes im Jahr wird dessen Fläche nur einmal gezählt. Einstreuballen werden mit der eingestellten Ballengröße in Liter umgerechnet. Anbauänderungen gelten auch für bisherige Ernten dieses Feldes.</small>';
- const auto=document.getElementById("autoYields");if(auto)auto.innerHTML=summary;
+ const y=activeYear(),need=yearlyNeed(y),baleSize=Math.max(1,Number(getSettingsForYear(y).bale)||7000);
+ const areaRows=[
+  ["Stroh gesamt",r.straw,Math.max(0,Number(need.strawTmr)||0)+(Math.max(0,Number(need.beddingBales)||0)*baleSize)],
+  ["Heu",r.hay,Math.max(0,Number(need.hay)||0)],
+  ["Maissilage",r.silage,Math.max(0,Number(need.silage)||0)]
+ ];
+ const harvestTargets=typeof getRecommendedHarvestTargets==="function"?getRecommendedHarvestTargets(y):{strawTmr:0,beddingBales:0,hay:0,silage:0};
+ const additionalHarvest={
+  straw:Math.max(0,Number(harvestTargets.strawTmr)||0)+Math.max(0,Number(harvestTargets.beddingBales)||0)*baleSize,
+  hay:Math.max(0,Number(harvestTargets.hay)||0),
+  silage:Math.max(0,Number(harvestTargets.silage)||0)
+ };
+ const areaHtml=`<h3 style="margin-top:18px">Benötigte Anbaufläche – Betriebsjahr ${y}</h3><p class="muted">Die Schätzung nutzt ausschließlich deine eingetragenen Ernten und deren gemessenen Hektarertrag. Die zusätzliche Fläche bezieht sich auf die noch benötigte Erntemenge nach Berücksichtigung von Startbestand, Lagerbewegungen und Mindestreserve. Ohne passende Erntedaten wird keine Fläche geraten.</p><div class="table-wrap"><table><thead><tr><th>Futterart</th><th>Jahresbedarf</th><th>Zusätzlich zu ernten</th><th>Gemessener Ertrag/ha</th><th>Fläche für Jahresbedarf</th><th>Zusätzliche Fläche für Fehlmenge</th></tr></thead><tbody>${areaRows.map(([label,v,required])=>{const key=label.startsWith("Stroh")?"straw":label==="Heu"?"hay":"silage";const yieldPerHa=v.area>0?v.amount/v.area:0;const ha=yieldPerHa>0?required/yieldPerHa:null;const extra=additionalHarvest[key];const extraHa=yieldPerHa>0?extra/yieldPerHa:null;return `<tr><td><b>${label}</b></td><td>${fmt(required)} L</td><td>${fmt(extra)} L</td><td>${yieldPerHa>0?fmt(yieldPerHa)+" L/ha":"Keine Erntedaten"}</td><td>${ha===null?"–":fmt(ha)+" ha"}</td><td><b>${extraHa===null?"–":fmt(extraHa)+" ha"}</b></td></tr>`;}).join("")}</tbody></table></div>`;
+ // Unverbindliche Anbauplanung: vergleicht die aktuell zugewiesenen Feldflächen
+ // mit dem errechneten Bedarf. Es werden keine Felder automatisch umgestellt.
+ const cropGroups=[
+  {key:"straw",label:"Weizen / Gerste (Stroh)",crops:["wheat","barley"],result:r.straw,required:areaRows[0][2],additional:additionalHarvest.straw},
+  {key:"hay",label:"Gras (Heu)",crops:["grass"],result:r.hay,required:areaRows[1][2],additional:additionalHarvest.hay},
+  {key:"silage",label:"Mais (Maissilage)",crops:["corn"],result:r.silage,required:areaRows[2][2],additional:additionalHarvest.silage}
+ ];
+ const cropPlanRows=cropGroups.map(g=>{
+  const assigned=farmFields.filter(f=>g.crops.includes(f.crop)).reduce((sum,f)=>sum+(Number(f.area)||0),0);
+  const yieldPerHa=g.result.area>0?g.result.amount/g.result.area:0;
+  const needed=yieldPerHa>0?g.required/yieldPerHa:null;
+  const extraNeeded=yieldPerHa>0?g.additional/yieldPerHa:null;
+  const diff=extraNeeded===null?null:Math.max(0,extraNeeded-assigned);
+  const status=extraNeeded===null?"Erntedaten fehlen":g.additional<=0.01?"Kein zusätzlicher Erntebedarf":diff>0.01?`Noch ${fmt(diff)} ha zusätzlich einplanen`:assigned>extraNeeded+0.01?`${fmt(assigned-extraNeeded)} ha Reservefläche`:"Fläche reicht für Nachproduktion";
+  return `<tr><td><b>${g.label}</b></td><td>${fmt(assigned)} ha</td><td>${needed===null?"–":fmt(needed)+" ha"}</td><td>${extraNeeded===null?"–":fmt(extraNeeded)+" ha"}</td><td>${diff===null?"–":fmt(diff)+" ha"}</td><td>${status}</td></tr>`;
+ }).join("");
+ const cropPlanHtml=`<h3 style="margin-top:18px">Anbauplanung nach vorhandenem Flächenbestand</h3><p class="muted">Vergleich deiner aktuell zugewiesenen Feldflächen mit dem Jahresbedarf und der noch zusätzlich benötigten Erntemenge. Grundlage sind ausschließlich deine gemessenen Erträge pro Hektar. Weizen und Gerste werden gemeinsam für den Strohbedarf betrachtet. Diese Planung ändert keine Feldzuordnung automatisch.</p><div class="table-wrap"><table><thead><tr><th>Kultur / Verwendung</th><th>Aktuell zugewiesen</th><th>Benötigt</th><th>Fläche für Nachproduktion</th><th>Noch zusätzlich nötig</th><th>Bewertung</th></tr></thead><tbody>${cropPlanRows}</tbody></table></div>`;
+ // Feldempfehlung: nur vorhandene Felder mit passender, bereits eingestellter Kultur.
+ // Wenn Ertragsdaten vorliegen, werden die Felder mit dem höchsten gemessenen Ertrag zuerst gezeigt.
+ const fieldRecommendations=cropGroups.map(g=>{
+  const candidates=farmFields.filter(f=>g.crops.includes(f.crop)).map(f=>{
+   let qty=0, area=Number(f.area)||0;
+   Object.values(harvestData).forEach(list=>{if(!Array.isArray(list))return;list.forEach(h=>{
+    if(String(h.fieldId||"")!==String(f.id))return;
+    const crop=h.cropAtHarvest||f.crop, product=h.productAtHarvest||(cropProduct[crop]||crop);
+    if(product!==g.key)return;
+    qty+=g.key==="straw"?(Number(h.strawTmr)||0)+(Number(h.beddingBales)||0)*Math.max(1,Number(getSettingsForYear(activeYear()).bale)||7000):Number(h[g.key])||0;
+   });});
+   return {...f,area,yieldPerHa:area>0&&qty>0?qty/area:null};
+  }).filter(f=>f.area>0).sort((a,b)=>{
+   if(a.yieldPerHa!==null&&b.yieldPerHa!==null)return b.yieldPerHa-a.yieldPerHa;
+   if(a.yieldPerHa!==null)return -1;if(b.yieldPerHa!==null)return 1;return b.area-a.area;
+  });
+  const body=candidates.length?candidates.map((f,i)=>`<tr><td>${i===0?"<b>1. Empfehlung</b>":i+1}</td><td>${escapeHtml(f.name)}</td><td>${cropLabels[f.crop]||f.crop}</td><td>${fmt(f.area)} ha</td><td>${f.yieldPerHa===null?"Noch keine Ertragsdaten":fmt(f.yieldPerHa)+" L/ha"}</td></tr>`).join(""):`<tr><td colspan="5">Kein Feld mit passender Kultur und eingetragener Fläche vorhanden.</td></tr>`;
+  return `<h4 style="margin:12px 0 6px">${g.label}</h4><div class="table-wrap"><table><thead><tr><th>Reihenfolge</th><th>Feld</th><th>Aktuelle Kultur</th><th>Fläche</th><th>Gemessener Ertrag</th></tr></thead><tbody>${body}</tbody></table></div>`;
+ }).join("");
+ const fieldRecommendationHtml=`<h3 style="margin-top:18px">Feldempfehlung nach vorhandenen Erträgen</h3><p class="muted">Die Felder werden nach bereits eingetragenem Ertrag je Hektar sortiert. Ohne Ertragsdaten werden größere passende Felder zuerst angezeigt. Es werden keine Kulturen oder Feldzuordnungen automatisch geändert.</p>${fieldRecommendations}`;
+ const box=document.getElementById("fieldYieldSummary");if(box)box.innerHTML="<h3>Ertrag pro Hektar – Betriebsjahr "+y+"</h3>"+summary+'<small>Bei mehreren Ernten desselben Feldes im Jahr wird dessen Fläche nur einmal gezählt. Einstreuballen werden mit der eingestellten Ballengröße in Liter umgerechnet. Anbauänderungen gelten auch für bisherige Ernten dieses Feldes.</small>'+areaHtml+cropPlanHtml+fieldRecommendationHtml;
+ const auto=document.getElementById("autoYields");if(auto)auto.innerHTML=summary+areaHtml+cropPlanHtml+fieldRecommendationHtml;
 }
 function renderHarvest(){
  const y=Math.max(1,Math.floor(val("year"))), list=getHarvestForYear(y), totals=list.reduce((a,h)=>{
@@ -1699,12 +1840,25 @@ function renderHarvest(){
 }
 const harvestPlanLabels={strawTmr:"Stroh für TMR",beddingBales:"Stroh für Einstreu",hay:"Heu",silage:"Maissilage"};
 const harvestPlanUnits={strawTmr:"L",beddingBales:"Ballen",hay:"L",silage:"L"};
+function getRecommendedHarvestTargets(year){
+ const key=String(year),ledger=buildStockLedger(year),current=ledger[ledger.length-1];
+ const needs=yearlyNeed(year),recommended={};
+ const minKey={strawTmr:"minStrawTmr",beddingBales:"minBeddingBales",hay:"minHay",silage:"minSilage"};
+ Object.keys(harvestPlanLabels).forEach(k=>{
+  const item=current?.items?.[k]||{};
+  // Ernteziel = Jahresbedarf + gewünschter Mindestrestbestand - Startbestand - manuelle Zugänge + manuelle Entnahmen.
+  // Bereits geerntete Mengen werden NICHT abgezogen: Sie werden im Soll-Ist-Vergleich separat berücksichtigt.
+  recommended[k]=Math.max(0,(Number(needs[k])||0)+(Number(stockSettings[minKey[k]])||0)-(Number(item.opening)||0)-(Number(item.manualIn)||0)+(Number(item.manualOut)||0));
+ });
+ return recommended;
+}
 function renderHarvestPlan(year,needs,actual){
- const key=String(year);const plan=harvestPlans[key]||{strawTmr:0,beddingBales:0,hay:0,silage:0};
- document.getElementById("harvestPlan").innerHTML=`<div class="table-wrap"><table><thead><tr><th>Erntegut</th><th>Ernteziel (Soll)</th><th>Ist-Ernte</th><th>Bis zum Ziel</th><th>Fortschritt</th></tr></thead><tbody>${Object.keys(harvestPlanLabels).map(k=>{const target=Math.max(0,Number(plan[k])||0),done=actual[k]||0,remaining=Math.max(0,target-done),pct=target>0?Math.min(100,done/target*100):0;return `<tr><td><b>${harvestPlanLabels[k]}</b></td><td><input data-plan-k="${k}" type="number" min="0" step="1" value="${target}" aria-label="Ernteziel ${harvestPlanLabels[k]}" style="max-width:150px"></td><td>${fmt(done)} ${harvestPlanUnits[k]}</td><td>${fmt(remaining)} ${harvestPlanUnits[k]}</td><td><b>${target>0?fmt(pct)+" %":"kein Ziel gesetzt"}</b><div class="compare-track" style="margin-top:5px"><div class="harvest" style="width:${pct}%"></div></div></td></tr>`}).join("")}</tbody></table></div><p class="muted">Die Ernteziele werden getrennt je Betriebsjahr gespeichert. Eine Ist-Ernte wird aus allen Erntevorgängen dieses Jahres zusammengerechnet.</p>`;
+ const key=String(year),plan=harvestPlans[key]||{strawTmr:0,beddingBales:0,hay:0,silage:0},recommended=getRecommendedHarvestTargets(year);
+ const ledger=buildStockLedger(year),current=ledger[ledger.length-1];
+ document.getElementById("harvestPlan").innerHTML=`<div class="table-wrap"><table><thead><tr><th>Erntegut</th><th>Startbestand</th><th>Jahresbedarf + Mindestreserve</th><th>Empfohlenes Ernteziel</th><th>Dein Ernteziel (Soll)</th><th>Ist-Ernte</th><th>Bis zum Ziel</th><th>Fortschritt</th></tr></thead><tbody>${Object.keys(harvestPlanLabels).map(k=>{const target=Math.max(0,Number(plan[k])||0),done=actual[k]||0,remaining=Math.max(0,target-done),pct=target>0?Math.min(100,done/target*100):0,item=current?.items?.[k]||{};return `<tr><td><b>${harvestPlanLabels[k]}</b></td><td>${fmt(item.opening||0)} ${harvestPlanUnits[k]}</td><td>${fmt((Number(needs[k])||0)+(Number(item.minimum)||0))} ${harvestPlanUnits[k]}</td><td><b>${fmt(recommended[k])} ${harvestPlanUnits[k]}</b></td><td><input data-plan-k="${k}" type="number" min="0" step="1" value="${target}" aria-label="Ernteziel ${harvestPlanLabels[k]}" style="max-width:130px"></td><td>${fmt(done)} ${harvestPlanUnits[k]}</td><td>${fmt(remaining)} ${harvestPlanUnits[k]}</td><td><b>${target>0?fmt(pct)+" %":"kein Ziel gesetzt"}</b><div class="compare-track" style="margin-top:5px"><div class="harvest" style="width:${pct}%"></div></div></td></tr>`}).join("")}</tbody></table></div><p class="muted">Das empfohlene Ernteziel berücksichtigt Jahresbedarf, Startbestand, manuelle Lagerzugänge und den eingestellten Mindestrestbestand. Bereits erfasste Ernten werden im Soll-Ist-Vergleich berücksichtigt. Das Ziel ist eine Planungshilfe und keine automatische Buchung.</p>`;
 }
 function saveHarvestPlan(){const key=String(Math.max(1,Math.floor(val("year"))));const plan={...(harvestPlans[key]||{})};document.querySelectorAll("#harvestPlan [data-plan-k]").forEach(el=>plan[el.dataset.planK]=Math.max(0,Number(el.value)||0));harvestPlans[key]=plan;persist();renderHarvest();}
-function setHarvestPlanFromNeed(){const y=Math.max(1,Math.floor(val("year"))),t=calc().totals;harvestPlans[String(y)]={strawTmr:t.straw,beddingBales:t.bales,hay:t.hay,silage:t.silage};persist();renderHarvest();}
+function setHarvestPlanFromNeed(){const y=Math.max(1,Math.floor(val("year")));harvestPlans[String(y)]=getRecommendedHarvestTargets(y);persist();renderHarvest();}
 const stockFields={openingStrawTmr:"strawTmr",openingBeddingBales:"beddingBales",openingHay:"hay",openingSilage:"silage",minimumStrawTmr:"minStrawTmr",minimumBeddingBales:"minBeddingBales",minimumHay:"minHay",minimumSilage:"minSilage"};
 function loadStockInputs(){
  Object.entries(stockFields).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.value=Number(stockSettings[key])||0;});
@@ -1728,7 +1882,7 @@ function buildStockLedger(untilYear=Math.max(1,Math.floor(val("year")))){
  let stock={strawTmr:stockSettings.strawTmr,beddingBales:stockSettings.beddingBales,hay:stockSettings.hay,silage:stockSettings.silage};
  const ledger=[];
  for(let y=1;y<=untilYear;y++){
-   if(y>1&&yearClosures[String(y-1)]?.stock){Object.keys(stock).forEach(k=>{const prev=yearClosures[String(y-1)].stock[k];if(prev)stock[k]=Math.max(0,Number(prev.closing)||0);});}
+   if(y>1&&yearClosures[String(y-1)]?.stock){Object.keys(stock).forEach(k=>{const prev=yearClosures[String(y-1)].stock[k];if(prev&&Object.prototype.hasOwnProperty.call(prev,"closing")&&Number.isFinite(Number(prev.closing)))stock[k]=Math.max(0,Number(prev.closing));});}
    const need=yearlyNeed(y),harvest=yearlyHarvest(y),row={year:y,items:{}};
    Object.keys(names).forEach(k=>{
      const opening=Math.max(0,Number(stock[k])||0),harvestQty=Math.max(0,Number(harvest[k])||0),needQty=Math.max(0,Number(need[k])||0);
@@ -1760,7 +1914,14 @@ function renderStock(){
  return `<tr><td>${labels[k]}</td><td>${fmt(r.opening)} ${r.unit}</td><td>+ ${fmt(r.harvest)} ${r.unit}</td><td>+ ${fmt(r.manualIn)} ${r.unit}</td><td>− ${fmt(r.need)} ${r.unit}</td><td>− ${fmt(r.manualOut)} ${r.unit}</td><td><b>${fmt(r.closing)} ${r.unit}</b></td><td>${fmtYears(remaining)}</td><td><span class="pill" style="${r.shortage>0||r.belowMinimum?'background:#fde2e2;color:#9b2525':''}">${status}</span></td></tr>`;
  }).join("")}</tbody></table></div><p class="muted">Die Reichweite berechnet sich aus dem Restbestand geteilt durch den Bedarf des ausgewählten Betriebsjahres. Sie ist eine Schätzung bei gleichbleibendem Verbrauch und ohne weitere Ernten.</p>`;
  const alerts=items.map(k=>{const r=current.items[k],monthly=r.need/12,stock=Math.max(0,r.closing),runway=monthly>0?stock/monthly:null,reorder=Math.max(0,Math.max(r.minimum,monthly*3)-stock);return {label:labels[k],unit:r.unit,runway,reorder,short:r.shortage>0,low:r.belowMinimum&&(r.opening>0||r.harvest>0||r.need>0)};}).filter(a=>a.short||a.low||(a.runway!==null&&a.runway<3));
- document.getElementById("stockAlerts").innerHTML=alerts.length?`<div class="note"><b>Lagerwarnungen</b>${alerts.map(a=>`<p>${a.label}: ${a.short?'Bestand reicht nicht aus':a.low?'Mindestbestand unterschritten':'Vorrat unter drei Monatsbedarfen'}${a.runway!==null?' · ca. '+fmt(a.runway)+' Monate':''}${a.reorder>0?' · Empfehlung für 3-Monats-Vorrat: '+fmt(a.reorder)+' '+a.unit:''}</p>`).join("")}</div>`:'<p class="compare-good">Alle Lagerbestände sind ausreichend.</p>';
+ const hasActivity=k=>{const r=current.items[k];return r.opening>0||r.harvest>0||r.need>0||r.manualIn>0||r.manualOut>0;};
+ const anyRecorded=items.some(hasActivity);
+ const anyNeed=items.some(k=>current.items[k].need>0);
+ const unverified=items.filter(k=>!hasActivity(k));
+ const alertHtml=alerts.length?`<div class="note"><b>Lagerwarnungen</b>${alerts.map(a=>`<p>${a.label}: ${a.short?'Bestand reicht nicht aus':a.low?'Mindestbestand unterschritten':'Vorrat unter drei Monatsbedarfen'}${a.runway!==null?' · ca. '+fmt(a.runway)+' Monate':''}${a.reorder>0?' · Empfehlung für 3-Monats-Vorrat: '+fmt(a.reorder)+' '+a.unit:''}</p>`).join("")}</div>`:"";
+ const incompleteHtml=(!anyRecorded||!anyNeed||unverified.length)?`<div class="note"><b>Lagerprüfung teilweise unvollständig</b><p>${!anyRecorded?'Es wurden noch keine Lagerbewegungen oder Bedarfe erfasst. ':''}${!anyNeed?'Für kein Lagerprodukt ist ein Jahresbedarf hinterlegt. ':''}${unverified.length?'Für folgende Produkte fehlen Lager- oder Verbrauchsdaten: '+unverified.map(k=>labels[k]).join(', ')+'. ':''}Für nicht erfasste Produkte kann keine ausreichende Versorgung bestätigt werden.</p></div>`:"";
+ const allClear=alerts.length===0&&anyRecorded&&anyNeed&&unverified.length===0;
+ document.getElementById("stockAlerts").innerHTML=alertHtml+incompleteHtml+(allClear?'<p class="compare-good">Alle vier Lagerbestände sind anhand der erfassten Werte ausreichend.</p>':"");
  document.getElementById("dashboardStock").innerHTML=items.map(k=>{const r=current.items[k];return `<p><b>${labels[k]}:</b> ${fmt(r.closing)} ${r.unit}</p>`}).join("");
 }
 const stockProductLabels={strawTmr:"TMR-Stroh",beddingBales:"Einstreu-Stroh",hay:"Heu",silage:"Maissilage"};
@@ -1939,7 +2100,7 @@ function ageWeightedDemand(year,monthIndex){
 function renderAnalysis(){
  const sel=document.getElementById("analysisYear"); if(!sel)return;
  const current=Math.max(1,Math.floor(val("year")));
- const years=[...new Set([...Object.keys(yearInitialized).filter(k=>yearInitialized[k]).map(Number).filter(n=>n>0),...Object.keys(yearClosures).map(Number).filter(n=>n>0),current])].filter(y=>y!==24&&y!==2025&&y!==2026).sort((a,b)=>a-b);
+ const years=[...new Set([...Object.keys(yearInitialized).filter(k=>yearInitialized[k]).map(Number).filter(n=>n>0),...Object.keys(yearClosures).map(Number).filter(n=>n>0),current])].filter(y=>!isHiddenLegacyYear(y)).sort((a,b)=>a-b);
  const previous=sel.value||"all";
  sel.innerHTML='<option value="all">Gesamt – alle Betriebsjahre</option>'+years.map(y=>`<option value="${y}">Betriebsjahr ${y}</option>`).join("");
  sel.value=previous==="all"||years.includes(Number(previous))?previous:String(current);
@@ -2006,11 +2167,12 @@ function renderAnalysis(){
  document.getElementById("analysisMilk").innerHTML=`<p>Milchproduktion: <b>${fmt(milk)} L</b><br>Ausgeliefert: <b>${fmt(delivered)} L</b><br>Fabrikbedarf: <b>${fmt(factory)} L</b><br>Produktionssaldo: <b>${fmt(milk-factory)} L</b><br>Fabrikdeckung: <b>${factory?(milk/factory*100).toFixed(1):0} %</b></p>
  <hr><p>Startbestand Milchtank: <b>${fmt(milkTankOpening)} L</b><br>+ Produktion: <b>${fmt(milk)} L</b><br>− Auslieferung: <b>${fmt(delivered)} L</b><br>Verbleibend: <b>${fmt(Math.max(0,tankRemaining))} L</b>${tankRemaining<0?'<br><b class="compare-bad">Achtung: Auslieferungen übersteigen den verfügbaren Bestand.</b>':""}</p>`;
 
- document.getElementById("analysisStockText").innerHTML=`<p><b>Lagerbilanz – ${chosen==="all"?"letztes erfasstes Betriebsjahr":"Betriebsjahr "+chosen}</b></p>`+Object.keys(labels).map(k=>{
-   const r=selectedLedger.items[k],status=r.shortage>0?"Fehlmenge":r.belowMinimum?"Mindestbestand unterschritten":(r.opening||r.harvest||r.need||r.manualIn||r.manualOut)?"ausreichend":"noch nicht erfasst";
-   const reach=yearsLeft(Math.max(0,r.closing),r.need);
-   return `<div class="report-block"><p><b>${labels[k]}</b></p><p>Anfang ${fmt(r.opening)} ${r.unit} + Ernte ${fmt(r.harvest)} ${r.unit} − Bedarf ${fmt(r.need)} ${r.unit}</p><p><b>Restbestand: ${fmt(r.closing)} ${r.unit}</b></p><p>Status: <b>${status}</b> · Fehlmenge: ${fmt(r.shortage)} ${r.unit} · Reichweite: ${reach===null?"kein Verbrauch":fmt(reach)+" Jahre"}</p></div>`;
- }).join("");
+ document.getElementById("analysisStockText").innerHTML=`<p><b>Jahresübersicht Lager – ${chosen==="all"?"letztes erfasstes Betriebsjahr":"Betriebsjahr "+chosen}</b></p>
+ <p>Die Werte zeigen den rechnerischen Stand aus Anfangsbestand, Ernte, manuellen Bewegungen und geplantem Jahresbedarf. Ein tatsächlicher Endbestand ist nur so zuverlässig wie die eingetragenen Mengen.</p>
+ <div class="table-wrap"><table><thead><tr><th>Futterart</th><th>Anfang</th><th>Ernte</th><th>Zugänge</th><th>Bedarf</th><th>Entnahmen</th><th>Rechnerischer Rest</th><th>Fehlmenge</th><th>Status</th></tr></thead><tbody>${Object.keys(labels).map(k=>{
+   const r=selectedLedger.items[k],status=r.shortage>0?"Fehlmenge":r.belowMinimum?"Mindestbestand unterschritten":(r.opening||r.harvest||r.need||r.manualIn||r.manualOut)?"Bestand rechnerisch ausreichend":"Noch nicht erfasst";
+   return `<tr><td><b>${labels[k]}</b></td><td>${fmt(r.opening)} ${r.unit}</td><td>${fmt(r.harvest)} ${r.unit}</td><td>${fmt(r.manualIn)} ${r.unit}</td><td>${fmt(r.need)} ${r.unit}</td><td>${fmt(r.manualOut)} ${r.unit}</td><td><b>${fmt(r.closing)} ${r.unit}</b></td><td>${fmt(r.shortage)} ${r.unit}</td><td>${status}</td></tr>`;
+ }).join("")}</tbody></table></div>`;
 
  renderFieldHarvestAnalysis(entries);
  const stockCharts=Object.keys(labels).map(k=>{
@@ -2060,6 +2222,10 @@ function closeBusinessYear(){
  if(typeof closeMilkYearWithBusinessYear==="function")closeMilkYearWithBusinessYear(y);
  persist();renderYearClose();applyYearLock();
  createNextBusinessYear();
+ // Nach dem automatischen Hof-Jahreswechsel auch das passende Folge-Milchjahr
+ // vorbereiten und direkt auswählen. Der eigenständige Milchabschluss bleibt
+ // davon unabhängig weiterhin möglich.
+ if(typeof openNextMilkYear==="function")openNextMilkYear(y);
 }
 function reopenBusinessYear(){
  const y=activeYear();if(!yearClosures[y])return;
@@ -2168,13 +2334,23 @@ function printYearReport(){
 }
 </style>
 
+
+
+
+<style id="farm-overview-summary-v1">
+.farm-overview-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:14px 0 4px}
+.farm-overview-tile{min-width:0;padding:13px;border:1px solid var(--line);border-radius:11px;background:var(--surface-2);display:flex;flex-direction:column;gap:5px}
+.farm-overview-tile small{color:var(--muted);font-size:12px}.farm-overview-tile b{font-size:clamp(15px,2vw,21px);overflow-wrap:anywhere}.farm-overview-status{grid-column:span 1}
+@media(max-width:850px){.farm-overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.farm-overview-status{grid-column:1/-1}}
+</style>
+
 </body></html>`;
  const w=window.open("","_blank");if(!w){alert("Bitte Pop-ups für diese App erlauben, um den PDF-Bericht zu erstellen.");return;}w.document.open();w.document.write(html);w.document.close();
 }
 
 document.querySelectorAll("[data-jump-tab]").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.jumpTab)));
 function showTab(tab){
- const valid=["dashboard","master","months","stalls","production","harvest","analysis","milk"].includes(tab)?tab:"dashboard";
+ const valid=["dashboard","master","months","stalls","production","harvest","analysis","milk","planner"].includes(tab)?tab:"dashboard";
  document.querySelectorAll("nav button[data-tab]").forEach(b=>{
    const active=b.dataset.tab===valid;
    b.classList.toggle("active",active);
@@ -2226,7 +2402,7 @@ function refreshMilkYears(selected=activeYear()){
  const el=document.getElementById("milkYear");if(!el)return;
  // Milchjahre werden unabhängig von initialisierten Hofjahren geführt.
  const keys=[...knownYears(selected),...Object.keys(milkEntries||{}).map(Number),...Object.keys(milkYearClosures||{}).map(Number)]
-  .filter(n=>Number.isSafeInteger(Number(n))&&Number(n)>=1&&Number(n)!==24&&Number(n)!==2025).map(Number);
+  .map(Number).filter(n=>Number.isSafeInteger(n)&&n>=1&&!isHiddenLegacyYear(n));
  const ys=[...new Set(keys)].sort((a,b)=>a-b);
  const y=Number(selected)||Number(activeYear());
  if(!ys.includes(y))ys.push(y);
@@ -2313,8 +2489,13 @@ document.getElementById("analysisChartBtn").addEventListener("click",()=>setAnal
 function changeBusinessYear(requested){
  const yearInput=document.getElementById("year");
  const oldKey=String(Math.max(1,Math.floor(Number(yearInput.dataset.previous)||1)));
- const newKey=String(Math.max(1,Math.floor(Number(requested)||1)));
- if(newKey===oldKey){syncYearSelectors();return;}
+ let newKey=String(Math.max(1,Math.floor(Number(requested)||1)));
+ // Verhindert, dass ein Altjahr über alte Links/Backups doch aktiv geladen wird.
+ if(isHiddenLegacyYear(newKey)){
+   const valid=knownYears(oldKey);
+   newKey=String(valid[valid.length-1]||1);
+ }
+ if(newKey===oldKey){yearInput.value=newKey;syncYearSelectors();return;}
  saveActiveYearData(oldKey);
  if(!yearInitialized[newKey]){
    seedYearFromPrevious(Number(newKey));
@@ -2426,7 +2607,9 @@ function updateBackupReminder(){
  rem.textContent=days>=7?"⚠ Das Backup ist "+days+" Tage alt. Bitte jetzt ein neues Backup erstellen.":"Backup aktuell · vor Gerätewechsel trotzdem erneut sichern.";
 }
 function exportBackup(){
- const backup={format:"LS2025-Hofverwaltung-Backup",version:21,createdAt:new Date().toISOString(),
+ // Vor dem Export den aktuell sichtbaren Jahresstand sicher in yearData ablegen.
+ saveActiveYearData(activeYear());
+ const backup={format:"LS2025-Hofverwaltung-Backup",version:22,createdAt:new Date().toISOString(),
  settings:{...getSettings(),year:Number(activeYear())},months:data,yearData,yearHerdData,yearSettings,yearInitialized,harvestData,farmFields,nextFieldId,harvestPlans,yearClosures,milkYearClosures,operatingExpenses,nextExpenseId,operatingIncomes,nextIncomeId,stockSettings,stockTransactions,nextStockTransactionId,herd,nextAnimalId,nextHarvestId,milkTankOpening,milkEntries,stallData:{stalls:JSON.parse(localStorage.getItem("ls25buffalo_stalls")||"[]"),consumption:JSON.parse(localStorage.getItem("ls25buffalo_stall_consumption_v1")||"{}"),manualBase:JSON.parse(localStorage.getItem("ls25buffalo_stall_manual_base_v1")||"{}"),monthPlans:JSON.parse(localStorage.getItem("ls25buffalo_stall_month_plans")||"{}")}};
  const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
  const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;
@@ -2434,20 +2617,42 @@ function exportBackup(){
  setTimeout(()=>URL.revokeObjectURL(url),1000);
  localStorage.setItem("ls25buffalo_last_backup_at",new Date().toISOString());updateBackupReminder();document.getElementById("backupMsg").textContent="Backup wurde erstellt. Bewahre die JSON-Datei sicher auf.";
 }
+function validateBackupData(b){
+ if(!b||typeof b!=="object"||Array.isArray(b))throw new Error("Die Datei enthält kein gültiges Backup-Objekt.");
+ if(!b.settings||typeof b.settings!=="object"||Array.isArray(b.settings))throw new Error("Backup beschädigt: Einstellungen fehlen.");
+ if(!Array.isArray(b.herd))throw new Error("Backup beschädigt: Tierbestand fehlt oder ist ungültig.");
+ if(!b.yearData||typeof b.yearData!=="object"||Array.isArray(b.yearData))throw new Error("Backup beschädigt: Betriebsjahre fehlen.");
+ if(!b.harvestData||typeof b.harvestData!=="object"||Array.isArray(b.harvestData))throw new Error("Backup beschädigt: Erntedaten fehlen.");
+ for(const [year,months] of Object.entries(b.yearData)){
+  if(!/^\d+$/.test(year)||!Array.isArray(months))throw new Error("Backup beschädigt: Monatsdaten für Betriebsjahr "+year+" sind ungültig.");
+  if(months.length>12)throw new Error("Backup beschädigt: Betriebsjahr "+year+" enthält mehr als zwölf Monate.");
+ }
+ if(b.yearHerdData!==undefined&&(!b.yearHerdData||typeof b.yearHerdData!=="object"||Array.isArray(b.yearHerdData)))throw new Error("Backup beschädigt: Tierbestände der Betriebsjahre sind ungültig.");
+ if(b.milkEntries!==undefined&&(!b.milkEntries||typeof b.milkEntries!=="object"||Array.isArray(b.milkEntries)))throw new Error("Backup beschädigt: Milchdaten sind ungültig.");
+ if(b.stallData!==undefined&&(!b.stallData||typeof b.stallData!=="object"||Array.isArray(b.stallData)))throw new Error("Backup beschädigt: Stalldaten sind ungültig.");
+ return true;
+}
 function importBackup(file){
  const reader=new FileReader();
  reader.onload=()=>{
   try{
    const b=JSON.parse(reader.result);
-   if(!b||!b.settings||!Array.isArray(b.herd)||!b.yearData||!b.harvestData)throw new Error("Die Datei ist kein gültiges LS25-Backup.");
+   validateBackupData(b);
    ids.forEach(id=>{if(b.settings[id]!==undefined)document.getElementById(id).value=b.settings[id]});
    if(b.settings.year)document.getElementById("year").value=b.settings.year;
    if(b.stallData){localStorage.setItem("ls25buffalo_stalls",JSON.stringify(Array.isArray(b.stallData.stalls)?b.stallData.stalls:[]));localStorage.setItem("ls25buffalo_stall_consumption_v1",JSON.stringify(b.stallData.consumption||{}));localStorage.setItem("ls25buffalo_stall_manual_base_v1",JSON.stringify(b.stallData.manualBase||{}));localStorage.setItem("ls25buffalo_stall_month_plans",JSON.stringify(b.stallData.monthPlans||{}));}
-   yearData=b.yearData;yearHerdData=b.yearHerdData||{};yearSettings=b.yearSettings||{};yearInitialized=b.yearInitialized||{};if(!Object.keys(yearHerdData).length){Object.keys(yearData).forEach(k=>yearHerdData[k]=b.herd.map(a=>({...a})));}harvestData=b.harvestData;farmFields=Array.isArray(b.farmFields)?b.farmFields:[];nextFieldId=Number(b.nextFieldId)||Math.max(0,...farmFields.map(f=>Number(f.id)||0))+1;harvestPlans=b.harvestPlans||{};yearClosures=b.yearClosures||{};milkYearClosures=b.milkYearClosures||{};localStorage.setItem("ls25buffalo_milk_year_closures",JSON.stringify(milkYearClosures));operatingExpenses=Array.isArray(b.operatingExpenses)?b.operatingExpenses:[];nextExpenseId=Number(b.nextExpenseId)||Math.max(0,...operatingExpenses.map(x=>Number(x.id)||0))+1;operatingIncomes=Array.isArray(b.operatingIncomes)?b.operatingIncomes:[];nextIncomeId=Number(b.nextIncomeId)||Math.max(0,...operatingIncomes.map(x=>Number(x.id)||0))+1;stockSettings={...stockSettings,...(b.stockSettings||{})};stockTransactions=Array.isArray(b.stockTransactions)?b.stockTransactions:[];nextStockTransactionId=Number(b.nextStockTransactionId)||Math.max(0,...stockTransactions.map(x=>Number(x.id)||0))+1;
+   yearData=b.yearData;yearHerdData=b.yearHerdData||{};yearSettings=b.yearSettings||{};yearInitialized=b.yearInitialized||{};
+   // Ältere Backups ohne Initialisierungsmarker anhand ihrer echten Jahresdaten ergänzen.
+   Object.keys(yearData).forEach(k=>{if(Array.isArray(yearData[k])&&Number(k)>=1)yearInitialized[k]=true;});
+   harvestData=b.harvestData;farmFields=Array.isArray(b.farmFields)?b.farmFields:[];nextFieldId=Number(b.nextFieldId)||Math.max(0,...farmFields.map(f=>Number(f.id)||0))+1;harvestPlans=b.harvestPlans||{};yearClosures=b.yearClosures||{};Object.keys(yearClosures).forEach(k=>{if(Number(k)>=1)yearInitialized[k]=true;});milkYearClosures=b.milkYearClosures||{};localStorage.setItem("ls25buffalo_milk_year_closures",JSON.stringify(milkYearClosures));operatingExpenses=Array.isArray(b.operatingExpenses)?b.operatingExpenses:[];nextExpenseId=Number(b.nextExpenseId)||Math.max(0,...operatingExpenses.map(x=>Number(x.id)||0))+1;operatingIncomes=Array.isArray(b.operatingIncomes)?b.operatingIncomes:[];nextIncomeId=Number(b.nextIncomeId)||Math.max(0,...operatingIncomes.map(x=>Number(x.id)||0))+1;stockSettings={...stockSettings,...(b.stockSettings||{})};stockTransactions=Array.isArray(b.stockTransactions)?b.stockTransactions:[];nextStockTransactionId=Number(b.nextStockTransactionId)||Math.max(0,...stockTransactions.map(x=>Number(x.id)||0))+1;
    herd=b.herd;nextAnimalId=Number(b.nextAnimalId)||Math.max(0,...herd.map(a=>Number(a.id)||0))+1;
    nextHarvestId=Number(b.nextHarvestId)||1;milkTankOpening=Math.max(0,Number(b.milkTankOpening)||0);
    if(b.milkEntries&&typeof b.milkEntries==="object"&&!Array.isArray(b.milkEntries)){milkEntries=b.milkEntries;localStorage.setItem(MILK_KEY,JSON.stringify(milkEntries));}
    document.getElementById("milkTankOpening").value=milkTankOpening;
+   // Zuerst eine gültige Jahresauswahl herstellen, erst danach Daten daraus laden.
+   // So kann ein ausgeblendetes Altjahr (z. B. 24 oder 2026) nicht in den aktiven
+   // Tierbestand rutschen, während das Auswahlfeld bereits Jahr 3 anzeigt.
+   refreshYearOptions(b.settings.year||activeYear());
    const current=String(Math.max(1,Math.floor(val("year"))));
    data=Array.isArray(yearData[current])?yearData[current]:(Array.isArray(b.months)?b.months:months.map(()=>({tmr:0,bedding:0,milkDelivered:0})));
    yearData[current]=data;if(!yearHerdData[current])yearHerdData[current]=herd.map(a=>({...a}));if(!yearSettings[current])yearSettings[current]={...defaults,...getSettings(),year:Number(current)};if(!yearInitialized[current])yearInitialized[current]=true;applyYearSettings(current);refreshYearOptions(current);document.getElementById("year").dataset.previous=current;herd=(yearHerdData[current]||[]).map(a=>({...a}));loadStockInputs();renderHerd();renderMonths();renderAll();persist();refreshMilkYears();renderMilkMonth();window.ls25StallSystem?.render();updateBackupReminder();
@@ -2747,6 +2952,99 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
  window.ls25StallSystem={render:renderAllStallViews,renderAssignments:renderAnimalAssignments,renderSummary:()=>{renderStallList();renderStallAnalysis();},applyCombined,version:3};
 })();
 </script>
+
+<script id="ls25-year-planner-v2">
+(function(){
+ 'use strict';
+ const KEY='ls25buffalo_year_planner_v1';
+ const monthNames=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+ const defaultTasks=['Tierbestand und Altersgruppen kontrollieren','Monatlichen TMR- und Einstreuverbrauch eintragen','Stroh-, Heu- und Maissilagebestand prüfen','Milchproduktion und Auslieferung erfassen','Feldplanung und anstehende Arbeiten prüfen'];
+ const $=id=>document.getElementById(id);
+ function read(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return {}}}
+ function year(){return String(Math.max(1,Math.floor(Number($('year')?.value)||1)))}
+ function automaticItems(y){
+  const items=[];
+  try{
+   if(typeof buildStockLedger==='function'){
+    const rows=buildStockLedger(Number(y)), current=rows[rows.length-1];
+    if(current&&current.items){
+     Object.entries(current.items).forEach(([key,r])=>{
+      const label=r.name||key;
+      const hasData=(Number(r.opening)||0)+(Number(r.harvest)||0)+(Number(r.manualIn)||0)+(Number(r.manualOut)||0)+(Number(r.need)||0)>0;
+      if(!hasData){items.push({level:'info',text:label+': Bestands- oder Verbrauchsdaten fehlen noch.'});return;}
+      if((Number(r.shortage)||0)>0)items.push({level:'bad',text:label+': rechnerische Fehlmenge '+fmt(r.shortage)+' '+r.unit+'. Lagerzugang oder Ernte planen.'});
+      else if(r.belowMinimum)items.push({level:'warn',text:label+': Mindestbestand unterschritten. Vorrat auffüllen.'});
+     });
+    }
+   }
+   if(typeof getRecommendedHarvestTargets==='function'&&typeof yearlyHarvest==='function'){
+    const targets=getRecommendedHarvestTargets(Number(y)),actual=yearlyHarvest(Number(y));
+    const labels={strawTmr:'TMR-Stroh',beddingBales:'Einstreu-Stroh',hay:'Heu',silage:'Maissilage'};
+    Object.keys(labels).forEach(k=>{const gap=Math.max(0,(Number(targets[k])||0)-(Number(actual[k])||0));if(gap>0)items.push({level:'warn',text:labels[k]+': Noch '+fmt(gap)+(k==='beddingBales'?' Ballen':' L')+' bis zum empfohlenen Ernteziel.'});});
+   }
+  }catch(err){items.push({level:'info',text:'Automatische Hinweise derzeit nicht verfügbar. Bitte Lager- und Erntedaten direkt prüfen.'});}
+  return items;
+ }
+ function render(){
+  const y=year(), all=read(), saved=all[y]||{};
+  $('plannerYearLabel').textContent=y;
+  const automatic=automaticItems(y);
+  const autoHost=$('plannerAutoTasks');
+  function monthlyStockForecast(yearNumber){
+   const keys=['strawTmr','beddingBales','hay','silage'];
+   const labels={strawTmr:'TMR-Stroh',beddingBales:'Einstreu-Stroh',hay:'Heu',silage:'Maissilage'};
+   const units={strawTmr:'L',beddingBales:'Ballen',hay:'L',silage:'L'};
+   const ledger=buildStockLedger(yearNumber), current=ledger[ledger.length-1];
+   if(!current)return {html:'<p class="muted">Keine Lagerdaten für dieses Betriebsjahr verfügbar.</p>',basis:'keine Daten'};
+   const monthlyRows=Array.isArray(yearData[String(yearNumber)])?yearData[String(yearNumber)]:(Number(yearNumber)===Number(activeYear())?data:[]);
+   const annual=yearlyNeed(yearNumber), settings=getSettingsForYear(yearNumber), baleSize=Math.max(1,Number(settings.bale)||7000);
+   const monthlyNeed={
+    strawTmr:m=>{const v=Number(monthlyRows[m]?.tmr)||0;return v>0?v*.20:(Number(annual.strawTmr)||0)/12;},
+    beddingBales:m=>{const v=Number(monthlyRows[m]?.bedding)||0;return v>0?v/baleSize:(Number(annual.beddingBales)||0)/12;},
+    hay:m=>{const v=Number(monthlyRows[m]?.tmr)||0;return v>0?v*.30:(Number(annual.hay)||0)/12;},
+    silage:m=>{const v=Number(monthlyRows[m]?.tmr)||0;return v>0?v*.50:(Number(annual.silage)||0)/12;}
+   };
+   const rows=keys.map(key=>{
+    let balance=Math.max(0,Number(current.items[key].opening)||0), critical=null, values=[];
+    for(let m=0;m<12;m++){
+     const month=m+1;
+     getHarvestForYear(yearNumber).filter(h=>{const d=String(h.harvestDate||'');return (d?Number(d.slice(5,7))||12:12)===month;}).forEach(h=>balance+=Math.max(0,Number(h[key])||0));
+     stockTransactions.filter(t=>Number(t.year)===Number(yearNumber)&&t.product===key&&String(t.date||'').slice(5,7)===String(month).padStart(2,'0')).forEach(t=>balance+=(t.type==='in'?1:-1)*Math.max(0,Number(t.quantity)||0));
+     balance-=monthlyNeed[key](m);
+     if(balance<0&&critical===null)critical=month;
+     values.push(Math.max(0,balance));
+    }
+    const minimum=Math.max(0,Number(current.items[key]?.minimum)||0);
+    const replenishment=Math.max(0,minimum-balance);
+    return {key,label:labels[key],unit:units[key],critical,values,ending:balance,monthly:monthlyNeed[key](0),minimum,replenishment};
+   });
+   const monthLabels=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+   const html=`<div class="note" style="margin-top:12px"><b>Monatsprognose Lager – Betriebsjahr ${escapeHtml(String(yearNumber))}</b><p class="muted">Voraussichtliche Monatsendbestände. Ernten und datierte Lagerbewegungen werden im Buchungsmonat berücksichtigt. Wo kein Monatsverbrauch eingetragen ist, wird der Jahresbedarf gleichmäßig auf zwölf Monate verteilt. Die Zusatzmenge zeigt, was nach dem prognostizierten Jahresverbrauch mindestens nötig wäre, um den eingestellten Mindestbestand wieder zu erreichen.</p><div class="table-wrap"><table><thead><tr><th>Produkt</th><th>Monatsbedarf</th><th>Voraussichtlich kritisch</th><th>Bestand Dez.</th><th>Zusätzlich nötig bis Mindestbestand</th></tr></thead><tbody>${rows.map(r=>`<tr><td><b>${r.label}</b></td><td>${fmt(r.monthly)} ${r.unit}</td><td>${r.critical?monthLabels[r.critical-1]:'Im Planjahr nicht kritisch'}</td><td>${fmt(r.ending)} ${r.unit}</td><td><b>${fmt(r.replenishment)} ${r.unit}</b></td></tr>`).join('')}</tbody></table></div><div class="table-wrap"><table><thead><tr><th>Produkt / Monatsende</th>${monthLabels.map(m=>`<th>${m}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr><td><b>${r.label}</b></td>${r.values.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>`;
+   const actualMonths=monthlyRows.filter(r=>(Number(r?.tmr)||0)>0||(Number(r?.bedding)||0)>0).length;
+   return {html,basis:actualMonths+' von 12 Monaten mit Verbrauchsdaten'};
+  }
+  if(autoHost){const forecast=monthlyStockForecast(Number(y));autoHost.innerHTML=(automatic.length?`<div class="note"><b>Automatische Hinweise für Betriebsjahr ${escapeHtml(y)}</b>${automatic.map(a=>`<p style="margin:8px 0;color:${a.level==='bad'?'#b42318':a.level==='warn'?'#9a6700':'inherit'}">${escapeHtml(a.text)}</p>`).join('')}</div>`:'<p class="compare-good">Aus den erfassten Lager- und Erntedaten ergeben sich derzeit keine automatischen Nachfüll- oder Erntehinweise.</p>')+forecast.html;}
+  let done=0,total=0;
+  $('plannerMonths').innerHTML=monthNames.map((m,i)=>{
+   const item=saved[i]||{}, checks=Array.isArray(item.checks)?item.checks:[];
+   total+=defaultTasks.length; done+=defaultTasks.filter((_,j)=>checks[j]).length;
+   return `<div class="card span-4 planner-month" data-month="${i}"><h3>${m}</h3>${defaultTasks.map((t,j)=>`<label style="display:flex;gap:9px;align-items:flex-start;margin:9px 0;font-weight:600"><input type="checkbox" data-task="${j}" ${checks[j]?'checked':''} style="width:20px;min-height:20px;flex:0 0 20px"> <span>${t}</span></label>`).join('')}<div class="field"><label>Eigene Aufgabe / Notiz</label><input type="text" data-note maxlength="180" placeholder="z. B. Feld 3 mähen" value="${escapeHtml(item.note||'')}"></div></div>`;
+  }).join('');
+  $('plannerProgress').textContent=`${done} von ${total} Standard-Prüfpunkten erledigt (${Math.round(done/total*100)} %). Eigene Monatsnotizen werden separat gespeichert.`;
+  $('plannerMonths').querySelectorAll('input').forEach(el=>el.addEventListener('change',save));
+ }
+ function save(){
+  const all=read(), y=year(), result={};
+  $('plannerMonths').querySelectorAll('.planner-month').forEach(card=>{const i=Number(card.dataset.month);result[i]={checks:[...card.querySelectorAll('[data-task]')].map(x=>x.checked),note:card.querySelector('[data-note]').value};});
+  all[y]=result;localStorage.setItem(KEY,JSON.stringify(all));render();
+ }
+ $('plannerReset').addEventListener('click',()=>{if(!confirm('Alle Häkchen und eigenen Monatsnotizen für Betriebsjahr '+year()+' zurücksetzen?'))return;const all=read();delete all[year()];localStorage.setItem(KEY,JSON.stringify(all));render();});
+ $('year')?.addEventListener('change',()=>setTimeout(render,0));
+ document.querySelectorAll('[data-tab="planner"],[data-jump-tab="planner"]').forEach(el=>el.addEventListener('click',()=>setTimeout(render,0)));
+ render();
+})();
+</script>
+
 </body>
 </html>
 <style id="stall-assignment-final-layout-fix">
@@ -2763,4 +3061,21 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
 #milkDeliveredFactory { min-height:48px; width:100%; font-size:16px; }
 @media(max-width:760px){ #milk .fields { grid-template-columns:repeat(2,minmax(0,1fr)) !important; } }
 @media(max-width:460px){ #milk .fields { grid-template-columns:1fr !important; } }
+</style>
+
+<style id="dashboard-overview-unhide-v1">
+/* Dashboard: aktive Milch- und Jahreskennzahlen wieder sichtbar machen.
+   Es werden nur vorhandene, bereits berechnete Bereiche eingeblendet; keine Datenlogik wird verändert. */
+#dashboard .card:has(>#kMilk),
+#dashboard .card:has(>#dashboardMilkTank),
+#dashboard .card:has(>#annualSummary),
+#dashboard .card:has(>#annualSummary) #annualSummary {
+  display:block !important; visibility:visible !important;
+}
+#dashboard #kMilk,
+#dashboard #dashboardMilkTank,
+#dashboard #annualSummary { display:block !important; visibility:visible !important; }
+#dashboard .card:has(>#kMilk),
+#dashboard .card:has(>#dashboardMilkTank),
+#dashboard .card:has(>#annualSummary) { min-width:0; }
 </style>
