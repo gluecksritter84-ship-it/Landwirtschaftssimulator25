@@ -1568,7 +1568,7 @@ function renderManagementCockpit(totals,stockNow){
   const tmrRecorded=monthRows.filter(d=>(Number(d.tmr)||0)>0).length;
   const beddingRecorded=monthRows.filter(d=>(Number(d.bedding)||0)>0).length;
   const dataState=tmrRecorded===0&&beddingRecorded===0?"Noch keine Monatsverbräuche":`TMR ${tmrRecorded}/12 · Einstreu ${beddingRecorded}/12`;
-  const statusColor=criticalStock||missingStock||recorded===0?"#e3bd43":"#b7e486";
+  const statusColor=criticalStock||missingStock||(tmrRecorded===0&&beddingRecorded===0)?"#e3bd43":"#b7e486";
   summaryEl.innerHTML=`<div class="farm-overview-grid"><div class="farm-overview-tile"><small>Wasserbüffel</small><b>${fmt(buffaloCount)}</b></div><div class="farm-overview-tile"><small>Weitere Tiere</small><b>${fmt(pigCount)}</b></div><div class="farm-overview-tile"><small>Erfasste Feldfläche</small><b>${fmt(area)} ha</b></div><div class="farm-overview-tile"><small>Verbrauchsdaten</small><b>${dataState}</b></div><div class="farm-overview-tile farm-overview-status"><small>Lagerstatus</small><b style="color:${statusColor}">${stockState}</b></div></div><p class="muted">Die Kennzahlen beziehen sich auf das ausgewählte Betriebsjahr. Fehlende Lager- oder Verbrauchsdaten werden ausdrücklich als unvollständig ausgewiesen.</p>`;
  }
 }
