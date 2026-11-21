@@ -1048,7 +1048,7 @@ input,select,textarea,button{max-width:100%;min-width:0}
 <div class="span-4"><div class="kpi">9.000 L</div><b>Stroh · 20 %</b></div>
 <div class="span-4"><div class="kpi">13.500 L</div><b>Heu · 30 %</b></div>
 <div class="span-4"><div class="kpi">22.500 L</div><b>Maissilage · 50 %</b></div>
-</div><div class="actions"><button class="btn primary" id="saveBtn">Einstellungen speichern</button><button class="btn" id="resetBtn">Hofdaten komplett zurücksetzen</button></div><small id="saveMsg">Änderungen werden lokal im Browser gespeichert. Ein kompletter Reset löscht die Hofdaten dieses Browsers; exportiere vorher bei Bedarf ein Backup.</small></div>
+</div><div class="actions"><button class="btn primary" id="saveBtn" type="button">Einstellungen speichern</button><button class="btn" id="resetBtn" type="button">Hofdaten komplett zurücksetzen</button></div><small id="saveMsg">Änderungen werden lokal im Browser gespeichert. Ein kompletter Reset löscht die Hofdaten dieses Browsers; exportiere vorher bei Bedarf ein Backup.</small></div>
 </div>
 </section>
 <section class="panel" id="months">
@@ -1063,7 +1063,7 @@ input,select,textarea,button{max-width:100%;min-width:0}
 <div class="table-wrap"><table><thead><tr><th>Monat</th><th>Stall</th><th>TMR (L)</th><th>Einstreu (L)</th></tr></thead><tbody id="stallConsumptionRows"></tbody></table></div>
 <div aria-live="polite" class="note" id="stallConsumptionStatus"></div>
 </div>
-<div class="actions"><button class="btn primary" id="updateBtn">Berechnungen aktualisieren</button><button class="btn" id="csvBtn">Monatsdaten als CSV exportieren</button></div>
+<div class="actions"><button class="btn primary" id="updateBtn" type="button">Berechnungen aktualisieren</button><button class="btn" id="csvBtn" type="button">Monatsdaten als CSV exportieren</button></div>
 </div>
 </section>
 <section class="panel" id="production">
@@ -1310,7 +1310,7 @@ function persist(){try{
  localStorage.setItem("ls25buffalo_next_id",String(nextAnimalId));
  const savedAt=new Date().toISOString();localStorage.setItem("ls25buffalo_last_saved_at",savedAt);setSaveIndicator("Lokal gespeichert · "+new Date(savedAt).toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"}));
  try{window.dispatchEvent(new Event("ls25-local-data-changed"));}catch(_){}
- }catch(e){setSaveIndicator("Speichern fehlgeschlagen · bitte Backup prüfen",true);}}
+ }catch(e){setSaveIndicator("Speichern fehlgeschlagen · Speicherplatz oder Browserdaten prüfen",true);const msg=document.getElementById("backupMsg");if(msg)msg.textContent="Achtung: Lokales Speichern fehlgeschlagen. Bitte sofort ein JSON-Backup herunterladen, sofern die Daten noch angezeigt werden. Ursache: "+(e&&e.message?e.message:"unbekannter Speicherfehler");}}
 
 function load(){try{
  // V65: Keine automatische Löschung oder Zurücksetzung vorhandener Tierbestände.
@@ -1486,27 +1486,55 @@ function updateMixer(){
  if(out)out.innerHTML=`<div class="grid"><div class="card span-4"><div class="kpi">${fmt(straw)} L</div><b>Stroh · 20 %</b></div><div class="card span-4"><div class="kpi">${fmt(hay)} L</div><b>Heu · 30 %</b></div><div class="card span-4"><div class="kpi">${fmt(silage)} L</div><b>Maissilage · 50 %</b></div></div>`;
 }
 
-function estimateAgeBasedFeedDemand(sourceHerd=herd, sourceSettings=getSettings()){
+function estimateAgeBasedFeedDemand(sourceHerd=herd, sourceSettings=getSettings(), sourceMonths=data){
  const settings=sourceSettings||{};
- const result={tmr:0,bedding:0,months:[],animals:0,missingTmr:!(Number(settings.adultTmrMonthly)>0),missingBedding:!(Number(settings.adultBeddingMonthly)>0)};
+ const herdRows=Array.isArray(sourceHerd)?sourceHerd:[];
+ const monthRows=Array.isArray(sourceMonths)?sourceMonths:[];
  const factorFor=(age,kind)=>{
   const group=age<6?'Calf':age<12?'Young':age<24?'Subadult':'Adult';
-  const value=Number(settings[`${kind}Factor${group}`]);
+  const raw=settings[`${kind}Factor${group}`];
+  const value=raw===undefined?0:Number(raw);
   return Number.isFinite(value)?Math.max(0,value):0;
  };
+ let observedTmr=0,weightedTmr=0,observedBedding=0,weightedBedding=0;
+ const monthFactors=[];
  for(let month=1;month<=12;month++){
-  let tmr=0,bedding=0,count=0;
-  (Array.isArray(sourceHerd)?sourceHerd:[]).forEach(animal=>{
+  let tmrFactorSum=0,beddingFactorSum=0,count=0;
+  herdRows.forEach(animal=>{
    if((animal.type||'buffalo')==='pig')return;
-   const start=Math.max(1,Math.min(12,Number(animal.startMonth)||1));
+   const start=Math.max(1,Math.min(12,Math.floor(Number(animal.startMonth)||1)));
    if(start>month)return;
    const age=Math.max(0,Number(animal.age)||0)+(month-start);
    count++;
-   if(!result.missingTmr)tmr+=Number(settings.adultTmrMonthly)*factorFor(age,'tmr');
-   if(!result.missingBedding)bedding+=Number(settings.adultBeddingMonthly)*factorFor(age,'bedding');
+   tmrFactorSum+=factorFor(age,'tmr');
+   beddingFactorSum+=factorFor(age,'bedding');
   });
-  result.months.push({month,count,tmr,bedding});
-  result.tmr+=tmr;result.bedding+=bedding;result.animals=Math.max(result.animals,count);
+  const row=monthRows[month-1]||{};
+  const actualTmr=Math.max(0,Number(row.tmr)||0);
+  const actualBedding=Math.max(0,Number(row.bedding)||0);
+  if(actualTmr>0&&tmrFactorSum>0){observedTmr+=actualTmr;weightedTmr+=tmrFactorSum;}
+  if(actualBedding>0&&beddingFactorSum>0){observedBedding+=actualBedding;weightedBedding+=beddingFactorSum;}
+  monthFactors.push({month,count,tmrFactorSum,beddingFactorSum,actualTmr,actualBedding});
+ }
+ const manualTmr=Math.max(0,Number(settings.adultTmrMonthly)||0);
+ const manualBedding=Math.max(0,Number(settings.adultBeddingMonthly)||0);
+ const inferredTmr=weightedTmr>0?observedTmr/weightedTmr:0;
+ const inferredBedding=weightedBedding>0?observedBedding/weightedBedding:0;
+ const referenceTmr=manualTmr||inferredTmr;
+ const referenceBedding=manualBedding||inferredBedding;
+ const result={
+  tmr:0,bedding:0,months:[],animals:0,monthFactors,
+  referenceTmr,referenceBedding,
+  tmrSource:manualTmr?'manuell':'aus erfassten Monatsverbräuchen errechnet',
+  beddingSource:manualBedding?'manuell':'aus erfassten Monatsverbräuchen errechnet',
+  missingTmr:!(referenceTmr>0),missingBedding:!(referenceBedding>0)
+ };
+ for(let month=1;month<=12;month++){
+  const f=monthFactors[month-1];
+  const tmr=result.missingTmr?0:referenceTmr*f.tmrFactorSum;
+  const bedding=result.missingBedding?0:referenceBedding*f.beddingFactorSum;
+  result.months.push({month,count:f.count,tmr,bedding});
+  result.tmr+=tmr;result.bedding+=bedding;result.animals=Math.max(result.animals,f.count);
  }
  return result;
 }
@@ -1542,8 +1570,8 @@ function renderManagementCockpit(totals,stockNow){
   if(missingBedding||beddingMonths===0)warnings.push("Für Einstreu fehlen Monatsverbrauchswerte oder ein Referenzwert je erwachsenem Tier.");
   const warningHtml=warnings.length?`<div class="note"><b>Futterplanung teilweise unvollständig</b><p>${warnings.join(" ")} Fehlende Werte werden nicht als bestätigter Bedarf ausgegeben.</p></div>`:"";
   const emptyHtml=tmrMonths===0&&beddingMonths===0?`<div class="note"><b>Noch keine Verbrauchsmonate erfasst</b><p>Eine belastbare Hochrechnung ist erst möglich, wenn du mindestens einen Monatsverbrauch für TMR oder Einstreu einträgst.</p></div>`:"";
-  const ageEstimate=estimateAgeBasedFeedDemand(typeof getHerd==='function'?getHerd():herd,settings);
-  const ageEstimateHtml=`<div class="note"><b>Altersabhängiger Planbedarf (separate Schätzung)</b><p>${ageEstimate.missingTmr?'TMR: Referenzwert je erwachsenem Tier fehlt.':`TMR: ${fmt(ageEstimate.tmr)} L/Jahr (${fmt(ageEstimate.tmr/12)} L/Monat im Jahresmittel).`}<br>${ageEstimate.missingBedding?'Einstreu: Referenzwert je erwachsenem Tier fehlt.':`Einstreu: ${fmt(ageEstimate.bedding)} L/Jahr (${fmt(ageEstimate.bedding/12)} L/Monat im Jahresmittel).`}</p><small>Berechnet aus Tieralter, Zugangsmonat und den einstellbaren Altersfaktoren. Dies ist eine Planannahme, kein aus dem Spiel ausgelesener Vanilla-Wert. Der erfasste Ist-Verbrauch bleibt davon getrennt.</small></div>`;
+  const ageEstimate=estimateAgeBasedFeedDemand(typeof getHerd==='function'?getHerd():herd,settings,monthRows);
+  const ageEstimateHtml=`<div class="note"><b>Altersabhängiger Planbedarf · Referenzwerte automatisch ermittelt</b><p>${ageEstimate.missingTmr?'TMR: Noch kein geeigneter Monatsverbrauch zur Rückrechnung vorhanden.':`TMR-Referenz: ${fmt(ageEstimate.referenceTmr)} L je erwachsenem Tier/Monat (${ageEstimate.tmrSource}). Planbedarf: ${fmt(ageEstimate.tmr)} L/Jahr.`}<br>${ageEstimate.missingBedding?'Einstreu: Noch kein geeigneter Monatsverbrauch zur Rückrechnung vorhanden.':`Einstreu-Referenz: ${fmt(ageEstimate.referenceBedding)} L je erwachsenem Tier/Monat (${ageEstimate.beddingSource}). Planbedarf: ${fmt(ageEstimate.bedding)} L/Jahr.`}</p><small>Die Rückrechnung teilt die erfassten Monatsverbräuche durch die Summe der passenden Altersfaktoren aller im jeweiligen Monat vorhandenen Tiere. Manuelle Referenzwerte haben Vorrang. Ohne geeignete Monatsdaten wird kein Wert erfunden. Das Ergebnis ist eine Schätzung aus deinen Betriebsdaten, kein aus LS25 ausgelesener Vanilla-Wert.</small></div>`;
   const projectionText=incomplete?`Vorläufige Hochrechnung: TMR aus ${tmrMonths}/12 und Einstreu aus ${beddingMonths}/12 erfassten Monaten.`:`Hochrechnung auf 12 Monate anhand der erfassten Verbrauchsmonate.`;
   feedEl.innerHTML=`${warningHtml}${emptyHtml}${ageEstimateHtml}<p class="muted">${projectionText} Die Werte sind eine Planungshilfe und keine automatische LS25-Auslesung.</p><div class="table-wrap"><table class="feed-plan-table"><thead><tr><th>Produkt</th><th>Ø / Monat</th><th>Hochrechnung 12 Monate</th><th>Reichweite ab Jahresende</th></tr></thead><tbody>${projectedItems.map(it=>{
    const stock=stockNow?.items?.[it.key],closing=Math.max(0,Number(stock?.closing)||0),monthly=it.monthly,annual=it.annual,runway=monthly>0?closing/monthly:null,shortage=annual>closing;
@@ -2609,7 +2637,7 @@ function updateBackupReminder(){
 function exportBackup(){
  // Vor dem Export den aktuell sichtbaren Jahresstand sicher in yearData ablegen.
  saveActiveYearData(activeYear());
- const backup={format:"LS2025-Hofverwaltung-Backup",version:22,createdAt:new Date().toISOString(),
+ const backup={format:"LS2025-Hofverwaltung-Backup",version:23,createdAt:new Date().toISOString(),
  settings:{...getSettings(),year:Number(activeYear())},months:data,yearData,yearHerdData,yearSettings,yearInitialized,harvestData,farmFields,nextFieldId,harvestPlans,yearClosures,milkYearClosures,operatingExpenses,nextExpenseId,operatingIncomes,nextIncomeId,stockSettings,stockTransactions,nextStockTransactionId,herd,nextAnimalId,nextHarvestId,milkTankOpening,milkEntries,stallData:{stalls:JSON.parse(localStorage.getItem("ls25buffalo_stalls")||"[]"),consumption:JSON.parse(localStorage.getItem("ls25buffalo_stall_consumption_v1")||"{}"),manualBase:JSON.parse(localStorage.getItem("ls25buffalo_stall_manual_base_v1")||"{}"),monthPlans:JSON.parse(localStorage.getItem("ls25buffalo_stall_month_plans")||"{}")}};
  const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
  const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;
@@ -2623,13 +2651,22 @@ function validateBackupData(b){
  if(!Array.isArray(b.herd))throw new Error("Backup beschädigt: Tierbestand fehlt oder ist ungültig.");
  if(!b.yearData||typeof b.yearData!=="object"||Array.isArray(b.yearData))throw new Error("Backup beschädigt: Betriebsjahre fehlen.");
  if(!b.harvestData||typeof b.harvestData!=="object"||Array.isArray(b.harvestData))throw new Error("Backup beschädigt: Erntedaten fehlen.");
- for(const [year,months] of Object.entries(b.yearData)){
-  if(!/^\d+$/.test(year)||!Array.isArray(months))throw new Error("Backup beschädigt: Monatsdaten für Betriebsjahr "+year+" sind ungültig.");
-  if(months.length>12)throw new Error("Backup beschädigt: Betriebsjahr "+year+" enthält mehr als zwölf Monate.");
- }
- if(b.yearHerdData!==undefined&&(!b.yearHerdData||typeof b.yearHerdData!=="object"||Array.isArray(b.yearHerdData)))throw new Error("Backup beschädigt: Tierbestände der Betriebsjahre sind ungültig.");
+ const objectFields=["yearHerdData","yearSettings","yearInitialized","harvestPlans","yearClosures","milkYearClosures","stockSettings","stallData"];
+ objectFields.forEach(key=>{if(b[key]!==undefined&&(!b[key]||typeof b[key]!=="object"||Array.isArray(b[key])))throw new Error("Backup beschädigt: "+key+" ist ungültig.");});
+ const arrayFields=["farmFields","stockTransactions","operatingExpenses","operatingIncomes"];
+ arrayFields.forEach(key=>{if(b[key]!==undefined&&!Array.isArray(b[key]))throw new Error("Backup beschädigt: "+key+" ist ungültig.");});
  if(b.milkEntries!==undefined&&(!b.milkEntries||typeof b.milkEntries!=="object"||Array.isArray(b.milkEntries)))throw new Error("Backup beschädigt: Milchdaten sind ungültig.");
- if(b.stallData!==undefined&&(!b.stallData||typeof b.stallData!=="object"||Array.isArray(b.stallData)))throw new Error("Backup beschädigt: Stalldaten sind ungültig.");
+ for(const animal of b.herd){if(!animal||typeof animal!=="object"||Array.isArray(animal))throw new Error("Backup beschädigt: Ein Tiereintrag ist ungültig.");}
+ for(const [year,months] of Object.entries(b.yearData)){
+  if(!/^\d+$/.test(year)||!Array.isArray(months)||months.length>12)throw new Error("Backup beschädigt: Monatsdaten für Betriebsjahr "+year+" sind ungültig.");
+  months.forEach((row,index)=>{
+   if(!row||typeof row!=="object"||Array.isArray(row))throw new Error("Backup beschädigt: Monat "+(index+1)+" in Betriebsjahr "+year+" ist ungültig.");
+   ["tmr","bedding","milkDelivered"].forEach(field=>{if(row[field]!==undefined&&(!Number.isFinite(Number(row[field]))||Number(row[field])<0))throw new Error("Backup beschädigt: Ungültiger Wert für "+field+" in Betriebsjahr "+year+".");});
+  });
+ }
+ if(b.yearHerdData)Object.entries(b.yearHerdData).forEach(([year,animals])=>{if(!/^\d+$/.test(year)||!Array.isArray(animals))throw new Error("Backup beschädigt: Tierbestand für Betriebsjahr "+year+" ist ungültig.");});
+ if(b.harvestData)Object.entries(b.harvestData).forEach(([year,records])=>{if(!/^\d+$/.test(year)||!Array.isArray(records))throw new Error("Backup beschädigt: Erntedaten für Betriebsjahr "+year+" sind ungültig.");});
+ if(b.stallData&&b.stallData.stalls!==undefined&&!Array.isArray(b.stallData.stalls))throw new Error("Backup beschädigt: Stallliste ist ungültig.");
  return true;
 }
 function importBackup(file){
@@ -2638,7 +2675,13 @@ function importBackup(file){
   try{
    const b=JSON.parse(reader.result);
    validateBackupData(b);
-   ids.forEach(id=>{if(b.settings[id]!==undefined)document.getElementById(id).value=b.settings[id]});
+   const backupYears=Object.keys(b.yearData||{}).filter(k=>/^\d+$/.test(k)).sort((a,c)=>Number(a)-Number(c));
+   const animalCount=b.herd.length;
+   const fieldCount=Array.isArray(b.farmFields)?b.farmFields.length:0;
+   const milkYearCount=Object.keys(b.milkEntries||{}).length;
+   const preview="Backup vom "+(b.createdAt?new Date(b.createdAt).toLocaleString("de-DE"):"ohne Zeitstempel")+"\nBetriebsjahre: "+(backupYears.join(", ")||"keine")+"\nTiere im aktiven Exportbestand: "+animalCount+"\nFelder: "+fieldCount+"\nMilchjahre: "+milkYearCount+"\n\nDer Import ersetzt die aktuell gespeicherten Hofdaten in diesem Browser. Vor dem Fortfahren bitte sicherstellen, dass ein aktuelles Backup vorhanden ist.\n\nBackup jetzt importieren?";
+   if(!confirm(preview))return;
+   ids.forEach(id=>{if(b.settings[id]!==undefined&&document.getElementById(id))document.getElementById(id).value=b.settings[id]});
    if(b.settings.year)document.getElementById("year").value=b.settings.year;
    if(b.stallData){localStorage.setItem("ls25buffalo_stalls",JSON.stringify(Array.isArray(b.stallData.stalls)?b.stallData.stalls:[]));localStorage.setItem("ls25buffalo_stall_consumption_v1",JSON.stringify(b.stallData.consumption||{}));localStorage.setItem("ls25buffalo_stall_manual_base_v1",JSON.stringify(b.stallData.manualBase||{}));localStorage.setItem("ls25buffalo_stall_month_plans",JSON.stringify(b.stallData.monthPlans||{}));}
    yearData=b.yearData;yearHerdData=b.yearHerdData||{};yearSettings=b.yearSettings||{};yearInitialized=b.yearInitialized||{};
@@ -3079,3 +3122,5 @@ load();const lastSaved=localStorage.getItem("ls25buffalo_last_saved_at");if(last
 #dashboard .card:has(>#dashboardMilkTank),
 #dashboard .card:has(>#annualSummary) { min-width:0; }
 </style>
+
+<!-- Release 2026-11-21: Wartungsrelease - automatische Referenzwerte, Backup-Validierung und Importvorschau. -->
