@@ -1,0 +1,21 @@
+{
+  "name": "LS25 Farm Command Center – Hofverwaltung mit Tierzucht",
+  "short_name": "LS25 Hofverwaltung",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#06120b",
+  "theme_color": "#07150d",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
